@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:smart_salary/core/costants/assets_manager.dart';
+import 'package:smart_salary/core/routes/app_routes.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -74,8 +75,7 @@ class _SplashScreenState extends State<SplashScreen>
   void _navigateToHomeScreen() async {
     await Future.delayed(const Duration(seconds: 5));
     if (mounted) {
-      // استبدل 'HomeScreen()' بصفحة تطبيقك الرئيسية
-      // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const HomeScreen()));
+      Navigator.pushReplacementNamed(context, AppRoutes.onboarding);
     }
   }
 
