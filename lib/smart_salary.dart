@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:smart_salary/core/routes/routes_generator.dart';
+import 'package:smart_salary/core/theme/theme_manager.dart';
 
 import 'core/routes/app_routes.dart';
 
@@ -13,7 +14,8 @@ class SmartSalary extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       onGenerateRoute: RoutesGenerator.router,
       initialRoute: AppRoutes.splashScreen,
-      //theme: ThemeManager.lightTheme,
+      theme: ThemeManager.light,
+      themeMode: ThemeMode.light,
     );
   }
 }
