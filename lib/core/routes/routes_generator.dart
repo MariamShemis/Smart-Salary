@@ -1,0 +1,15 @@
+import 'package:flutter/cupertino.dart';
+import 'package:smart_salary/core/routes/app_routes.dart';
+import 'package:smart_salary/features/splash_screen/splash_screen.dart';
+
+abstract class RoutesGenerator {
+  static Route? router(RouteSettings settings) {
+    switch (settings.name) {
+      case AppRoutes.splashScreen :
+        {
+          return CupertinoPageRoute(builder: (context) => SplashScreen());
+        }
+    }
+    return null;
+  }
+}
