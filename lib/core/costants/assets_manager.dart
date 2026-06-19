@@ -13,5 +13,6 @@ class LottieAssets {
 
 class SvgAssets {
   static const String base = 'assets/svg/';
+  static const String googleIcon = '${base}google_icon.svg';
 }
 

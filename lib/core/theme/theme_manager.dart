@@ -34,6 +34,19 @@ class ThemeManager {
         ),
       ),
     ),
+    outlinedButtonTheme: OutlinedButtonThemeData(
+      style: OutlinedButton.styleFrom(
+        minimumSize: const Size(double.infinity, 52),
+        side: const BorderSide(color: Color(0xFFD1DCDA), width: 1),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(26),
+        ),
+        textStyle: const TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    ),
 
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
