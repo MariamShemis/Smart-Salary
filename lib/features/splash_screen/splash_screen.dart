@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:smart_salary/core/costants/assets_manager.dart';
+import 'package:smart_salary/core/costants/color_manager.dart';
 import 'package:smart_salary/core/routes/app_routes.dart';
+import 'package:smart_salary/l10n/app_localizations.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -87,10 +90,7 @@ class _SplashScreenState extends State<SplashScreen>
 
   @override
   Widget build(BuildContext context) {
-    const Color primaryDarkGreen = Color(0xFF005954);
-    const Color textBlack = Color(0xFF1A1A1A);
-    const Color textGrey = Color(0xFF708090);
-
+    AppLocalizations appLocalizations = AppLocalizations.of(context)!;
     return Scaffold(
       body: Container(
         width: double.infinity,
@@ -124,71 +124,72 @@ class _SplashScreenState extends State<SplashScreen>
                           alignment: Alignment.center,
                           transform: transformMatrix,
                           child: Container(
-                            width: 110,
-                            height: 110,
+                            width: 110.w,
+                            height: 110.h,
                             decoration: BoxDecoration(
-                              color: primaryDarkGreen,
-                              borderRadius: BorderRadius.circular(28),
+                              color: ColorManager.primaryColor,
+                              borderRadius: BorderRadius.circular(28.r),
                               boxShadow: [
                                 BoxShadow(
-                                  color: primaryDarkGreen.withOpacity(0.2),
-                                  blurRadius: 20,
+                                  color: ColorManager.primaryColor.withOpacity(
+                                    0.2,
+                                  ),
+                                  blurRadius: 20.r,
                                   offset: const Offset(0, 10),
                                 ),
                               ],
                             ),
-                            child: const Icon(
+                            child: Icon(
                               Icons.account_balance_wallet_rounded,
-                              size: 55,
+                              size: 55.sp,
                               color: Colors.white,
                             ),
                           ),
                         );
                       },
                     ),
-                    const SizedBox(height: 24),
-                    const Text(
-                      'Smart Salary',
+                    SizedBox(height: 24.h),
+                    Text(
+                      appLocalizations.smartSalary,
                       style: TextStyle(
-                        fontSize: 28,
+                        fontSize: 28.sp,
                         fontWeight: FontWeight.bold,
-                        color: textBlack,
+                        color: ColorManager.black,
                         letterSpacing: 0.5,
                       ),
                     ),
-                    const SizedBox(height: 8),
-                    const Text(
-                      'Precision Payroll & Financial Clarity',
+                    SizedBox(height: 8.h),
+                    Text(
+                      appLocalizations.precisionPayroll_FinancialClarity,
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        fontSize: 13,
+                        fontSize: 13.sp,
                         fontWeight: FontWeight.w500,
-                        color: textGrey,
+                        color: ColorManager.greyDark,
                       ),
                     ),
                     const Spacer(flex: 3),
                     SizedBox(
-                      width: 180,
+                      width: 180.w,
                       child: Column(
                         children: [
                           ClipRRect(
-                            borderRadius: BorderRadius.circular(2),
+                            borderRadius: BorderRadius.circular(2.r),
                             child: const LinearProgressIndicator(
                               backgroundColor: Color(0xFFD0E6E4),
                               valueColor: AlwaysStoppedAnimation<Color>(
-                                primaryDarkGreen,
+                                ColorManager.primaryColor,
                               ),
                               minHeight: 3,
                             ),
                           ),
-                          const SizedBox(height: 10),
-                          const Text(
-                            'INITIALIZING',
+                          SizedBox(height: 10.h),
+                          Text(
+                            appLocalizations.iNITIALIZING,
                             style: TextStyle(
                               fontSize: 10,
                               fontWeight: FontWeight.bold,
-                              color: primaryDarkGreen,
-                              letterSpacing: 4.0,
+                              color: ColorManager.primaryColor,
                             ),
                           ),
                         ],

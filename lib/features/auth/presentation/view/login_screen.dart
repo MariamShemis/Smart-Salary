@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:smart_salary/core/costants/assets_manager.dart';
 import 'package:smart_salary/core/costants/color_manager.dart';
+import 'package:smart_salary/core/routes/app_routes.dart';
 import 'package:smart_salary/core/widgets/main_gradient_background.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -172,7 +173,9 @@ class LoginScreen extends StatelessWidget {
 
                     // 7. زر تسجيل الدخول الأساسي (Login Button)
                     ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.pushReplacementNamed(context, AppRoutes.mainLayout);
+                      },
                       child: const Text(
                         'Login',
                         style: TextStyle(

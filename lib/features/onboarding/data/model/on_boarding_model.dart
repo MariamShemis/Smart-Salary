@@ -1,3 +1,6 @@
+import 'package:flutter/cupertino.dart';
+import 'package:smart_salary/l10n/app_localizations.dart';
+
 class OnboardingModel {
   final String title;
   final String description;
@@ -10,20 +13,26 @@ class OnboardingModel {
   });
 }
 
-const List<OnboardingModel> onboardingData = [
-  OnboardingModel(
-    title: 'Manage Your Salary Easily.',
-    description: 'Track your salary, bonuses, overtime and deductions in one place.',
-    imagePath: 'assets/images/onboarding1.png',
-  ),
-  OnboardingModel(
-    title: 'Track Working Hours',
-    description: 'Monitor attendance, overtime, late arrivals and early departures with precision and transparency.',
-    imagePath: 'assets/images/onboarding2.png',
-  ),
-  OnboardingModel(
-    title: 'Monthly Salary Insights',
-    description: 'View salary history, reports and analytics for every month. Stay informed about your financial progress.',
-    imagePath: 'assets/images/onboarding3.png',
-  ),
-];
+List<OnboardingModel> getOnboardingData(BuildContext context) {
+  AppLocalizations appLocalizations = AppLocalizations.of(context)!;
+  return [
+    OnboardingModel(
+      title: appLocalizations.manageYourSalaryEasily,
+      description: appLocalizations
+          .track_your_salary_bonuses_overtime_and_deductions_in_one_place,
+      imagePath: 'assets/images/onboarding1.png',
+    ),
+    OnboardingModel(
+      title: appLocalizations.trackWorkingHours,
+      description: appLocalizations
+          .monitor_attendance_overtime_late_arrivals_and_early_departures_with_precision_and_transparency,
+      imagePath: 'assets/images/onboarding2.png',
+    ),
+    OnboardingModel(
+      title: appLocalizations.monthlySalaryInsights,
+      description: appLocalizations
+          .view_salary_history_reports_and_analytics_for_every_month__Stay_informed_about_your_financial_progress,
+      imagePath: 'assets/images/onboarding3.png',
+    ),
+  ];
+}
