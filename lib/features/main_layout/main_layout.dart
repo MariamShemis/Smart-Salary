@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:smart_salary/core/costants/color_manager.dart';
 import 'package:smart_salary/core/widgets/main_gradient_background.dart';
+import 'package:smart_salary/features/main_layout/daily_reports/presentation/view/daily_reports.dart';
 import 'package:smart_salary/features/main_layout/home/presentation/view/home_screen.dart';
 
 class MainLayout extends StatefulWidget {
@@ -16,7 +17,7 @@ class _MainLayoutState extends State<MainLayout> {
 
   List<Widget> get _pages => [
     HomeScreen(),
-    const Center(child: Text('Reports Screen')),
+    DailyReports(),
     const Center(child: Text('Profile Screen')),
   ];
 

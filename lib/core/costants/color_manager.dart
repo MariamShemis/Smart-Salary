@@ -3,6 +3,8 @@ import 'package:flutter/cupertino.dart';
 abstract class ColorManager {
   static const Color primaryColor = Color(0xFF005C55);
   static const Color greyDark = Color(0xFF3E4947);
+  static const Color grey = Color(0xFFF1F4F3);
+  static const Color greyText = Color(0xFF6B7280);
   static const Color black = Color(0xFF181C1C);
   static const Color white = Color(0xFFFFFFFF);
   static const Color background = Color(0xFFE5E9E7);

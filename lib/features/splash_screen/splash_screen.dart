@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:smart_salary/core/costants/assets_manager.dart';
 import 'package:smart_salary/core/costants/color_manager.dart';
 import 'package:smart_salary/core/routes/app_routes.dart';
+import 'package:smart_salary/core/widgets/logo_app.dart';
 import 'package:smart_salary/l10n/app_localizations.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -123,28 +124,7 @@ class _SplashScreenState extends State<SplashScreen>
                         return Transform(
                           alignment: Alignment.center,
                           transform: transformMatrix,
-                          child: Container(
-                            width: 110.w,
-                            height: 110.h,
-                            decoration: BoxDecoration(
-                              color: ColorManager.primaryColor,
-                              borderRadius: BorderRadius.circular(28.r),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: ColorManager.primaryColor.withOpacity(
-                                    0.2,
-                                  ),
-                                  blurRadius: 20.r,
-                                  offset: const Offset(0, 10),
-                                ),
-                              ],
-                            ),
-                            child: Icon(
-                              Icons.account_balance_wallet_rounded,
-                              size: 55.sp,
-                              color: Colors.white,
-                            ),
-                          ),
+                          child: LogoApp(width: 110.w, height: 110.h, size: 55.sp,),
                         );
                       },
                     ),
