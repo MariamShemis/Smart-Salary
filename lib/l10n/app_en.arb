@@ -20,6 +20,7 @@
   "rememberMe": "Remember me",
   "forgetPassword": "Forget Password",
   "forget_password_": "Forget Password ?",
+  "pleaseEnterYourEmailToReceiveAConfirmationCodeToSetANewPassword": "Please enter your email to receive a confirmation code to set a new password",
   "orContinueWith": "Or continue with",
   "dontHaveAnAccount": "Don't have an account?",
   "alreadyHaveAccount": "Already have an account?",
@@ -30,6 +31,6 @@
   "login_with_Google": "Login with Google",
   "please_enter_your_email_to_receive_a_confirmation_code_to_set_a_new_password": "Please enter your email to receive a confirmation code to set a new password",
   "resetPassword": "Reset Password",
-  "skip": "Skip"
-
+  "skip": "Skip",
+  "login": "Login"
 }

@@ -221,6 +221,12 @@ abstract class AppLocalizations {
   /// **'Forget Password ?'**
   String get forget_password_;
 
+  /// No description provided for @pleaseEnterYourEmailToReceiveAConfirmationCodeToSetANewPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter your email to receive a confirmation code to set a new password'**
+  String get pleaseEnterYourEmailToReceiveAConfirmationCodeToSetANewPassword;
+
   /// No description provided for @orContinueWith.
   ///
   /// In en, this message translates to:
@@ -286,6 +292,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Skip'**
   String get skip;
+
+  /// No description provided for @login.
+  ///
+  /// In en, this message translates to:
+  /// **'Login'**
+  String get login;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

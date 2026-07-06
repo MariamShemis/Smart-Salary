@@ -72,6 +72,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get forget_password_ => 'هل نسيت كلمة المرور؟';
 
   @override
+  String get pleaseEnterYourEmailToReceiveAConfirmationCodeToSetANewPassword => 'أدخل بريدك الإلكتروني لتلقي رمز التحقق لتعيين كلمة مرور جديدة';
+
+  @override
   String get orContinueWith => 'أو المتابعة باستخدام';
 
   @override
@@ -93,7 +96,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get welcome_back_ => 'مرحباً بعودتك!';
 
   @override
-  String get login_with_Google => 'تسجيل الدخول باستخدام جوجل';
+  String get login_with_Google => 'تسجيل الدخول باستخدام Google';
 
   @override
   String get please_enter_your_email_to_receive_a_confirmation_code_to_set_a_new_password => 'يرجى إدخال بريدك الإلكتروني لاستلام رمز التأكيد وتعيين كلمة مرور جديدة';
@@ -103,4 +106,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get skip => 'تخطي';
+
+  @override
+  String get login => 'تسجيل الدخول';
 }

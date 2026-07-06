@@ -72,6 +72,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get forget_password_ => 'Forget Password ?';
 
   @override
+  String get pleaseEnterYourEmailToReceiveAConfirmationCodeToSetANewPassword => 'Please enter your email to receive a confirmation code to set a new password';
+
+  @override
   String get orContinueWith => 'Or continue with';
 
   @override
@@ -103,4 +106,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get skip => 'Skip';
+
+  @override
+  String get login => 'Login';
 }

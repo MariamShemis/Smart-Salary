@@ -20,7 +20,8 @@ class CustomAuthTextFormField extends StatefulWidget {
     this.isPassword = false,
     this.keyboardType = TextInputType.text,
     this.validator,
-    this.obscureInitialValue, this.suffixIcon,
+    this.obscureInitialValue,
+    this.suffixIcon,
   });
 
   @override
@@ -57,12 +58,17 @@ class _CustomAuthTextFormFieldState extends State<CustomAuthTextFormField> {
             controller: widget.controller,
             keyboardType: widget.keyboardType,
             obscureText: widget.isPassword ? _obscureText : false,
-            style: TextStyle(fontSize: 16.sp, color: Colors.black87),
+            style: TextStyle(
+              fontSize: 14.sp,
+              color: ColorManager.black,
+              fontWeight: FontWeight.bold,
+            ),
             decoration: InputDecoration(
               hintText: widget.hintText,
               hintStyle: TextStyle(
                 color: ColorManager.greyText,
-                fontSize: 16.sp,
+                fontWeight: FontWeight.w500,
+                fontSize: 14.sp,
               ),
               filled: true,
               fillColor: const Color(0xFFF3F5F5),
@@ -80,7 +86,10 @@ class _CustomAuthTextFormFieldState extends State<CustomAuthTextFormField> {
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(18.r),
-                borderSide: BorderSide(color: Colors.grey.shade400, width: 1.2),
+                borderSide: BorderSide(
+                  color: ColorManager.primaryColor,
+                  width: 1.2,
+                ),
               ),
               errorBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(18.r),
@@ -101,7 +110,7 @@ class _CustomAuthTextFormFieldState extends State<CustomAuthTextFormField> {
                         _obscureText
                             ? Icons.visibility_off_outlined
                             : Icons.visibility_outlined,
-                        color: Colors.grey,
+                        color: ColorManager.greyText,
                       ),
                     )
                   : Icon(widget.suffixIcon, color: Colors.grey),
