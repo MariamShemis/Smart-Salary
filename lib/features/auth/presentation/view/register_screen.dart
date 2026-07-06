@@ -1,30 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:smart_salary/core/costants/assets_manager.dart';
 import 'package:smart_salary/core/costants/color_manager.dart';
-import 'package:smart_salary/core/routes/app_routes.dart';
 import 'package:smart_salary/core/widgets/custom_auth_text_form_field.dart';
 import 'package:smart_salary/core/widgets/logo_app.dart';
 import 'package:smart_salary/core/widgets/main_gradient_background.dart';
 import 'package:smart_salary/features/auth/presentation/widgets/custom_login_outline_border.dart';
 import 'package:smart_salary/l10n/app_localizations.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class RegisterScreen extends StatefulWidget {
+  const RegisterScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<RegisterScreen> createState() => _RegisterScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _RegisterScreenState extends State<RegisterScreen> {
+  final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
 
   @override
   void dispose() {
+    _nameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
+    _confirmPasswordController.dispose();
     super.dispose();
   }
 
@@ -35,9 +37,13 @@ class _LoginScreenState extends State<LoginScreen> {
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.transparent,
-          elevation: 5,
+          elevation: 0,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back_ios, color: ColorManager.primaryColor),
+            onPressed: () => Navigator.pop(context),
+          ),
           title: Text(
-            appLocalizations.login,
+            appLocalizations.sign_up,
             style: TextStyle(
               color: ColorManager.primaryColor,
               fontSize: 20.sp,
@@ -81,6 +87,13 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     SizedBox(height: 25.h),
                     CustomAuthTextFormField(
+                      controller: _nameController,
+                      labelText: appLocalizations.name,
+                      hintText: appLocalizations.enterYourName,
+                      keyboardType: TextInputType.name,
+                    ),
+                    SizedBox(height: 20.h),
+                    CustomAuthTextFormField(
                       controller: _emailController,
                       labelText: appLocalizations.email,
                       hintText: appLocalizations.enterYourEmail,
@@ -94,68 +107,23 @@ class _LoginScreenState extends State<LoginScreen> {
                       keyboardType: TextInputType.visiblePassword,
                       isPassword: true,
                     ),
-                    SizedBox(height: 16.h),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            SizedBox(
-                              width: 24,
-                              height: 24,
-                              child: Checkbox(
-                                value: false,
-                                onChanged: (value) {},
-                                activeColor: ColorManager.primaryColor,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(4),
-                                ),
-                              ),
-                            ),
-                            SizedBox(width: 4.w),
-                            Text(
-                              appLocalizations.rememberMe,
-                              style: TextStyle(
-                                fontSize: 13.sp,
-                                color: ColorManager.greyDark,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ],
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            Navigator.pushNamed(context, AppRoutes.forgetPassword);
-                          },
-                          style: TextButton.styleFrom(
-                            padding: EdgeInsets.zero,
-                            minimumSize: Size.zero,
-                          ),
-                          child: Text(
-                            appLocalizations.forget_password_,
-                            style: TextStyle(
-                              fontSize: 13.sp,
-                              color: ColorManager.primaryColor,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ],
+                    SizedBox(height: 20.h),
+                    CustomAuthTextFormField(
+                      controller: _confirmPasswordController,
+                      labelText: appLocalizations.confirmPassword,
+                      hintText: '••••••••',
+                      keyboardType: TextInputType.visiblePassword,
+                      isPassword: true,
                     ),
-                    SizedBox(height: 18.h),
+                    SizedBox(height: 24.h),
                     ElevatedButton(
-                      onPressed: () {
-                        Navigator.pushReplacementNamed(
-                          context,
-                          AppRoutes.mainLayout,
-                        );
-                      },
-                      child: Text(appLocalizations.login),
+                      onPressed: () {},
+                      child: Text(appLocalizations.sign_up),
                     ),
                     SizedBox(height: 24.h),
                     Row(
                       children: [
-                        Expanded(
+                        const Expanded(
                           child: Divider(
                             color: Color(0xFFE5E9E7),
                             thickness: 1,
@@ -173,7 +141,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                           ),
                         ),
-                        Expanded(
+                        const Expanded(
                           child: Divider(
                             color: Color(0xFFE5E9E7),
                             thickness: 1,
@@ -182,24 +150,35 @@ class _LoginScreenState extends State<LoginScreen> {
                       ],
                     ),
                     SizedBox(height: 24.h),
-                    CustomLoginOutlineBorder(onPressed: (){} , isGoogleLogin: true, isGoogle: false,),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: CustomLoginOutlineBorder(onPressed: () {}),
+                        ),
+                        SizedBox(width: 16.w),
+                        Expanded(
+                          child: CustomLoginOutlineBorder(
+                            onPressed: () {},
+                            isGoogle: false,
+                          ),
+                        ),
+                      ],
+                    ),
                     SizedBox(height: 24.h),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          "${appLocalizations.dontHaveAnAccount}  ",
+                          "${appLocalizations.alreadyHaveAccount}  ",
                           style: TextStyle(
                             fontSize: 14.sp,
                             color: ColorManager.greyDark,
                           ),
                         ),
                         GestureDetector(
-                          onTap: () {
-                            Navigator.pushNamed(context, AppRoutes.register);
-                          },
+                          onTap: () => Navigator.pop(context),
                           child: Text(
-                            appLocalizations.register,
+                            appLocalizations.login,
                             style: TextStyle(
                               fontSize: 14.sp,
                               fontWeight: FontWeight.bold,

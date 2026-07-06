@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:smart_salary/core/costants/color_manager.dart';
 import 'package:smart_salary/core/routes/app_routes.dart';
 import 'package:smart_salary/core/widgets/main_gradient_background.dart';
 import 'package:smart_salary/features/onboarding/data/cubit/onboarding_cubit.dart';
 import 'package:smart_salary/features/onboarding/data/cubit/onboarding_state.dart';
 import 'package:smart_salary/features/onboarding/data/model/on_boarding_model.dart';
+import 'package:smart_salary/l10n/app_localizations.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class OnboardingScreen extends StatefulWidget {
@@ -26,6 +28,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    AppLocalizations appLocalizations = AppLocalizations.of(context)!;
     return BlocProvider(
       create: (_) => OnboardingCubit(),
       child: MainGradientBackground(
@@ -48,29 +51,30 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               builder: (context, state) {
                 final cubit = context.read<OnboardingCubit>();
                 final isLastPage =
-                    state.currentPageIndex == onboardingData.length - 1;
+                    state.currentPageIndex ==
+                    getOnboardingData(context).length - 1;
                 return Column(
                   children: [
                     Padding(
-                      padding: const EdgeInsets.symmetric(
+                      padding: REdgeInsets.symmetric(
                         horizontal: 24.0,
                         vertical: 8.0,
                       ),
                       child: Align(
                         alignment: Alignment.topRight,
                         child: isLastPage
-                            ? const SizedBox(height: 40)
+                            ? SizedBox(height: 40.h)
                             : TextButton(
                                 onPressed: () {
                                   cubit.updatePageIndex(
-                                    onboardingData.length - 1,
+                                    getOnboardingData(context).length - 1,
                                   );
                                 },
-                                child: const Text(
-                                  'Skip',
+                                child: Text(
+                                  appLocalizations.skip,
                                   style: TextStyle(
                                     color: ColorManager.greyDark,
-                                    fontSize: 16,
+                                    fontSize: 16.sp,
                                     fontWeight: FontWeight.w500,
                                   ),
                                 ),
@@ -81,14 +85,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       flex: 4,
                       child: PageView.builder(
                         controller: _pageController,
-                        itemCount: onboardingData.length,
+                        itemCount: getOnboardingData(context).length,
                         onPageChanged: (index) => cubit.updatePageIndex(index),
                         itemBuilder: (context, index) {
-                          final item = onboardingData[index];
+                          final item = getOnboardingData(context)[index];
                           return Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 32.0,
-                            ),
+                            padding: REdgeInsets.symmetric(horizontal: 32.0),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
@@ -103,25 +105,23 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                     ),
                                   ),
                                 ),
-                                const SizedBox(height: 40),
+                                SizedBox(height: 40.h),
                                 Text(
                                   item.title,
                                   textAlign: TextAlign.center,
-                                  style: const TextStyle(
-                                    fontSize: 26,
+                                  style: TextStyle(
+                                    fontSize: 26.sp,
                                     fontWeight: FontWeight.bold,
                                     color: ColorManager.black,
-                                    height: 1.3,
                                   ),
                                 ),
-                                const SizedBox(height: 16),
+                                SizedBox(height: 16.h),
                                 Text(
                                   item.description,
                                   textAlign: TextAlign.center,
-                                  style: const TextStyle(
-                                    fontSize: 14,
+                                  style: TextStyle(
+                                    fontSize: 14.sp,
                                     color: ColorManager.greyDark,
-                                    height: 1.5,
                                   ),
                                 ),
                               ],
@@ -137,7 +137,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         children: [
                           SmoothPageIndicator(
                             controller: _pageController,
-                            count: onboardingData.length,
+                            count: getOnboardingData(context).length,
                             effect: const ExpandingDotsEffect(
                               activeDotColor: ColorManager.primaryColor,
                               dotColor: ColorManager.background,
@@ -147,17 +147,20 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                               spacing: 8,
                             ),
                           ),
-                          const SizedBox(height: 32),
+                          SizedBox(height: 32.h),
                           Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 32.0,
-                            ),
+                            padding: REdgeInsets.symmetric(horizontal: 32.0),
                             child: ElevatedButton(
                               onPressed: () {
                                 if (isLastPage) {
-                                  Navigator.pushReplacementNamed(context, AppRoutes.login);
+                                  Navigator.pushReplacementNamed(
+                                    context,
+                                    AppRoutes.login,
+                                  );
                                 } else {
-                                  cubit.nextPage(onboardingData.length);
+                                  cubit.nextPage(
+                                    getOnboardingData(context).length,
+                                  );
                                 }
                               },
                               style: Theme.of(
@@ -168,14 +171,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                 children: [
                                   Text(
                                     isLastPage
-                                        ? 'Get Started'
-                                        : (state.currentPageIndex == 0
-                                              ? 'Next'
-                                              : 'Next Step'),
+                                        ? appLocalizations.getStarted
+                                        : appLocalizations.next,
                                   ),
-                                  const SizedBox(width: 8),
+                                  SizedBox(width: 8.w),
                                   if (!isLastPage)
-                                    const Icon(Icons.arrow_forward, size: 18),
+                                    Icon(Icons.arrow_forward, size: 18.sp),
                                 ],
                               ),
                             ),

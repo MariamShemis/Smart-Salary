@@ -25,13 +25,16 @@ class ThemeManager {
         backgroundColor: ColorManager.primaryColor,
         foregroundColor: ColorManager.white,
         minimumSize: const Size(double.infinity, 52),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(30),
-        ),
-        textStyle: const TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.bold,
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+        textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+      ),
+    ),
+    outlinedButtonTheme: OutlinedButtonThemeData(
+      style: OutlinedButton.styleFrom(
+        minimumSize: const Size(double.infinity, 52),
+        side: const BorderSide(color: Color(0xFFD1DCDA), width: 1),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(26)),
+        textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
       ),
     ),
 
@@ -49,17 +52,40 @@ class ThemeManager {
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(16),
-        borderSide: const BorderSide(color: ColorManager.primaryColor, width: 1.5),
+        borderSide: const BorderSide(
+          color: ColorManager.primaryColor,
+          width: 1.5,
+        ),
       ),
       hintStyle: const TextStyle(color: ColorManager.greyDark, fontSize: 14),
     ),
 
     textTheme: const TextTheme(
-      headlineLarge: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: ColorManager.black),
-      headlineMedium: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: ColorManager.black),
+      headlineLarge: TextStyle(
+        fontSize: 28,
+        fontWeight: FontWeight.bold,
+        color: ColorManager.black,
+      ),
+      headlineMedium: TextStyle(
+        fontSize: 24,
+        fontWeight: FontWeight.bold,
+        color: ColorManager.black,
+      ),
       bodyLarge: TextStyle(fontSize: 16, color: ColorManager.black),
       bodyMedium: TextStyle(fontSize: 14, color: ColorManager.greyDark),
-      labelLarge: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: ColorManager.white),
+      labelLarge: TextStyle(
+        fontSize: 16,
+        fontWeight: FontWeight.bold,
+        color: ColorManager.white,
+      ),
+    ),
+
+    bottomNavigationBarTheme: BottomNavigationBarThemeData(
+      elevation: 0,
+      backgroundColor: ColorManager.white,
+      type: BottomNavigationBarType.fixed,
+      showSelectedLabels: false,
+      showUnselectedLabels: false,
     ),
   );
 }
