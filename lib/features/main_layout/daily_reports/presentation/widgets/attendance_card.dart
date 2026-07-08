@@ -81,9 +81,9 @@ class _AttendanceCardState extends State<AttendanceCard> {
           const SizedBox(height: 25),
           _buildCalendar(),
           const SizedBox(height: 5),
-          const Divider(),
-          const SizedBox(height: 12),
-          _buildLegend(),
+          // const Divider(),
+          // const SizedBox(height: 12),
+          // _buildLegend(),
         ],
       ),
     );

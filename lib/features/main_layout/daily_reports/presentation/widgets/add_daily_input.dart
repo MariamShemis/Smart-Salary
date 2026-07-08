@@ -1,42 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:smart_salary/core/costants/color_manager.dart';
 
 class AddDailyInput extends StatefulWidget {
   final DateTime selectedDay;
 
-  const AddDailyInput({super.key, required this.selectedDay});
+  final TextEditingController overtimeController;
+  final TextEditingController bonusController;
+  final TextEditingController absentController;
+  final TextEditingController reportController;
+
+  final VoidCallback onSave;
+
+  const AddDailyInput({
+    super.key,
+    required this.selectedDay,
+    required this.overtimeController,
+    required this.bonusController,
+    required this.absentController,
+    required this.reportController,
+    required this.onSave,
+  });
 
   @override
   State<AddDailyInput> createState() => _AddDailyInputState();
 }
 
 class _AddDailyInputState extends State<AddDailyInput> {
-  final TextEditingController _overtimeController = TextEditingController();
-  final TextEditingController _bonusController = TextEditingController();
-  final TextEditingController _absentController = TextEditingController();
-  final TextEditingController _reportController = TextEditingController();
-
-  @override
-  void didUpdateWidget(covariant AddDailyInput oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (oldWidget.selectedDay != widget.selectedDay) {
-      _overtimeController.clear();
-      _bonusController.clear();
-      _absentController.clear();
-      _reportController.clear();
-    }
-  }
-
-  @override
-  void dispose() {
-    _overtimeController.dispose();
-    _bonusController.dispose();
-    _absentController.dispose();
-    _reportController.dispose();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     const primaryColor = Color(0xff004D40);
@@ -44,6 +35,7 @@ class _AddDailyInputState extends State<AddDailyInput> {
     const bonusColor = ColorManager.secondary;
     const absentColor = ColorManager.red;
     const reportsColor = Color(0xffFFB300);
+    const vacationColor = Color(0xffB45309);
 
     return Container(
       width: double.infinity,
@@ -66,7 +58,6 @@ class _AddDailyInputState extends State<AddDailyInput> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              // عرض التاريخ المختار ديناميكياً
               Text(
                 DateFormat('MMMM dd, yyyy').format(widget.selectedDay),
                 style: const TextStyle(
@@ -75,9 +66,11 @@ class _AddDailyInputState extends State<AddDailyInput> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              // عرض اسم اليوم ديناميكياً
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 14,
+                  vertical: 6,
+                ),
                 decoration: BoxDecoration(
                   color: const Color(0xFFE0F2F1),
                   borderRadius: BorderRadius.circular(12),
@@ -93,58 +86,64 @@ class _AddDailyInputState extends State<AddDailyInput> {
               ),
             ],
           ),
+
           const SizedBox(height: 24),
+
           _buildInputField(
-            controller: _overtimeController,
+            controller: widget.overtimeController,
             label: 'Over time',
             color: overTimeColor,
             hint: 'Enter hours (number)',
             keyboardType: TextInputType.number,
           ),
+
           const SizedBox(height: 16),
+
           _buildInputField(
-            controller: _bonusController,
+            controller: widget.bonusController,
             label: 'Bonus',
             color: bonusColor,
             hint: 'Enter bonus (number)',
             keyboardType: TextInputType.number,
           ),
           const SizedBox(height: 16),
+
           _buildInputField(
-            controller: _absentController,
+            controller: widget.absentController,
             label: 'Absent',
             color: absentColor,
             hint: 'Enter days (number)',
             keyboardType: TextInputType.number,
           ),
+
           const SizedBox(height: 16),
+
           _buildInputField(
-            controller: _reportController,
+            controller: widget.reportController,
             label: 'Reports',
             color: reportsColor,
             hint: 'Type text report...',
-            isReport: true,
             keyboardType: TextInputType.text,
+            isReport: true,
             maxLines: 4,
           ),
-          const SizedBox(height: 28),
+
+          SizedBox(height: 28.h),
+
           SizedBox(
             width: double.infinity,
-            height: 54,
+            height: 54.h,
             child: ElevatedButton(
-              onPressed: () {
-                // هنا تقدري تستخدمي الحقول للحفظ:
-                // print(_overtimeController.text);
-              },
+              onPressed: widget.onSave,
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF2E7D32),
+                backgroundColor: ColorManager.primaryColor,
+                elevation: 0,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(24),
                 ),
-                elevation: 0,
               ),
               child: const Text(
-                'Save :-)',
+                'Save',
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 16,
@@ -167,7 +166,7 @@ class _AddDailyInputState extends State<AddDailyInput> {
     bool isReport = false,
     int maxLines = 1,
   }) {
-    final fieldDecoration = InputDecoration(
+    final decoration = InputDecoration(
       hintText: hint,
       hintStyle: const TextStyle(color: Colors.black38, fontSize: 13),
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -175,11 +174,11 @@ class _AddDailyInputState extends State<AddDailyInput> {
       fillColor: const Color(0xFFFAFAFA),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: const BorderSide(color: Color(0xFF004D40), width: 1),
+        borderSide: BorderSide(color: ColorManager.primaryColor),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: const BorderSide(color: Color(0xFF004D40), width: 1.8),
+        borderSide: BorderSide(color: ColorManager.primaryColor, width: 1.8),
       ),
     );
 
@@ -196,34 +195,30 @@ class _AddDailyInputState extends State<AddDailyInput> {
           Expanded(
             child: Text(
               label,
-              style: const TextStyle(
-                color: Colors.black87,
-                fontSize: 15,
-                fontWeight: FontWeight.w600,
-              ),
+              style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
             ),
           ),
         ],
       ),
     );
 
-    return isReport
-        ? Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        labelWidget,
-        const SizedBox(height: 12),
-        TextField(
-          controller: controller,
-          keyboardType: keyboardType,
-          maxLines: 4,
-          style: const TextStyle(fontSize: 14),
-          decoration: fieldDecoration,
-        ),
-      ],
-    )
-        : Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
+    if (isReport) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          labelWidget,
+          const SizedBox(height: 12),
+          TextField(
+            controller: controller,
+            keyboardType: keyboardType,
+            maxLines: maxLines,
+            decoration: decoration,
+          ),
+        ],
+      );
+    }
+
+    return Row(
       children: [
         labelWidget,
         Expanded(
@@ -231,8 +226,7 @@ class _AddDailyInputState extends State<AddDailyInput> {
             controller: controller,
             keyboardType: keyboardType,
             maxLines: maxLines,
-            style: const TextStyle(fontSize: 14),
-            decoration: fieldDecoration,
+            decoration: decoration,
           ),
         ),
       ],

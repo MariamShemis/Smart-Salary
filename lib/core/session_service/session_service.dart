@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SessionService {
@@ -31,7 +32,6 @@ class SessionService {
     required String otMultiplier,
     required String bonusDays,
     required String bonusValue,
-    required String vacationTotal,
     required String absentDays,
     required String deductAbsent,
     required String deductCustom,
@@ -45,7 +45,6 @@ class SessionService {
     await _prefs!.setString(_overtimeMultiplierKey, otMultiplier);
     await _prefs!.setString(_bonusDaysKey, bonusDays);
     await _prefs!.setString(_bonusValueKey, bonusValue);
-    await _prefs!.setString(_vacationTotalKey, vacationTotal);
     await _prefs!.setString(_absentDaysKey, absentDays);
     await _prefs!.setString(_deductionAbsentKey, deductAbsent);
     await _prefs!.setString(_deductionCustomKey, deductCustom);
@@ -62,7 +61,7 @@ class SessionService {
       'otMultiplier': _prefs!.getString(_overtimeMultiplierKey) ?? '',
       'bonusDays': _prefs!.getString(_bonusDaysKey) ?? '',
       'bonusValue': _prefs!.getString(_bonusValueKey) ?? '20',
-      'vacationTotal': _prefs!.getString(_vacationTotalKey) ?? '30',
+      'vacationTotal': '30',
       'absentDays': _prefs!.getString(_absentDaysKey) ?? '',
       'deductAbsent': _prefs!.getString(_deductionAbsentKey) ?? '',
       'deductCustom': _prefs!.getString(_deductionCustomKey) ?? '',
@@ -85,5 +84,116 @@ class SessionService {
     await _prefs!.remove(_deductionCustomKey);
     await _prefs!.remove(_rewardValueKey);
     await _prefs!.remove(_rewardMultiplierKey);
+  }
+  static Future<void> saveDailyInput({
+    required DateTime date,
+    required String overtime,
+    required String bonus,
+    required String absent,
+    required String report,
+  }) async {
+    await _ensureInitialized();
+
+    final key =
+        "daily_${date.year}_${date.month}_${date.day}";
+
+    final data = jsonEncode({
+      "overtime": overtime,
+      "bonus": bonus,
+      "absent": absent,
+      "report": report,
+    });
+
+    await _prefs!.setString(key, data);
+  }
+
+  static Future<Map<String, String>> loadDailyInput(
+      DateTime date) async {
+    await _ensureInitialized();
+
+    final key =
+        "daily_${date.year}_${date.month}_${date.day}";
+
+    final json = _prefs!.getString(key);
+
+    if (json == null) {
+      return {
+        "overtime": "",
+        "bonus": "",
+        "absent": "",
+        "report": "",
+      };
+    }
+
+    final data = jsonDecode(json);
+
+    return {
+      "overtime": data["overtime"] ?? "",
+      "bonus": data["bonus"] ?? "",
+      "absent": data["absent"] ?? "",
+      "report": data["report"] ?? "",
+    };
+  }
+
+  static Future<Map<String, double>> loadMonthlyTotals(
+      DateTime month) async {
+    await _ensureInitialized();
+
+    double overtime = 0;
+    double bonus = 0;
+    double absent = 0;
+
+    final daysInMonth =
+        DateTime(month.year, month.month + 1, 0).day;
+
+    for (int day = 1; day <= daysInMonth; day++) {
+      final key =
+          "daily_${month.year}_${month.month}_$day";
+
+      final json = _prefs!.getString(key);
+
+      if (json == null) continue;
+
+      final data = jsonDecode(json);
+
+      overtime +=
+          double.tryParse(data["overtime"] ?? "0") ?? 0;
+
+      bonus +=
+          double.tryParse(data["bonus"] ?? "0") ?? 0;
+
+      absent +=
+          double.tryParse(data["absent"] ?? "0") ?? 0;
+
+    }
+
+    return {
+      "overtime": overtime,
+      "bonus": bonus,
+      "absent": absent,
+    };
+  }
+  static Future<double> loadYearlyAbsent(DateTime date) async {
+    await _ensureInitialized();
+
+    double absent = 0;
+
+    for (int month = 1; month <= 12; month++) {
+      final daysInMonth = DateTime(date.year, month + 1, 0).day;
+
+      for (int day = 1; day <= daysInMonth; day++) {
+        final key = "daily_${date.year}_${month}_${day}";
+
+        final json = _prefs!.getString(key);
+
+        if (json == null) continue;
+
+        final data = jsonDecode(json);
+
+        absent += double.tryParse(data["absent"] ?? "0") ?? 0;
+      }
+    }
+
+    return absent;
   }
 }
