@@ -26,10 +26,43 @@ class _DailyReportsState extends State<DailyReports> {
     _reportController.dispose();
     super.dispose();
   }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _initialize();
+  }
+
   @override
   void initState() {
     super.initState();
-    _loadDailyReport();
+    _initialize();
+  }
+
+  Future<void> _initialize() async {
+    final selectedMonth = await SessionService.loadSelectedMonth();
+
+    _selectedDay = DateTime(
+      selectedMonth.year,
+      selectedMonth.month,
+      DateTime.now().day,
+    );
+
+    final lastDay = DateTime(
+      selectedMonth.year,
+      selectedMonth.month + 1,
+      0,
+    ).day;
+
+    if (_selectedDay.day > lastDay) {
+      _selectedDay = DateTime(selectedMonth.year, selectedMonth.month, lastDay);
+    }
+
+    await _loadDailyReport();
+
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   Future<void> _loadDailyReport() async {

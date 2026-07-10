@@ -59,40 +59,41 @@ class _SalaryCalculatorState extends State<SalaryCalculator> {
 
     _initialize();
   }
-  Future<void> _initialize() async {
-    await _loadSavedData();
-    await _loadMonthData(_selectedMonth);
-  }
 
-  Future<void> _loadSavedData() async {
+  Future<void> _initialize() async {
+    _selectedMonth = await SessionService.loadSelectedMonth();
+
     final savedData = await SessionService.loadSalaryInputs();
 
-    setState(() {
-      _basicSalaryController.text = savedData['basic']!;
-      _dailyCountDivisorController.text = savedData['divisor']!;
-      _overtimeDaysController.text = savedData['otDays']!;
-      _overtimeMultiplierController.text = savedData['otMultiplier']!;
-      _bonusDaysController.text = savedData['bonusDays']!;
-      _bonusValueController.text = savedData['bonusValue']!;
-      _absentDaysController.text = savedData['absentDays']!;
-      _deductionAbsentController.text = savedData['deductAbsent']!;
-      _deductionCustomController.text = savedData['deductCustom']!;
-      _rewardValueController.text = savedData['rewardValue']!;
-      _rewardMultiplierController.text = savedData['rewardMultiplier']!;
+    _basicSalaryController.text = savedData['basic']!;
+    _dailyCountDivisorController.text = savedData['divisor']!;
+    _bonusValueController.text = savedData['bonusValue']!;
+    _overtimeMultiplierController.text = savedData['otMultiplier']!;
 
-      _calculateSalary();
-    });
+    await _loadMonthData(_selectedMonth);
+
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   Future<void> _saveData() async {
     await SessionService.saveSalaryInputs(
       basic: _basicSalaryController.text,
       divisor: _dailyCountDivisorController.text,
-      otDays: _overtimeDaysController.text,
       otMultiplier: _overtimeMultiplierController.text,
-      bonusDays: _bonusDaysController.text,
       bonusValue: _bonusValueController.text,
-      absentDays: _absentDaysController.text,
+    );
+    await SessionService.saveSalaryResults(
+      totalSalary: _totalSalaryResult,
+      totalSalaryWithReward: _totalSalaryWithRewardResult,
+      overtimeMonth: _overtimeMonthResult,
+      bonusMonth: _bonusMonthResult,
+      deduction: _deductionResult,
+      vacationDays: _annualVacationResult,
+    );
+    await SessionService.saveMonthlySalaryData(
+      month: _selectedMonth,
       deductAbsent: _deductionAbsentController.text,
       deductCustom: _deductionCustomController.text,
       rewardValue: _rewardValueController.text,
@@ -112,68 +113,46 @@ class _SalaryCalculatorState extends State<SalaryCalculator> {
   void _calculateSalary() {
     setState(() {
       double basic = double.tryParse(_basicSalaryController.text) ?? 0.0;
-
       double divisor =
           double.tryParse(_dailyCountDivisorController.text) ?? 30.0;
-
       _dailyCountResult = divisor == 0 ? 0 : basic / divisor;
-
       double otDays = double.tryParse(_overtimeDaysController.text) ?? 0.0;
-
       double otMultiplier =
           double.tryParse(_overtimeMultiplierController.text) ?? 1.0;
-
       _overtimeMonthResult =
           (otDays * _dailyCountResult) + (otMultiplier * _dailyCountResult);
-
       double bonusDays = double.tryParse(_bonusDaysController.text) ?? 0.0;
-
       double bonusValue = double.tryParse(_bonusValueController.text) ?? 20.0;
-
       _bonusMonthResult = bonusDays * bonusValue;
-
       double deductAbsent =
           double.tryParse(_deductionAbsentController.text) ?? 0.0;
-
       double deductCustom =
           double.tryParse(_deductionCustomController.text) ?? 0.0;
-
       _deductionResult = deductAbsent + (deductCustom * _dailyCountResult);
-
       _totalSalaryResult =
           basic + _overtimeMonthResult + _bonusMonthResult - _deductionResult;
-
       double rewardValue = double.tryParse(_rewardValueController.text) ?? 0.0;
-
       double rewardMultiplier =
           double.tryParse(_rewardMultiplierController.text) ?? 0.0;
-
       _rewardResult = rewardValue + (basic * rewardMultiplier);
-
       _totalSalaryWithRewardResult = _totalSalaryResult + _rewardResult;
     });
   }
+
   Future<void> _loadMonthData(DateTime month) async {
     _selectedMonth = month;
-
     final totals = await SessionService.loadMonthlyTotals(month);
-
-    _overtimeDaysController.text =
-        totals["overtime"]!.toInt().toString();
-
-    _bonusDaysController.text =
-        totals["bonus"]!.toInt().toString();
-
-    _absentDaysController.text =
-        totals["absent"]!.toInt().toString();
-
-    final yearlyAbsent =
-    await SessionService.loadYearlyAbsent(month);
-
+    final monthData = await SessionService.loadMonthlySalaryData(month);
+    _overtimeDaysController.text = totals["overtime"]!.toInt().toString();
+    _bonusDaysController.text = totals["bonus"]!.toInt().toString();
+    _absentDaysController.text = totals["absent"]!.toInt().toString();
+    _deductionAbsentController.text = monthData["deductAbsent"]!;
+    _deductionCustomController.text = monthData["deductCustom"]!;
+    _rewardValueController.text = monthData["rewardValue"]!;
+    _rewardMultiplierController.text = monthData["rewardMultiplier"]!;
+    final yearlyAbsent = await SessionService.loadYearlyAbsent(month);
     _annualVacationResult = 30 - yearlyAbsent;
-
     _calculateSalary();
-
     setState(() {});
   }
 
@@ -204,7 +183,11 @@ class _SalaryCalculatorState extends State<SalaryCalculator> {
           children: [
             SalaryHeader(
               selectedMonth: _selectedMonth,
-              onMonthChanged: _loadMonthData,
+              onMonthChanged: (month) async {
+                await SessionService.saveSelectedMonth(month);
+                await _saveData();
+                await _loadMonthData(month);
+              },
             ),
             SizedBox(height: 20.h),
             SalaryCard(

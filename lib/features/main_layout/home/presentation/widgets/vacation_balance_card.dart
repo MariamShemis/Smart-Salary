@@ -3,10 +3,19 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:smart_salary/core/costants/color_manager.dart';
 
 class VacationBalanceCard extends StatelessWidget {
-  const VacationBalanceCard({super.key});
+  const VacationBalanceCard({
+    super.key,
+    required this.remainingDays,
+  });
+
+  final double remainingDays;
 
   @override
   Widget build(BuildContext context) {
+    const double totalDays = 30;
+
+    final progress = (remainingDays / totalDays).clamp(0.0, 1.0);
+
     return Container(
       width: double.infinity,
       padding: REdgeInsets.symmetric(horizontal: 20, vertical: 18),
@@ -15,7 +24,7 @@ class VacationBalanceCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(20.r),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.01),
+            color: Colors.black.withOpacity(.01),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -24,53 +33,35 @@ class VacationBalanceCard extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          // النصوص والزر جهة اليسار
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              SizedBox(height: 10.h),
+
               Text(
-                'Vacation Balance',
+                "Vacation Balance",
                 style: TextStyle(
                   color: const Color(0xFF1A1A1A),
-                  fontSize: 16.sp,
+                  fontSize: 18.sp,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              SizedBox(height: 4.h),
+
+              SizedBox(height: 10.h),
+
               Text(
-                '14 days remaining from 25',
+                "${remainingDays.toInt()} days remaining from $totalDays",
                 style: TextStyle(
-                  color: ColorManager.greyDark.withOpacity(0.6),
+                  color: ColorManager.greyDark.withOpacity(.6),
                   fontSize: 12.sp,
                   fontWeight: FontWeight.w500,
                 ),
               ),
+
               SizedBox(height: 16.h),
-              // زر طلب الإجازة التفاعلي
-              InkWell(
-                onTap: () {},
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      'Request Leave ',
-                      style: TextStyle(
-                        color: ColorManager.primaryColor,
-                        fontSize: 15.sp,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Icon(
-                      Icons.arrow_forward_ios_rounded,
-                      color: ColorManager.primaryColor,
-                      size: 12.sp,
-                    ),
-                  ],
-                ),
-              ),
             ],
           ),
-          // المؤشر الدائري جهة اليمين ومكتوب بداخله الرقم
+
           Stack(
             alignment: Alignment.center,
             children: [
@@ -78,28 +69,32 @@ class VacationBalanceCard extends StatelessWidget {
                 width: 65.w,
                 height: 65.w,
                 child: CircularProgressIndicator(
-                  value: 14 / 25, // النسبة المحسوبة للأيام المتبقية
+                  value: progress,
                   strokeWidth: 7.w,
-                  backgroundColor: const Color(0xFFE0E0E0).withOpacity(0.5),
-                  valueColor: AlwaysStoppedAnimation<Color>(ColorManager.primaryColor),
+                  backgroundColor:
+                  const Color(0xFFE0E0E0).withOpacity(.5),
+                  valueColor: AlwaysStoppedAnimation(
+                    ColorManager.primaryColor,
+                  ),
                 ),
               ),
+
               Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    '14',
+                    remainingDays.toInt().toString(),
                     style: TextStyle(
                       color: ColorManager.primaryColor,
                       fontSize: 18.sp,
                       fontWeight: FontWeight.bold,
-                      height: 1.1,
                     ),
                   ),
+
                   Text(
-                    'DAYS',
+                    "DAYS",
                     style: TextStyle(
-                      color: ColorManager.greyDark.withOpacity(0.7),
+                      color: ColorManager.greyDark.withOpacity(.7),
                       fontSize: 8.sp,
                       fontWeight: FontWeight.bold,
                     ),

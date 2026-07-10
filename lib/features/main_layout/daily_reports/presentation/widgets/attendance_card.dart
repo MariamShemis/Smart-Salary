@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:smart_salary/core/costants/color_manager.dart';
+import 'package:smart_salary/core/helper/salary_period_helper.dart';
+import 'package:smart_salary/core/session_service/session_service.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class AttendanceCard extends StatefulWidget {
@@ -23,41 +25,58 @@ class _AttendanceCardState extends State<AttendanceCard> {
   static const bonusColor = ColorManager.secondary;
   static const absentColor = ColorManager.red;
   static const reportsColor = Color(0xffFFB300);
-
   late DateTime _focusedDay;
 
-  final Map<DateTime, List<Color>> attendance = {
-    DateTime(2026, 7, 1): [absentColor],
-    DateTime(2026, 7, 2): [overTimeColor],
-    DateTime(2026, 7, 3): [overTimeColor],
-    DateTime(2026, 7, 4): [overTimeColor],
-    DateTime(2026, 7, 5): [overTimeColor, bonusColor],
-    DateTime(2026, 7, 6): [overTimeColor],
-    DateTime(2026, 7, 9): [absentColor],
-    DateTime(2026, 7, 10): [bonusColor],
-    DateTime(2026, 7, 11): [bonusColor],
-    DateTime(2026, 7, 12): [overTimeColor, absentColor],
-    DateTime(2026, 7, 13): [absentColor],
-    DateTime(2026, 7, 16): [overTimeColor],
-    DateTime(2026, 7, 17): [overTimeColor],
-    DateTime(2026, 7, 18): [overTimeColor],
-    DateTime(2026, 7, 19): [overTimeColor],
-    DateTime(2026, 7, 20): [overTimeColor],
-  };
+  Map<DateTime, List<Color>> attendance = {};
+
+  Future<void> _loadAttendance() async {
+    attendance.clear();
+    final days = SalaryPeriodHelper.getAllDays(_focusedDay);
+    for (final date in days) {
+      final data = await SessionService.loadDailyInput(date);
+      List<Color> colors = [];
+      if ((double.tryParse(data["overtime"] ?? "0") ?? 0) > 0) {
+        colors.add(overTimeColor);
+      }
+      if ((double.tryParse(data["bonus"] ?? "0") ?? 0) > 0) {
+        colors.add(bonusColor);
+      }
+      if ((double.tryParse(data["absent"] ?? "0") ?? 0) > 0) {
+        colors.add(absentColor);
+      }
+      if ((data["report"] ?? "").trim().isNotEmpty) {
+        colors.add(reportsColor);
+      }
+      if (colors.isNotEmpty) {
+        attendance[DateTime(date.year, date.month, date.day)] = colors;
+      }
+    }
+    setState(() {});
+  }
 
   @override
   void initState() {
     super.initState();
     _focusedDay = widget.selectedDay;
+    _loadAttendance();
   }
 
   List<Color> _markers(DateTime day) {
     return attendance.entries
         .firstWhere(
           (e) => isSameDay(e.key, day),
-      orElse: () => MapEntry(day, []),
-    )
+          orElse: () => MapEntry(day, []),
+        )
         .value;
+  }
+
+  @override
+  void didUpdateWidget(covariant AttendanceCard oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (!isSameDay(oldWidget.selectedDay, widget.selectedDay)) {
+      _focusedDay = widget.selectedDay;
+      _loadAttendance();
+    }
   }
 
   @override
@@ -108,32 +127,23 @@ class _AttendanceCardState extends State<AttendanceCard> {
             const SizedBox(height: 4),
             Text(
               DateFormat.yMMMM().format(_focusedDay),
-              style: const TextStyle(
-                fontSize: 28,
-                fontWeight: FontWeight.bold,
-              ),
+              style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
             ),
           ],
         ),
         Row(
           children: [
-            _navButton(
-              Icons.chevron_left,
-                  () {
-                setState(() {
-                  _focusedDay = DateTime(_focusedDay.year, _focusedDay.month - 1);
-                });
-              },
-            ),
+            _navButton(Icons.chevron_left, () async {
+              _focusedDay = DateTime(_focusedDay.year, _focusedDay.month - 1);
+              await _loadAttendance();
+              setState(() {});
+            }),
             const SizedBox(width: 10),
-            _navButton(
-              Icons.chevron_right,
-                  () {
-                setState(() {
-                  _focusedDay = DateTime(_focusedDay.year, _focusedDay.month + 1);
-                });
-              },
-            ),
+            _navButton(Icons.chevron_right, () async {
+              _focusedDay = DateTime(_focusedDay.year, _focusedDay.month + 1);
+              await _loadAttendance();
+              setState(() {});
+            }),
           ],
         ),
       ],
@@ -181,8 +191,14 @@ class _AttendanceCardState extends State<AttendanceCard> {
         cellMargin: EdgeInsets.all(4),
       ),
       daysOfWeekStyle: const DaysOfWeekStyle(
-        weekdayStyle: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold),
-        weekendStyle: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold),
+        weekdayStyle: TextStyle(
+          color: Colors.grey,
+          fontWeight: FontWeight.bold,
+        ),
+        weekendStyle: TextStyle(
+          color: Colors.grey,
+          fontWeight: FontWeight.bold,
+        ),
       ),
       calendarBuilders: CalendarBuilders(
         defaultBuilder: (context, day, focusedDay) {
@@ -190,7 +206,9 @@ class _AttendanceCardState extends State<AttendanceCard> {
             child: Text(
               "${day.day}",
               style: TextStyle(
-                color: day.month == _focusedDay.month ? Colors.black87 : Colors.black26,
+                color: day.month == _focusedDay.month
+                    ? Colors.black87
+                    : Colors.black26,
               ),
             ),
           );
@@ -205,7 +223,10 @@ class _AttendanceCardState extends State<AttendanceCard> {
             child: Center(
               child: Text(
                 "${day.day}",
-                style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           );
@@ -222,7 +243,10 @@ class _AttendanceCardState extends State<AttendanceCard> {
                   margin: const EdgeInsets.symmetric(horizontal: 1),
                   width: 5,
                   height: 5,
-                  decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+                  decoration: BoxDecoration(
+                    color: color,
+                    shape: BoxShape.circle,
+                  ),
                 );
               }).toList(),
             ),
@@ -253,7 +277,10 @@ class _AttendanceCardState extends State<AttendanceCard> {
           decoration: BoxDecoration(color: color, shape: BoxShape.circle),
         ),
         const SizedBox(width: 5),
-        Text(title, style: const TextStyle(fontSize: 12, color: Colors.black54)),
+        Text(
+          title,
+          style: const TextStyle(fontSize: 12, color: Colors.black54),
+        ),
       ],
     );
   }

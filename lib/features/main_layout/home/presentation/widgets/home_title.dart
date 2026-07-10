@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/intl.dart';
 import 'package:smart_salary/core/costants/color_manager.dart';
 
 class HomeTitle extends StatelessWidget {
@@ -7,26 +8,38 @@ class HomeTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final now = DateTime.now();
+    final dayName = DateFormat('EEEE').format(now);
+    final fullDate = DateFormat('dd MMM yyyy').format(now);
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Card(
           shape: RoundedRectangleBorder(
-            side: BorderSide(color: ColorManager.secondary, width: 2.w),
+            side: BorderSide(
+              color: ColorManager.secondary,
+              width: 2.w,
+            ),
             borderRadius: BorderRadius.circular(50.r),
           ),
           child: CircleAvatar(
             radius: 28.r,
             backgroundColor: ColorManager.primaryColor,
-            child: Icon(Icons.person, color: ColorManager.secondary , size: 25..sp,),
+            child: Icon(
+              Icons.person,
+              color: ColorManager.secondary,
+              size: 25.sp,
+            ),
           ),
         ),
+
         SizedBox(width: 10.w),
+
         Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "Welcome back ✨ ",
+              "Welcome back ✨",
               style: TextStyle(
                 fontSize: 14.sp,
                 color: ColorManager.greyDark,
@@ -42,6 +55,31 @@ class HomeTitle extends StatelessWidget {
               ),
             ),
           ],
+        ),
+        const Spacer(),
+        Container(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text(
+                dayName,
+                style: TextStyle(
+                  fontSize: 13.sp,
+                  fontWeight: FontWeight.w500,
+                  color: ColorManager.greyDark,
+                ),
+              ),
+              Text(
+                fullDate,
+                style: TextStyle(
+                  fontSize: 16.sp,
+                  color: ColorManager.primaryColor,
+                  fontWeight: FontWeight.bold,
+
+                ),
+              ),
+            ],
+          ),
         ),
       ],
     );
