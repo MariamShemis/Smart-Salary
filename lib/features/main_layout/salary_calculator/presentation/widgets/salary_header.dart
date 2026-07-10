@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:month_year_picker/month_year_picker.dart';
 import 'package:smart_salary/core/costants/color_manager.dart';
+import 'package:smart_salary/l10n/app_localizations.dart';
 
 class SalaryHeader extends StatelessWidget {
   final DateTime selectedMonth;
@@ -52,49 +53,50 @@ class SalaryHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    AppLocalizations appLocalizations = AppLocalizations.of(context)!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          "Salary Calculator",
+        Text(
+          appLocalizations.salaryCalculator,
           style: TextStyle(
-            fontSize: 28,
+            fontSize: 25.sp,
             fontWeight: FontWeight.bold,
-            color: Color(0xff004D40),
+            color: ColorManager.primaryColor,
           ),
         ),
         SizedBox(height: 16.h),
         GestureDetector(
           onTap: () => _pickMonthYear(context),
           child: Container(
-            padding: const EdgeInsets.symmetric(
+            padding: REdgeInsets.symmetric(
               horizontal: 16,
               vertical: 12,
             ),
             decoration: BoxDecoration(
               color: ColorManager.white,
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(16.r),
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Icon(
+                Icon(
                   Icons.calendar_month,
-                  color: Color(0xff004D40),
+                  color: ColorManager.primaryColor,
                 ),
-                const SizedBox(width: 8),
+                SizedBox(width: 8.w),
                 Text(
                   DateFormat("MMM yyyy").format(selectedMonth),
-                  style: const TextStyle(
-                    fontSize: 16,
+                  style: TextStyle(
+                    fontSize: 16.sp,
                     fontWeight: FontWeight.w600,
-                    color: Color(0xff004D40),
+                    color: ColorManager.primaryColor,
                   ),
                 ),
-                const SizedBox(width: 6),
-                const Icon(
+                SizedBox(width: 6.w),
+                Icon(
                   Icons.keyboard_arrow_down_rounded,
-                  color: Color(0xff004D40),
+                  color: ColorManager.primaryColor,
                 ),
               ],
             ),

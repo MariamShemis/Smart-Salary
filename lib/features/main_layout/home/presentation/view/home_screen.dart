@@ -24,11 +24,18 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     _loadHomeData();
   }
+  @override
+  void didUpdateWidget(covariant HomeScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    _loadHomeData();
+  }
 
   Future<void> _loadHomeData() async {
     _selectedMonth = await SessionService.loadSelectedMonth();
 
     homeData = await SessionService.loadSalaryResults(_selectedMonth);
+
+    print(homeData);
 
     if (mounted) {
       setState(() {});
@@ -46,7 +53,6 @@ class _HomeScreenState extends State<HomeScreen> {
       child: RefreshIndicator(
         onRefresh: _loadHomeData,
         child: SingleChildScrollView(
-          physics: const AlwaysScrollableScrollPhysics(),
           child: Padding(
             padding: REdgeInsets.all(16),
             child: Column(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:smart_salary/core/costants/color_manager.dart';
+import 'package:smart_salary/l10n/app_localizations.dart';
 
 class VacationBalanceCard extends StatelessWidget {
   const VacationBalanceCard({
@@ -12,10 +13,9 @@ class VacationBalanceCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    AppLocalizations appLocalizations = AppLocalizations.of(context)!;
     const double totalDays = 30;
-
     final progress = (remainingDays / totalDays).clamp(0.0, 1.0);
-
     return Container(
       width: double.infinity,
       padding: REdgeInsets.symmetric(horizontal: 20, vertical: 18),
@@ -37,20 +37,17 @@ class VacationBalanceCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(height: 10.h),
-
               Text(
-                "Vacation Balance",
+                appLocalizations.vacationBalance,
                 style: TextStyle(
                   color: const Color(0xFF1A1A1A),
                   fontSize: 18.sp,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-
               SizedBox(height: 10.h),
-
               Text(
-                "${remainingDays.toInt()} days remaining from $totalDays",
+                "${remainingDays.toInt()} ${appLocalizations.days_remaining_from} $totalDays",
                 style: TextStyle(
                   color: ColorManager.greyDark.withOpacity(.6),
                   fontSize: 12.sp,
@@ -92,7 +89,7 @@ class VacationBalanceCard extends StatelessWidget {
                   ),
 
                   Text(
-                    "DAYS",
+                    appLocalizations.days.toUpperCase(),
                     style: TextStyle(
                       color: ColorManager.greyDark.withOpacity(.7),
                       fontSize: 8.sp,

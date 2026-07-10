@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:smart_salary/core/costants/color_manager.dart';
 import 'package:smart_salary/core/helper/salary_period_helper.dart';
 import 'package:smart_salary/core/session_service/session_service.dart';
+import 'package:smart_salary/l10n/app_localizations.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class AttendanceCard extends StatefulWidget {
@@ -82,10 +84,10 @@ class _AttendanceCardState extends State<AttendanceCard> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(24),
+      padding: REdgeInsets.all(24),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(30),
+        borderRadius: BorderRadius.circular(30.r),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(.05),
@@ -97,9 +99,9 @@ class _AttendanceCardState extends State<AttendanceCard> {
       child: Column(
         children: [
           _buildHeader(),
-          const SizedBox(height: 25),
+          SizedBox(height: 25.h),
           _buildCalendar(),
-          const SizedBox(height: 5),
+          SizedBox(height: 5.h),
           // const Divider(),
           // const SizedBox(height: 12),
           // _buildLegend(),
@@ -109,27 +111,32 @@ class _AttendanceCardState extends State<AttendanceCard> {
   }
 
   Widget _buildHeader() {
+    AppLocalizations appLocalizations = AppLocalizations.of(context)!;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              "ATTENDANCE",
-              style: TextStyle(
-                color: primaryColor,
-                fontSize: 13,
-                fontWeight: FontWeight.bold,
-                letterSpacing: 1,
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                appLocalizations.attendance.toUpperCase(),
+                style: TextStyle(
+                  color: primaryColor,
+                  fontSize: 13.sp,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 1,
+                ),
               ),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              DateFormat.yMMMM().format(_focusedDay),
-              style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
-            ),
-          ],
+              SizedBox(height: 4.h),
+              Text(
+                DateFormat.yMMMM().format(_focusedDay),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(fontSize: 28.sp, fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
         ),
         Row(
           children: [
@@ -138,7 +145,7 @@ class _AttendanceCardState extends State<AttendanceCard> {
               await _loadAttendance();
               setState(() {});
             }),
-            const SizedBox(width: 10),
+            SizedBox(width: 10.w),
             _navButton(Icons.chevron_right, () async {
               _focusedDay = DateTime(_focusedDay.year, _focusedDay.month + 1);
               await _loadAttendance();
@@ -153,10 +160,10 @@ class _AttendanceCardState extends State<AttendanceCard> {
   Widget _navButton(IconData icon, VoidCallback onTap) {
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(30),
+      borderRadius: BorderRadius.circular(30.r),
       child: Container(
-        width: 42,
-        height: 42,
+        width: 42.w,
+        height: 42.h,
         decoration: const BoxDecoration(
           color: Color(0xffF4F4F4),
           shape: BoxShape.circle,
@@ -177,18 +184,18 @@ class _AttendanceCardState extends State<AttendanceCard> {
         setState(() {
           _focusedDay = focusedDay;
         });
-        widget.onDayChanged(selectedDay); // نمرر اليوم الجديد للأب
+        widget.onDayChanged(selectedDay);
       },
       onPageChanged: (focusedDay) {
         setState(() {
           _focusedDay = focusedDay;
         });
       },
-      calendarStyle: const CalendarStyle(
+      calendarStyle: CalendarStyle(
         markersMaxCount: 3,
         canMarkersOverflow: false,
-        markerMargin: EdgeInsets.only(top: 4),
-        cellMargin: EdgeInsets.all(4),
+        markerMargin: REdgeInsets.only(top: 4),
+        cellMargin: REdgeInsets.all(4),
       ),
       daysOfWeekStyle: const DaysOfWeekStyle(
         weekdayStyle: TextStyle(
@@ -215,10 +222,10 @@ class _AttendanceCardState extends State<AttendanceCard> {
         },
         selectedBuilder: (context, day, focusedDay) {
           return Container(
-            margin: const EdgeInsets.all(6),
+            margin: REdgeInsets.all(6),
             decoration: BoxDecoration(
               color: primaryColor,
-              borderRadius: BorderRadius.circular(14),
+              borderRadius: BorderRadius.circular(14.r),
             ),
             child: Center(
               child: Text(
@@ -235,14 +242,14 @@ class _AttendanceCardState extends State<AttendanceCard> {
           final dots = _markers(day);
           if (dots.isEmpty) return const SizedBox();
           return Positioned(
-            bottom: 4,
+            bottom: 4.h,
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: dots.map((color) {
                 return Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 1),
-                  width: 5,
-                  height: 5,
+                  margin: REdgeInsets.symmetric(horizontal: 1),
+                  width: 5.w,
+                  height: 5.h,
                   decoration: BoxDecoration(
                     color: color,
                     shape: BoxShape.circle,
@@ -257,13 +264,14 @@ class _AttendanceCardState extends State<AttendanceCard> {
   }
 
   Widget _buildLegend() {
+    AppLocalizations appLocalizations = AppLocalizations.of(context)!;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        _legend("Over time", overTimeColor),
-        _legend("Bonus", bonusColor),
-        _legend("Absent", absentColor),
-        _legend("Reports", reportsColor),
+        _legend(appLocalizations.over_time, overTimeColor),
+        _legend(appLocalizations.bonus, bonusColor),
+        _legend(appLocalizations.absent, absentColor),
+        _legend(appLocalizations.reports, reportsColor),
       ],
     );
   }
@@ -272,14 +280,14 @@ class _AttendanceCardState extends State<AttendanceCard> {
     return Row(
       children: [
         Container(
-          width: 8,
-          height: 8,
+          width: 8.w,
+          height: 8.h,
           decoration: BoxDecoration(color: color, shape: BoxShape.circle),
         ),
-        const SizedBox(width: 5),
+        SizedBox(width: 5.w),
         Text(
           title,
-          style: const TextStyle(fontSize: 12, color: Colors.black54),
+          style: TextStyle(fontSize: 12.sp, color: Colors.black54),
         ),
       ],
     );

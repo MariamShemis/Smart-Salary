@@ -21,15 +21,15 @@ class SummaryItem extends StatelessWidget {
         ?isTitle
             ? Text(
                 title ?? "",
-                style: const TextStyle(
-                  fontSize: 16,
+                style: TextStyle(
+                  fontSize: 16.sp,
                   fontWeight: FontWeight.w600,
                 ),
               )
             : null,
         SizedBox(width: isTitle ? 20.w : 0.w),
         Container(
-          width: isTitle ?65.w : 30.w,
+          width: isTitle ?65.w : 40.w,
           height: 38.h,
           decoration: BoxDecoration(
             color: const Color(0xFFF5F5F5),
@@ -39,6 +39,8 @@ class SummaryItem extends StatelessWidget {
           child: Center(
             child: Text(
               value,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
               style: TextStyle(
                 fontSize: 14.sp,
                 fontWeight: FontWeight.bold,

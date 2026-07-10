@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:smart_salary/core/costants/color_manager.dart';
+import 'package:smart_salary/l10n/app_localizations.dart';
 
 class NetSalaryCard extends StatefulWidget {
   final double totalSalary;
@@ -10,7 +11,8 @@ class NetSalaryCard extends StatefulWidget {
   const NetSalaryCard({
     super.key,
     required this.totalSalary,
-    required this.totalSalaryWithReward, required this.month,
+    required this.totalSalaryWithReward,
+    required this.month,
   });
 
   @override
@@ -22,10 +24,10 @@ class _NetSalaryCardState extends State<NetSalaryCard> {
 
   @override
   Widget build(BuildContext context) {
+    AppLocalizations appLocalizations = AppLocalizations.of(context)!;
     final salary = _showReward
         ? widget.totalSalaryWithReward
         : widget.totalSalary;
-
     final parts = salary.toStringAsFixed(2).split(".");
 
     return Container(
@@ -71,7 +73,7 @@ class _NetSalaryCardState extends State<NetSalaryCard> {
                       borderRadius: BorderRadius.circular(12.r),
                     ),
                     child: Text(
-                        widget.month.toUpperCase(),
+                      widget.month.toUpperCase(),
                       style: TextStyle(
                         color: ColorManager.primaryColor.withOpacity(.8),
                         fontSize: 11.sp,
@@ -85,9 +87,7 @@ class _NetSalaryCardState extends State<NetSalaryCard> {
                   ),
                 ],
               ),
-
               SizedBox(height: 12.h),
-
               AnimatedSwitcher(
                 duration: const Duration(milliseconds: 300),
                 child: Column(
@@ -96,17 +96,15 @@ class _NetSalaryCardState extends State<NetSalaryCard> {
                   children: [
                     Text(
                       _showReward
-                          ? "NET SALARY WITH REWARD"
-                          : "NET SALARY",
+                          ? appLocalizations.nET_SALARY_WITH_REWARD
+                          : appLocalizations.nET_SALARY,
                       style: TextStyle(
                         color: ColorManager.greyDark.withOpacity(.6),
                         fontSize: 13.sp,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-
                     SizedBox(height: 4.h),
-
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.baseline,
                       textBaseline: TextBaseline.alphabetic,
@@ -128,7 +126,7 @@ class _NetSalaryCardState extends State<NetSalaryCard> {
                           ),
                         ),
                         Text(
-                          "LE",
+                          appLocalizations.lE,
                           style: TextStyle(
                             color: ColorManager.primaryColor,
                             fontSize: 28.sp,
@@ -142,7 +140,6 @@ class _NetSalaryCardState extends State<NetSalaryCard> {
               ),
             ],
           ),
-
           IconButton(
             onPressed: () {
               setState(() {

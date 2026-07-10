@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:smart_salary/features/main_layout/salary_calculator/presentation/widgets/formula_row.dart';
 import 'package:smart_salary/features/main_layout/salary_calculator/presentation/widgets/row_text_field.dart';
 import 'package:smart_salary/features/main_layout/salary_calculator/presentation/widgets/summary_item.dart';
+import 'package:smart_salary/l10n/app_localizations.dart';
 
 class SalaryCard extends StatelessWidget {
   const SalaryCard({
@@ -41,8 +42,9 @@ class SalaryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    AppLocalizations appLocalizations = AppLocalizations.of(context)!;
     return Container(
-      padding: EdgeInsets.all(20.w),
+      padding: REdgeInsets.all(20.w),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(24.r),
@@ -57,8 +59,8 @@ class SalaryCard extends StatelessWidget {
       child: Column(
         children: [
           RowTextField(
-            label: "Basic Salary",
-            hint: "Enter basic salary",
+            label: appLocalizations.basicSalary,
+            hint: appLocalizations.enter_basic_salary,
             controller: basicSalaryController,
             onChanged: onChanged,
           ),
@@ -69,8 +71,8 @@ class SalaryCard extends StatelessWidget {
           ),
           SizedBox(height: 20.h),
           FormulaRow(
-            label: "Daily Count",
-            prefixText: "Basic /",
+            label: appLocalizations.dailyCount,
+            prefixText: "${appLocalizations.basic} /",
             controller: dailyCountDivisorController,
             hint: "30",
             resultValue: dailyCountResult,
@@ -78,15 +80,15 @@ class SalaryCard extends StatelessWidget {
           ),
           SizedBox(height: 22.h),
           SummaryItem(
-            title: "Overtime Days",
+            title: appLocalizations.overtimeDays,
             value: overtimeDaysController.text.isEmpty
                 ? "0"
                 : overtimeDaysController.text,
           ),
           SizedBox(height: 18.h),
           FormulaRow(
-            label: "Overtime Month",
-            prefixText: "OT Days +",
+            label: appLocalizations.overtimeMonth,
+            prefixText: "${appLocalizations.oT_Days} +",
             controller: overtimeMultiplierController,
             hint: "1",
             resultValue: overtimeMonthResult,
@@ -99,15 +101,15 @@ class SalaryCard extends StatelessWidget {
           ),
           SizedBox(height: 20.h),
           SummaryItem(
-            title: "Bonus Days",
+            title: appLocalizations.bonusDays,
             value: bonusDaysController.text.isEmpty
                 ? "0"
                 : bonusDaysController.text,
           ),
           SizedBox(height: 18.h),
           FormulaRow(
-            label: "Bonus Month",
-            prefixText: "Days ×",
+            label: appLocalizations.bonusMonth,
+            prefixText: "${appLocalizations.days} ×",
             controller: bonusValueController,
             hint: "20",
             resultValue: bonusMonthResult,
@@ -120,17 +122,17 @@ class SalaryCard extends StatelessWidget {
           ),
           SizedBox(height: 20.h),
           SummaryItem(
-            title: "Absent Days",
+            title: appLocalizations.absentDays,
             value: absentDaysController.text.isEmpty
                 ? "0"
                 : absentDaysController.text,
           ),
           SizedBox(height: 18.h),
           FormulaRow(
-            label: "Vacation",
-            prefixText: "Total",
+            label: appLocalizations.vacation,
+            prefixText: appLocalizations.total,
             fixedValue: vacationTotal,
-            suffixText: "- Absent",
+            suffixText: "- ${appLocalizations.absent}",
             hint: "",
             resultValue: annualVacationResult,
             onChanged: onChanged,

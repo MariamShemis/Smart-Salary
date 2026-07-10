@@ -4,6 +4,7 @@ import 'package:smart_salary/core/costants/color_manager.dart';
 import 'package:smart_salary/features/main_layout/salary_calculator/presentation/widgets/mini_text_field.dart';
 import 'package:smart_salary/features/main_layout/salary_calculator/presentation/widgets/result_box.dart';
 import 'package:smart_salary/features/main_layout/salary_calculator/presentation/widgets/total_salary_card.dart';
+import 'package:smart_salary/l10n/app_localizations.dart';
 
 class DeductionRewardCard extends StatelessWidget {
   const DeductionRewardCard({
@@ -35,6 +36,7 @@ class DeductionRewardCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    AppLocalizations appLocalizations = AppLocalizations.of(context)!;
     return Container(
       padding: EdgeInsets.all(20.w),
       decoration: BoxDecoration(
@@ -52,7 +54,7 @@ class DeductionRewardCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "Deductions & Rewards",
+            appLocalizations.deductions_Rewards,
             style: TextStyle(
               fontSize: 18.sp,
               fontWeight: FontWeight.bold,
@@ -61,7 +63,7 @@ class DeductionRewardCard extends StatelessWidget {
           ),
           SizedBox(height: 22.h),
           Text(
-            "Deduction Formula",
+            appLocalizations.deductionFormula,
             style: TextStyle(
               fontSize: 15.sp,
               fontWeight: FontWeight.w600,
@@ -78,7 +80,7 @@ class DeductionRewardCard extends StatelessWidget {
                 width: 75.w,
                 child: MiniTextField(
                   controller: deductionAbsentController,
-                  hint: "Count",
+                  hint: appLocalizations.count,
                   onChanged: onChanged,
                 ),
               ),
@@ -87,7 +89,7 @@ class DeductionRewardCard extends StatelessWidget {
                 width: 75.w,
                 child: MiniTextField(
                   controller: deductionCustomController,
-                  hint: "Days",
+                  hint: appLocalizations.days,
                   onChanged: onChanged,
                 ),
               ),
@@ -98,7 +100,7 @@ class DeductionRewardCard extends StatelessWidget {
           ),
           SizedBox(height: 28.h),
           Text(
-            "Reward Formula",
+            appLocalizations.rewardFormula,
             style: TextStyle(
               fontSize: 15.sp,
               fontWeight: FontWeight.w600,
@@ -115,7 +117,7 @@ class DeductionRewardCard extends StatelessWidget {
                 width: 75.w,
                 child: MiniTextField(
                   controller: rewardValueController,
-                  hint: "Value",
+                  hint: appLocalizations.value,
                   onChanged: onChanged,
                 ),
               ),
@@ -124,7 +126,7 @@ class DeductionRewardCard extends StatelessWidget {
                 width: 75.w,
                 child: MiniTextField(
                   controller: rewardMultiplierController,
-                  hint: "Amount",
+                  hint: appLocalizations.amount,
                   onChanged: onChanged,
                 ),
               ),
@@ -135,14 +137,14 @@ class DeductionRewardCard extends StatelessWidget {
 
           SizedBox(height: 30.h),
           TotalSalaryCard(
-            title: "Total Salary",
-            formula: "Basic + OT + Bonus - Deduction",
+            title: appLocalizations.totalSalary,
+            formula: "${appLocalizations.basic} + ${appLocalizations.oT} + ${appLocalizations.bonus} - ${appLocalizations.deductions}",
             value: totalSalary,
           ),
           SizedBox(height: 18.h),
           TotalSalaryCard(
-            title: "Total Salary with Reward",
-            formula: "Total Salary + Reward",
+            title: appLocalizations.total_Salary_with_Reward,
+            formula: "${appLocalizations.totalSalary} + ${appLocalizations.reward}",
             value: totalSalaryWithReward,
           ),
         ],

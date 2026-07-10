@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:smart_salary/core/costants/color_manager.dart';
+import 'package:smart_salary/l10n/app_localizations.dart';
 
 class SalaryDetailsGrid extends StatelessWidget {
   const SalaryDetailsGrid({
@@ -22,6 +23,7 @@ class SalaryDetailsGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    AppLocalizations appLocalizations = AppLocalizations.of(context)!;
     final height = MediaQuery.sizeOf(context).height;
 
     return GridView.count(
@@ -33,35 +35,35 @@ class SalaryDetailsGrid extends StatelessWidget {
       mainAxisExtent: height * .14,
       children: [
         _SalaryItemCard(
-          title: "Basic Salary",
-          amount: "${basicSalary.toStringAsFixed(2)} LE",
+          title: appLocalizations.basicSalary,
+          amount: "${basicSalary.toStringAsFixed(2)} ${appLocalizations.lE}",
           icon: Icons.account_balance_rounded,
           iconColor: const Color(0xFF006064),
         ),
 
         _SalaryItemCard(
-          title: "Overtime",
+          title: appLocalizations.overtime,
           amount:
-          "${overtimeMonth.toStringAsFixed(2)} LE",
+          "${overtimeMonth.toStringAsFixed(2)} ${appLocalizations.lE}",
           isDays: true,
-          amountDays: "${overtimeDays.toInt()} Days",
+          amountDays: "${overtimeDays.toInt()} ${appLocalizations.days}",
           icon: Icons.more_time_rounded,
           iconColor: const Color(0xFF006064),
         ),
 
         _SalaryItemCard(
-          title: "Bonus",
+          title: appLocalizations.bonus,
           amount:
-          "${bonusMonth.toStringAsFixed(2)} LE",
+          "${bonusMonth.toStringAsFixed(2)} ${appLocalizations.lE}",
           isDays: true,
-          amountDays: "${bonusDays.toInt()} Days",
+          amountDays: "${bonusDays.toInt()} ${appLocalizations.unit}",
           icon: Icons.emoji_events_outlined,
           iconColor: ColorManager.lightBrown,
         ),
 
         _SalaryItemCard(
-          title: "Deductions",
-          amount: "${deduction.toStringAsFixed(2)} LE",
+          title: appLocalizations.deductions,
+          amount: "${deduction.toStringAsFixed(2)} ${appLocalizations.lE}",
           icon: Icons.remove_circle_outline_rounded,
           iconColor: ColorManager.red,
           isDeduction: true,

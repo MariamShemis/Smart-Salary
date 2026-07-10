@@ -5,6 +5,7 @@ import 'package:smart_salary/features/main_layout/salary_calculator/presentation
 import 'package:smart_salary/features/main_layout/salary_calculator/presentation/widgets/salary_card.dart';
 import 'package:smart_salary/features/main_layout/salary_calculator/presentation/widgets/salary_header.dart';
 import 'package:smart_salary/features/main_layout/salary_calculator/presentation/widgets/salary_save_button.dart';
+import 'package:smart_salary/l10n/app_localizations.dart';
 
 class SalaryCalculator extends StatefulWidget {
   const SalaryCalculator({super.key});
@@ -78,6 +79,7 @@ class _SalaryCalculatorState extends State<SalaryCalculator> {
   }
 
   Future<void> _saveData() async {
+    AppLocalizations appLocalizations = AppLocalizations.of(context)!;
     await SessionService.saveSalaryInputs(
       basic: _basicSalaryController.text,
       divisor: _dailyCountDivisorController.text,
@@ -99,18 +101,17 @@ class _SalaryCalculatorState extends State<SalaryCalculator> {
       rewardValue: _rewardValueController.text,
       rewardMultiplier: _rewardMultiplierController.text,
     );
-
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Salary calculations saved successfully!"),
+        SnackBar(
+          content: Text("${appLocalizations.salary_calculations_saved_successfully}!"),
           backgroundColor: Color(0xff004D40),
         ),
       );
     }
   }
 
-  void _calculateSalary() {
+  void _calculateSalary() async {
     setState(() {
       double basic = double.tryParse(_basicSalaryController.text) ?? 0.0;
       double divisor =
@@ -137,6 +138,15 @@ class _SalaryCalculatorState extends State<SalaryCalculator> {
       _rewardResult = rewardValue + (basic * rewardMultiplier);
       _totalSalaryWithRewardResult = _totalSalaryResult + _rewardResult;
     });
+
+    await SessionService.saveSalaryResults(
+      totalSalary: _totalSalaryResult,
+      totalSalaryWithReward: _totalSalaryWithRewardResult,
+      overtimeMonth: _overtimeMonthResult,
+      bonusMonth: _bonusMonthResult,
+      deduction: _deductionResult,
+      vacationDays: _annualVacationResult,
+    );
   }
 
   Future<void> _loadMonthData(DateTime month) async {
@@ -177,7 +187,7 @@ class _SalaryCalculatorState extends State<SalaryCalculator> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: SingleChildScrollView(
-        padding: const EdgeInsets.all(20),
+        padding: REdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

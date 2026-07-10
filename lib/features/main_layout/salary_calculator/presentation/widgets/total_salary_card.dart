@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class TotalSalaryCard extends StatelessWidget {
   const TotalSalaryCard({
@@ -19,11 +20,11 @@ class TotalSalaryCard extends StatelessWidget {
     return Row(
       children: [
         SizedBox(
-          width: 110,
+          width: 110.w,
           child: Text(
             title,
-            style: const TextStyle(
-              fontSize: 15,
+            style: TextStyle(
+              fontSize: 15.sp,
               fontWeight: FontWeight.bold,
               color: primaryColor,
             ),
@@ -31,16 +32,16 @@ class TotalSalaryCard extends StatelessWidget {
         ),
         Expanded(
           child: Container(
-            padding: const EdgeInsets.symmetric(
+            padding: REdgeInsets.symmetric(
               horizontal: 14,
               vertical: 12,
             ),
             decoration: BoxDecoration(
-              color: const Color(0xFFE0F2F1),
-              borderRadius: BorderRadius.circular(12),
+              color: Color(0xFFE0F2F1),
+              borderRadius: BorderRadius.circular(12.r),
               border: Border.all(
                 color: primaryColor,
-                width: 1.2,
+                width: 1.2.w,
               ),
             ),
             child: Column(
@@ -48,16 +49,16 @@ class TotalSalaryCard extends StatelessWidget {
               children: [
                 Text(
                   "$formula =",
-                  style: const TextStyle(
-                    fontSize: 12,
+                  style: TextStyle(
+                    fontSize: 12.sp,
                     color: primaryColor,
                   ),
                 ),
-                const SizedBox(height: 6),
+                SizedBox(height: 6.h),
                 Text(
                   value.toStringAsFixed(1),
-                  style: const TextStyle(
-                    fontSize: 15,
+                  style: TextStyle(
+                    fontSize: 15.sp,
                     fontWeight: FontWeight.bold,
                     color: primaryColor,
                   ),

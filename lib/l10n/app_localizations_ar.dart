@@ -93,7 +93,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get welcome_ => 'مرحباً!';
 
   @override
-  String get welcome_back_ => 'مرحباً بعودتك!';
+  String get welcome_back => 'مرحباً بعودتك';
 
   @override
   String get login_with_Google => 'تسجيل الدخول باستخدام Google';
@@ -109,4 +109,133 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get login => 'تسجيل الدخول';
+
+  @override
+  String get nET_SALARY_WITH_REWARD => 'صافي الراتب مع المكافأة';
+
+  @override
+  String get nET_SALARY => 'صافي الراتب';
+
+  @override
+  String get lE => 'ج.م';
+
+  @override
+  String get basicSalary => 'الراتب الأساسي';
+
+  @override
+  String get overtime => 'العمل الإضافي';
+
+  @override
+  String get days => 'أيام';
+
+  @override
+  String get bonus => 'المكافأة';
+
+  @override
+  String get deductions => 'الخصومات';
+
+  @override
+  String get vacationBalance => 'رصيد الإجازات';
+
+  @override
+  String get days_remaining_from => 'يوم متبقي من';
+
+  @override
+  String get salary_calculations_saved_successfully => 'تم حفظ حسابات الراتب بنجاح';
+
+  @override
+  String get deductions_Rewards => 'الخصومات والمكافآت';
+
+  @override
+  String get deductionFormula => 'معادلة الخصم';
+
+  @override
+  String get count => 'العدد';
+
+  @override
+  String get rewardFormula => 'معادلة المكافأة';
+
+  @override
+  String get value => 'القيمة';
+
+  @override
+  String get amount => 'النسبة';
+
+  @override
+  String get totalSalary => 'إجمالي الراتب';
+
+  @override
+  String get basic => 'الأساسي';
+
+  @override
+  String get oT => 'إضافي';
+
+  @override
+  String get total_Salary_with_Reward => 'إجمالي الراتب مع المكافأة';
+
+  @override
+  String get reward => 'المكافأة';
+
+  @override
+  String get enter_basic_salary => 'أدخل الراتب الأساسي';
+
+  @override
+  String get dailyCount => 'الأجر اليومي';
+
+  @override
+  String get overtimeDays => 'أيام العمل الإضافي';
+
+  @override
+  String get overtimeMonth => 'إجمالي الإضافي';
+
+  @override
+  String get oT_Days => 'أيام الإضافي';
+
+  @override
+  String get bonusDays => 'أيام المكافأة';
+
+  @override
+  String get bonusMonth => 'إجمالي المكافآت';
+
+  @override
+  String get absentDays => 'أيام الغياب';
+
+  @override
+  String get vacation => 'الإجازات';
+
+  @override
+  String get total => 'الإجمالي';
+
+  @override
+  String get absent => 'الغياب';
+
+  @override
+  String get salaryCalculator => 'حاسبة الراتب';
+
+  @override
+  String get save => 'حفظ';
+
+  @override
+  String get saved_Successfully => 'تم الحفظ بنجاح';
+
+  @override
+  String get over_time => 'عمل إضافي';
+
+  @override
+  String get enter_days => 'أدخل عدد الأيام';
+
+  @override
+  String get enter_unit => 'أدخل القيمة';
+
+  @override
+  String get reports => 'التقارير';
+
+  @override
+  String get enter_report => 'أدخل التقرير';
+
+  @override
+  String get attendance => 'الحضور والانصراف';
+
+  @override
+  String get unit => 'القيمة';
 }

@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:smart_salary/core/costants/color_manager.dart';
+import 'package:smart_salary/l10n/app_localizations.dart';
 
 class HomeTitle extends StatelessWidget {
   const HomeTitle({super.key});
 
   @override
   Widget build(BuildContext context) {
+    AppLocalizations appLocalizations = AppLocalizations.of(context)!;
     final now = DateTime.now();
     final dayName = DateFormat('EEEE').format(now);
     final fullDate = DateFormat('dd MMM yyyy').format(now);
@@ -32,14 +34,12 @@ class HomeTitle extends StatelessWidget {
             ),
           ),
         ),
-
         SizedBox(width: 10.w),
-
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "Welcome back ✨",
+              "${appLocalizations.welcome_back} ✨",
               style: TextStyle(
                 fontSize: 14.sp,
                 color: ColorManager.greyDark,
@@ -57,29 +57,26 @@ class HomeTitle extends StatelessWidget {
           ],
         ),
         const Spacer(),
-        Container(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Text(
-                dayName,
-                style: TextStyle(
-                  fontSize: 13.sp,
-                  fontWeight: FontWeight.w500,
-                  color: ColorManager.greyDark,
-                ),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            Text(
+              dayName,
+              style: TextStyle(
+                fontSize: 13.sp,
+                fontWeight: FontWeight.w500,
+                color: ColorManager.greyDark,
               ),
-              Text(
-                fullDate,
-                style: TextStyle(
-                  fontSize: 16.sp,
-                  color: ColorManager.primaryColor,
-                  fontWeight: FontWeight.bold,
-
-                ),
+            ),
+            Text(
+              fullDate,
+              style: TextStyle(
+                fontSize: 16.sp,
+                color: ColorManager.primaryColor,
+                fontWeight: FontWeight.bold,
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ],
     );
