@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:smart_salary/core/costants/color_manager.dart';
 import 'package:smart_salary/core/session_service/session_service.dart';
+import 'package:smart_salary/features/main_layout/daily_reports/data/cubit/daily_reports_cubit.dart';
+import 'package:smart_salary/features/main_layout/daily_reports/data/cubit/daily_reports_state.dart';
 import 'package:smart_salary/features/main_layout/daily_reports/presentation/widgets/add_daily_input.dart';
 import 'package:smart_salary/features/main_layout/daily_reports/presentation/widgets/attendance_card.dart';
+import 'package:smart_salary/features/main_layout/home/data/cubit/home_cubit.dart';
 import 'package:smart_salary/l10n/app_localizations.dart';
 
 class DailyReports extends StatefulWidget {
@@ -19,6 +23,7 @@ class _DailyReportsState extends State<DailyReports> {
   final TextEditingController _bonusController = TextEditingController();
   final TextEditingController _absentController = TextEditingController();
   final TextEditingController _reportController = TextEditingController();
+  int refresh = 0;
 
   @override
   void dispose() {
@@ -56,31 +61,25 @@ class _DailyReportsState extends State<DailyReports> {
     if (_selectedDay.day > lastDay) {
       _selectedDay = DateTime(selectedMonth.year, selectedMonth.month, lastDay);
     }
-    await _loadDailyReport();
-    if (mounted) {
-      setState(() {});
-    }
-  }
-
-  Future<void> _loadDailyReport() async {
-    final data = await SessionService.loadDailyInput(_selectedDay);
-    _overtimeController.text = data["overtime"]!;
-    _bonusController.text = data["bonus"]!;
-    _absentController.text = data["absent"]!;
-    _reportController.text = data["report"]!;
+    context.read<DailyReportsCubit>().loadDaily(_selectedDay);
+    setState(() {
+      refresh++;
+    });
   }
 
   Future<void> _saveDailyReport() async {
     AppLocalizations appLocalizations = AppLocalizations.of(context)!;
-    await SessionService.saveDailyInput(
-      date: _selectedDay,
+    await context.read<DailyReportsCubit>().saveDaily(
+      day: _selectedDay,
       overtime: _overtimeController.text,
       bonus: _bonusController.text,
       absent: _absentController.text,
       report: _reportController.text,
     );
-    final month = await SessionService.loadSelectedMonth();
-    await SessionService.recalculateSalary(month);
+    await context.read<HomeCubit>().loadHome();
+    setState(() {
+      refresh++;
+    });
     if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -92,35 +91,48 @@ class _DailyReportsState extends State<DailyReports> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              AttendanceCard(
-                selectedDay: _selectedDay,
-                onDayChanged: (newDay) async {
-                  setState(() {
-                    _selectedDay = newDay;
-                  });
-                  await _loadDailyReport();
-                },
+    return BlocConsumer<DailyReportsCubit, DailyReportsState>(
+      listener: (context, state) {
+        if (state is DailyReportsLoaded) {
+          _overtimeController.text = state.overtime;
+          _bonusController.text = state.bonus;
+          _absentController.text = state.absent;
+          _reportController.text = state.report;
+        }
+      },
+      builder: (context, state) {
+        return SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  AttendanceCard(
+                    selectedDay: _selectedDay,
+                    refresh: refresh,
+                    onDayChanged: (newDay) async {
+                      setState(() {
+                        _selectedDay = newDay;
+                      });
+                      context.read<DailyReportsCubit>().loadDaily(newDay);
+                    },
+                  ),
+                  SizedBox(height: 20.h),
+                  AddDailyInput(
+                    selectedDay: _selectedDay,
+                    overtimeController: _overtimeController,
+                    bonusController: _bonusController,
+                    absentController: _absentController,
+                    reportController: _reportController,
+                    onSave: _saveDailyReport,
+                  ),
+                  SizedBox(height: 20.h),
+                ],
               ),
-              SizedBox(height: 20.h),
-              AddDailyInput(
-                selectedDay: _selectedDay,
-                overtimeController: _overtimeController,
-                bonusController: _bonusController,
-                absentController: _absentController,
-                reportController: _reportController,
-                onSave: _saveDailyReport,
-              ),
-              SizedBox(height: 20.h),
-            ],
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }

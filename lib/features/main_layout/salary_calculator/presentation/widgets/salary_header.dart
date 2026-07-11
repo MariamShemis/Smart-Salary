@@ -24,7 +24,7 @@ class SalaryHeader extends StatelessWidget {
       builder: (context, child) {
         return MediaQuery(
           data: MediaQuery.of(context).copyWith(
-            textScaler: const TextScaler.linear(0.9),
+            textScaler: const TextScaler.linear(0.93),
           ),
           child: Theme(
             data: Theme.of(context).copyWith(

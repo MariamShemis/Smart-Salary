@@ -10,11 +10,13 @@ import 'package:table_calendar/table_calendar.dart';
 class AttendanceCard extends StatefulWidget {
   final DateTime selectedDay;
   final ValueChanged<DateTime> onDayChanged;
+  final int refresh;
 
   const AttendanceCard({
     super.key,
     required this.selectedDay,
     required this.onDayChanged,
+    required this.refresh,
   });
 
   @override
@@ -55,6 +57,19 @@ class _AttendanceCardState extends State<AttendanceCard> {
     }
     setState(() {});
   }
+  Future<void> _syncSelectedMonth() async {
+    final month = await SessionService.loadSelectedMonth();
+
+    setState(() {
+      _focusedDay = DateTime(
+        month.year,
+        month.month,
+        widget.selectedDay.day,
+      );
+    });
+
+    await _loadAttendance();
+  }
 
   @override
   void initState() {
@@ -71,12 +86,11 @@ class _AttendanceCardState extends State<AttendanceCard> {
         )
         .value;
   }
-
   @override
   void didUpdateWidget(covariant AttendanceCard oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (!isSameDay(oldWidget.selectedDay, widget.selectedDay)) {
-      _focusedDay = widget.selectedDay;
+
+    if (oldWidget.refresh != widget.refresh) {
       _loadAttendance();
     }
   }
@@ -175,6 +189,7 @@ class _AttendanceCardState extends State<AttendanceCard> {
 
   Widget _buildCalendar() {
     return TableCalendar(
+      //key: ValueKey(widget.refresh),
       firstDay: DateTime(2020),
       lastDay: DateTime(2035),
       focusedDay: _focusedDay,

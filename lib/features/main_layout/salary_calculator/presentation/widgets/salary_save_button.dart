@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:smart_salary/core/costants/color_manager.dart';
 import 'package:smart_salary/l10n/app_localizations.dart';
 
 class SalarySaveButton extends StatelessWidget {
@@ -18,7 +19,7 @@ class SalarySaveButton extends StatelessWidget {
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
-          backgroundColor: const Color(0xFF2E7D32),
+          backgroundColor: ColorManager.primaryColor,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(24.r),
           ),

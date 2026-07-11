@@ -34,44 +34,30 @@ class SessionService {
     final monthlyTotals = await loadMonthlyTotals(month);
     final monthData = await loadMonthlySalaryData(month);
     final yearlyAbsent = await loadYearlyAbsent(month);
-    final basic =
-        double.tryParse(salaryInputs["basic"] ?? "0") ?? 0;
-    final divisor =
-        double.tryParse(salaryInputs["divisor"] ?? "30") ?? 30;
+    final basic = double.tryParse(salaryInputs["basic"] ?? "0") ?? 0;
+    final divisor = double.tryParse(salaryInputs["divisor"] ?? "30") ?? 30;
     final otMultiplier =
-        double.tryParse(salaryInputs["otMultiplier"] ?? "1") ?? 1;
+        double.tryParse(monthData["overtimeMultiplier"] ?? "1") ?? 1;
+
     final bonusValue =
-        double.tryParse(salaryInputs["bonusValue"] ?? "20") ?? 20;
+        double.tryParse(monthData["bonusValue"] ?? "20") ?? 20;
     final overtimeDays = monthlyTotals["overtime"] ?? 0;
     final bonusDays = monthlyTotals["bonus"] ?? 0;
     final absentDays = monthlyTotals["absent"] ?? 0;
     final dailySalary = divisor == 0 ? 0 : basic / divisor;
     final overtimeMonth =
-        (overtimeDays * dailySalary) +
-            (otMultiplier * dailySalary);
-    final bonusMonth =
-        bonusDays * bonusValue;
-    final deductAbsent =
-        double.tryParse(monthData["deductAbsent"] ?? "0") ?? 0;
-    final deductCustom =
-        double.tryParse(monthData["deductCustom"] ?? "0") ?? 0;
-    final deduction =
-        deductAbsent + (deductCustom * dailySalary);
-    final rewardValue =
-        double.tryParse(monthData["rewardValue"] ?? "0") ?? 0;
+        (overtimeDays * dailySalary) + (otMultiplier * dailySalary);
+    final bonusMonth = bonusDays * bonusValue;
+    final deductAbsent = double.tryParse(monthData["deductAbsent"] ?? "0") ?? 0;
+    final deductCustom = double.tryParse(monthData["deductCustom"] ?? "0") ?? 0;
+    final deduction = deductAbsent + (deductCustom * dailySalary);
+    final rewardValue = double.tryParse(monthData["rewardValue"] ?? "0") ?? 0;
     final rewardMultiplier =
         double.tryParse(monthData["rewardMultiplier"] ?? "0") ?? 0;
-    final reward =
-        rewardValue + (basic * rewardMultiplier);
-    final totalSalary =
-        basic +
-            overtimeMonth +
-            bonusMonth -
-            deduction;
-    final totalSalaryWithReward =
-        totalSalary + reward;
-    final vacation =
-        30 - yearlyAbsent;
+    final reward = rewardValue + (basic * rewardMultiplier);
+    final totalSalary = basic + overtimeMonth + bonusMonth - deduction;
+    final totalSalaryWithReward = totalSalary + reward;
+    final vacation = 30 - yearlyAbsent;
     await saveSalaryResults(
       totalSalary: totalSalary,
       totalSalaryWithReward: totalSalaryWithReward,
@@ -79,21 +65,20 @@ class SessionService {
       bonusMonth: bonusMonth,
       deduction: deduction,
       vacationDays: vacation,
+      month: month,
     );
   }
 
   static Future<void> saveSalaryInputs({
     required String basic,
     required String divisor,
-    required String otMultiplier,
-    required String bonusValue,
   }) async {
     await _ensureInitialized();
 
     await _prefs!.setString(_basicSalaryKey, basic);
     await _prefs!.setString(_dailyDivisorKey, divisor);
-    await _prefs!.setString(_overtimeMultiplierKey, otMultiplier);
-    await _prefs!.setString(_bonusValueKey, bonusValue);
+    // await _prefs!.setString(_overtimeMultiplierKey, otMultiplier);
+    // await _prefs!.setString(_bonusValueKey, bonusValue);
   }
 
   static Future<Map<String, String>> loadSalaryInputs() async {
@@ -138,6 +123,7 @@ class SessionService {
   }
 
   static Future<void> saveSalaryResults({
+    required DateTime month,
     required double totalSalary,
     required double totalSalaryWithReward,
     required double overtimeMonth,
@@ -147,17 +133,18 @@ class SessionService {
   }) async {
     await _ensureInitialized();
 
-    print("Saving bonusMonth = $bonusMonth");
+    final key = "salary_result_${month.year}_${month.month}";
 
-    await _prefs!.setDouble(_totalSalaryKey, totalSalary);
-    await _prefs!.setDouble(_totalSalaryWithRewardKey, totalSalaryWithReward);
-    await _prefs!.setDouble(_overtimeMonthKey, overtimeMonth);
-    await _prefs!.setDouble(_bonusMonthKey, bonusMonth);
+    final data = jsonEncode({
+      "totalSalary": totalSalary,
+      "totalSalaryWithReward": totalSalaryWithReward,
+      "overtimeMonth": overtimeMonth,
+      "bonusMonth": bonusMonth,
+      "deduction": deduction,
+      "vacationDays": vacationDays,
+    });
 
-    print("Saved value = ${_prefs!.getDouble(_bonusMonthKey)}");
-
-    await _prefs!.setDouble(_deductionKey, deduction);
-    await _prefs!.setDouble(_vacationDaysKey, vacationDays);
+    await _prefs!.setString(key, data);
   }
 
   static Future<Map<String, double>> loadSalaryResults(DateTime month) async {
@@ -166,19 +153,33 @@ class SessionService {
     final salary = await loadSalaryInputs();
     final totals = await loadMonthlyTotals(month);
 
-    print("Bonus Month Saved = ${_prefs!.getDouble(_bonusMonthKey)}");
+    final key = "salary_result_${month.year}_${month.month}";
+    final json = _prefs!.getString(key);
 
+    if (json == null) {
+      return {
+        "basicSalary": double.tryParse(salary["basic"] ?? "0") ?? 0,
+        "overtimeDays": totals["overtime"] ?? 0,
+        "bonusDays": totals["bonus"] ?? 0,
+        "totalSalary": 0,
+        "totalSalaryWithReward": 0,
+        "overtimeMonth": 0,
+        "bonusMonth": 0,
+        "deduction": 0,
+        "vacationDays": 30,
+      };
+    }
+    final data = jsonDecode(json);
     return {
       "basicSalary": double.tryParse(salary["basic"] ?? "0") ?? 0,
       "overtimeDays": totals["overtime"] ?? 0,
       "bonusDays": totals["bonus"] ?? 0,
-      "totalSalary": _prefs!.getDouble(_totalSalaryKey) ?? 0,
-      "totalSalaryWithReward":
-          _prefs!.getDouble(_totalSalaryWithRewardKey) ?? 0,
-      "overtimeMonth": _prefs!.getDouble(_overtimeMonthKey) ?? 0,
-      "bonusMonth": _prefs!.getDouble(_bonusMonthKey) ?? 0,
-      "deduction": _prefs!.getDouble(_deductionKey) ?? 0,
-      "vacationDays": _prefs!.getDouble(_vacationDaysKey) ?? 30,
+      "totalSalary": (data["totalSalary"] ?? 0).toDouble(),
+      "totalSalaryWithReward": (data["totalSalaryWithReward"] ?? 0).toDouble(),
+      "overtimeMonth": (data["overtimeMonth"] ?? 0).toDouble(),
+      "bonusMonth": (data["bonusMonth"] ?? 0).toDouble(),
+      "deduction": (data["deduction"] ?? 0).toDouble(),
+      "vacationDays": (data["vacationDays"] ?? 30).toDouble(),
     };
   }
 
@@ -188,6 +189,8 @@ class SessionService {
     required String deductCustom,
     required String rewardValue,
     required String rewardMultiplier,
+    required String overtimeMultiplier,
+    required String bonusValue,
   }) async {
     await _ensureInitialized();
 
@@ -198,6 +201,8 @@ class SessionService {
       "deductCustom": deductCustom,
       "rewardValue": rewardValue,
       "rewardMultiplier": rewardMultiplier,
+      "overtimeMultiplier": overtimeMultiplier,
+      "bonusValue": bonusValue,
     });
 
     await _prefs!.setString(key, data);
@@ -218,6 +223,8 @@ class SessionService {
         "deductCustom": "",
         "rewardValue": "",
         "rewardMultiplier": "",
+        "overtimeMultiplier": "",
+        "bonusValue": "20",
       };
     }
 
@@ -228,6 +235,8 @@ class SessionService {
       "deductCustom": data["deductCustom"] ?? "",
       "rewardValue": data["rewardValue"] ?? "",
       "rewardMultiplier": data["rewardMultiplier"] ?? "",
+      "overtimeMultiplier": data["overtimeMultiplier"] ?? "",
+      "bonusValue": data["bonusValue"] ?? "20",
     };
   }
 
@@ -318,5 +327,4 @@ class SessionService {
 
     return DateTime.parse(value);
   }
-
 }
