@@ -238,4 +238,28 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get unit => 'Unit';
+
+  @override
+  String get general_settings => 'General Settings';
+
+  @override
+  String get editProfile => 'Edit Profile';
+
+  @override
+  String get account_Security => 'Account & Security';
+
+  @override
+  String get log_out => 'Log out';
+
+  @override
+  String get language => 'Language';
+
+  @override
+  String get are_you_sure_you_want_to_log_out => 'Are you sure you want to log out';
+
+  @override
+  String get cancel => 'Cancel';
+
+  @override
+  String get ok => 'Ok';
 }

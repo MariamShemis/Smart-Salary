@@ -37,7 +37,7 @@ class SessionService {
     final basic = double.tryParse(salaryInputs["basic"] ?? "0") ?? 0;
     final divisor = double.tryParse(salaryInputs["divisor"] ?? "30") ?? 30;
     final otMultiplier =
-        double.tryParse(monthData["overtimeMultiplier"] ?? "1") ?? 1;
+        double.tryParse(monthData["overtimeMultiplier"] ?? "0") ?? 0;
 
     final bonusValue =
         double.tryParse(monthData["bonusValue"] ?? "20") ?? 20;

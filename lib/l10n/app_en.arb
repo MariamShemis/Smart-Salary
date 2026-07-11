@@ -75,5 +75,13 @@
   "reports": "Reports",
   "enter_report": "Enter report",
   "attendance": "Attendance",
-  "unit": "Unit"
+  "unit": "Unit",
+  "general_settings": "General Settings",
+  "editProfile": "Edit Profile",
+  "account_Security": "Account & Security",
+  "log_out": "Log out",
+  "language": "Language",
+  "are_you_sure_you_want_to_log_out": "Are you sure you want to log out",
+  "cancel": "Cancel",
+  "ok": "Ok"
 }

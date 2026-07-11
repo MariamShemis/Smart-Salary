@@ -4,6 +4,7 @@ import 'package:smart_salary/core/costants/color_manager.dart';
 import 'package:smart_salary/core/widgets/main_gradient_background.dart';
 import 'package:smart_salary/features/main_layout/daily_reports/presentation/view/daily_reports.dart';
 import 'package:smart_salary/features/main_layout/home/presentation/view/home_screen.dart';
+import 'package:smart_salary/features/main_layout/profile/presentation/view/profile_screen.dart';
 import 'package:smart_salary/features/main_layout/salary_calculator/presentation/view/salary_calculator.dart';
 
 class MainLayout extends StatefulWidget {
@@ -20,7 +21,7 @@ class _MainLayoutState extends State<MainLayout> {
     HomeScreen(),
     DailyReports(),
     SalaryCalculator(),
-    const Center(child: Text('Profile Screen')),
+    ProfileScreen(),
   ];
 
   @override

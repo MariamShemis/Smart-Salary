@@ -90,7 +90,7 @@ class SalaryCard extends StatelessWidget {
             label: appLocalizations.overtimeMonth,
             prefixText: "${appLocalizations.oT_Days} +",
             controller: overtimeMultiplierController,
-            hint: "1",
+            hint: "0",
             resultValue: overtimeMonthResult,
             onChanged: onChanged,
           ),

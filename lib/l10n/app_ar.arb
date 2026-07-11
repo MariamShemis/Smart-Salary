@@ -75,5 +75,13 @@
   "reports": "التقارير",
   "enter_report": "أدخل التقرير",
   "attendance": "الحضور والانصراف",
-  "unit": "القيمة"
+  "unit": "القيمة",
+  "general_settings": "الإعدادات العامة",
+  "editProfile": "تعديل الملف الشخصي",
+  "account_Security": "الحساب والأمان",
+  "log_out": "تسجيل الخروج",
+  "language": "اللغة",
+  "are_you_sure_you_want_to_log_out": "هل أنت متأكد أنك تريد تسجيل الخروج؟",
+  "cancel": "إلغاء",
+  "ok": "موافق"
 }

@@ -238,4 +238,28 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get unit => 'القيمة';
+
+  @override
+  String get general_settings => 'الإعدادات العامة';
+
+  @override
+  String get editProfile => 'تعديل الملف الشخصي';
+
+  @override
+  String get account_Security => 'الحساب والأمان';
+
+  @override
+  String get log_out => 'تسجيل الخروج';
+
+  @override
+  String get language => 'اللغة';
+
+  @override
+  String get are_you_sure_you_want_to_log_out => 'هل أنت متأكد أنك تريد تسجيل الخروج؟';
+
+  @override
+  String get cancel => 'إلغاء';
+
+  @override
+  String get ok => 'موافق';
 }

@@ -556,6 +556,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Unit'**
   String get unit;
+
+  /// No description provided for @general_settings.
+  ///
+  /// In en, this message translates to:
+  /// **'General Settings'**
+  String get general_settings;
+
+  /// No description provided for @editProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Profile'**
+  String get editProfile;
+
+  /// No description provided for @account_Security.
+  ///
+  /// In en, this message translates to:
+  /// **'Account & Security'**
+  String get account_Security;
+
+  /// No description provided for @log_out.
+  ///
+  /// In en, this message translates to:
+  /// **'Log out'**
+  String get log_out;
+
+  /// No description provided for @language.
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get language;
+
+  /// No description provided for @are_you_sure_you_want_to_log_out.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to log out'**
+  String get are_you_sure_you_want_to_log_out;
+
+  /// No description provided for @cancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get cancel;
+
+  /// No description provided for @ok.
+  ///
+  /// In en, this message translates to:
+  /// **'Ok'**
+  String get ok;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

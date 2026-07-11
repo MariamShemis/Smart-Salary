@@ -17,7 +17,7 @@ class SalaryCubit extends Cubit<SalaryState> {
       basic: double.tryParse(salary["basic"] ?? "0") ?? 0,
       divisor: double.tryParse(salary["divisor"] ?? "30") ?? 30,
       overtimeMultiplier:
-      double.tryParse(monthData["overtimeMultiplier"] ?? "1") ?? 1,
+      double.tryParse(monthData["overtimeMultiplier"] ?? "0") ?? 0,
       bonusValue:
       double.tryParse(monthData["bonusValue"] ?? "20") ?? 20,
       overtimeDays: totals["overtime"] ?? 0,
