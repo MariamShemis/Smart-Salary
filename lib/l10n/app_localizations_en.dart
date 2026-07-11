@@ -93,7 +93,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get welcome_ => 'Welcome!';
 
   @override
-  String get welcome_back_ => 'Welcome back!';
+  String get welcome_back => 'Welcome back';
 
   @override
   String get login_with_Google => 'Login with Google';
@@ -109,4 +109,133 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get login => 'Login';
+
+  @override
+  String get nET_SALARY_WITH_REWARD => 'NET SALARY WITH REWARD';
+
+  @override
+  String get nET_SALARY => 'NET SALARY';
+
+  @override
+  String get lE => 'LE';
+
+  @override
+  String get basicSalary => 'Basic Salary';
+
+  @override
+  String get overtime => 'Overtime';
+
+  @override
+  String get days => 'Days';
+
+  @override
+  String get bonus => 'Bonus';
+
+  @override
+  String get deductions => 'Deductions';
+
+  @override
+  String get vacationBalance => 'Vacation Balance';
+
+  @override
+  String get days_remaining_from => 'days remaining from';
+
+  @override
+  String get salary_calculations_saved_successfully => 'Salary calculations saved successfully';
+
+  @override
+  String get deductions_Rewards => 'Deductions & Rewards';
+
+  @override
+  String get deductionFormula => 'Deduction Formula';
+
+  @override
+  String get count => 'Count';
+
+  @override
+  String get rewardFormula => 'Reward Formula';
+
+  @override
+  String get value => 'Value';
+
+  @override
+  String get amount => 'Amount';
+
+  @override
+  String get totalSalary => 'Total Salary';
+
+  @override
+  String get basic => 'Basic';
+
+  @override
+  String get oT => 'OT';
+
+  @override
+  String get total_Salary_with_Reward => 'Total Salary with Reward';
+
+  @override
+  String get reward => 'Reward';
+
+  @override
+  String get enter_basic_salary => 'Enter basic salary';
+
+  @override
+  String get dailyCount => 'Daily Count';
+
+  @override
+  String get overtimeDays => 'Overtime Days';
+
+  @override
+  String get overtimeMonth => 'Overtime Month';
+
+  @override
+  String get oT_Days => 'OT Days';
+
+  @override
+  String get bonusDays => 'Bonus Days';
+
+  @override
+  String get bonusMonth => 'Bonus Month';
+
+  @override
+  String get absentDays => 'Absent Days';
+
+  @override
+  String get vacation => 'Vacation';
+
+  @override
+  String get total => 'Total';
+
+  @override
+  String get absent => 'Absent';
+
+  @override
+  String get salaryCalculator => 'Salary Calculator';
+
+  @override
+  String get save => 'Save';
+
+  @override
+  String get saved_Successfully => 'Saved Successfully';
+
+  @override
+  String get over_time => 'Over time';
+
+  @override
+  String get enter_days => 'Enter days';
+
+  @override
+  String get enter_unit => 'Enter unit';
+
+  @override
+  String get reports => 'Reports';
+
+  @override
+  String get enter_report => 'Enter report';
+
+  @override
+  String get attendance => 'Attendance';
+
+  @override
+  String get unit => 'Unit';
 }

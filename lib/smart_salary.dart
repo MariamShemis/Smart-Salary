@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:month_year_picker/month_year_picker.dart';
 import 'package:smart_salary/core/routes/routes_generator.dart';
 import 'package:smart_salary/core/theme/theme_manager.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -27,13 +28,11 @@ class SmartSalary extends StatelessWidget {
           GlobalMaterialLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate,
           GlobalCupertinoLocalizations.delegate,
+          MonthYearPickerLocalizations.delegate,
         ],
-        locale: Locale("en"),
-        supportedLocales: const [
-          Locale('ar'),
-          Locale('en'),
-        ],
-      ),
+        supportedLocales: AppLocalizations.supportedLocales,
+        locale: const Locale("en"),
+      )
     );
   }
 }

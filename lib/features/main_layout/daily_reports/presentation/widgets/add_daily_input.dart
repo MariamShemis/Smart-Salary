@@ -1,45 +1,36 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:smart_salary/core/costants/color_manager.dart';
+import 'package:smart_salary/l10n/app_localizations.dart';
 
 class AddDailyInput extends StatefulWidget {
   final DateTime selectedDay;
+  final TextEditingController overtimeController;
+  final TextEditingController bonusController;
+  final TextEditingController absentController;
+  final TextEditingController reportController;
+  final VoidCallback onSave;
 
-  const AddDailyInput({super.key, required this.selectedDay});
+  const AddDailyInput({
+    super.key,
+    required this.selectedDay,
+    required this.overtimeController,
+    required this.bonusController,
+    required this.absentController,
+    required this.reportController,
+    required this.onSave,
+  });
 
   @override
   State<AddDailyInput> createState() => _AddDailyInputState();
 }
 
 class _AddDailyInputState extends State<AddDailyInput> {
-  final TextEditingController _overtimeController = TextEditingController();
-  final TextEditingController _bonusController = TextEditingController();
-  final TextEditingController _absentController = TextEditingController();
-  final TextEditingController _reportController = TextEditingController();
-
-  @override
-  void didUpdateWidget(covariant AddDailyInput oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (oldWidget.selectedDay != widget.selectedDay) {
-      _overtimeController.clear();
-      _bonusController.clear();
-      _absentController.clear();
-      _reportController.clear();
-    }
-  }
-
-  @override
-  void dispose() {
-    _overtimeController.dispose();
-    _bonusController.dispose();
-    _absentController.dispose();
-    _reportController.dispose();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
-    const primaryColor = Color(0xff004D40);
+    AppLocalizations appLocalizations = AppLocalizations.of(context)!;
+    const primaryColor = ColorManager.primaryColor;
     const overTimeColor = Color(0xff00695C);
     const bonusColor = ColorManager.secondary;
     const absentColor = ColorManager.red;
@@ -47,10 +38,10 @@ class _AddDailyInputState extends State<AddDailyInput> {
 
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(24),
+      padding: REdgeInsets.all(24),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(32),
+        borderRadius: BorderRadius.circular(32.r),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.02),
@@ -66,88 +57,86 @@ class _AddDailyInputState extends State<AddDailyInput> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              // عرض التاريخ المختار ديناميكياً
               Text(
                 DateFormat('MMMM dd, yyyy').format(widget.selectedDay),
-                style: const TextStyle(
+                style: TextStyle(
                   color: Colors.black87,
-                  fontSize: 20,
+                  fontSize: 20.sp,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              // عرض اسم اليوم ديناميكياً
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                padding: REdgeInsets.symmetric(
+                  horizontal: 14,
+                  vertical: 6,
+                ),
                 decoration: BoxDecoration(
                   color: const Color(0xFFE0F2F1),
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(12.r),
                 ),
                 child: Text(
                   DateFormat('EEEE').format(widget.selectedDay),
-                  style: const TextStyle(
+                  style: TextStyle(
                     color: primaryColor,
-                    fontSize: 13,
+                    fontSize: 13.sp,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 24),
+          SizedBox(height: 24.h),
           _buildInputField(
-            controller: _overtimeController,
-            label: 'Over time',
+            controller: widget.overtimeController,
+            label: appLocalizations.over_time,
             color: overTimeColor,
-            hint: 'Enter hours (number)',
+            hint: appLocalizations.enter_days,
             keyboardType: TextInputType.number,
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16.h),
           _buildInputField(
-            controller: _bonusController,
-            label: 'Bonus',
+            controller: widget.bonusController,
+            label: appLocalizations.bonus,
             color: bonusColor,
-            hint: 'Enter bonus (number)',
+            hint: appLocalizations.enter_unit,
             keyboardType: TextInputType.number,
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16.h),
           _buildInputField(
-            controller: _absentController,
-            label: 'Absent',
+            controller: widget.absentController,
+            label: appLocalizations.absent,
             color: absentColor,
-            hint: 'Enter days (number)',
+            hint: appLocalizations.enter_days,
             keyboardType: TextInputType.number,
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16.h),
           _buildInputField(
-            controller: _reportController,
-            label: 'Reports',
+            controller: widget.reportController,
+            label: appLocalizations.reports,
             color: reportsColor,
-            hint: 'Type text report...',
-            isReport: true,
+            hint: '${appLocalizations.enter_report}...',
             keyboardType: TextInputType.text,
+            isReport: true,
             maxLines: 4,
           ),
-          const SizedBox(height: 28),
+          SizedBox(height: 28.h),
           SizedBox(
             width: double.infinity,
-            height: 54,
+            height: 54.h,
             child: ElevatedButton(
-              onPressed: () {
-                // هنا تقدري تستخدمي الحقول للحفظ:
-                // print(_overtimeController.text);
-              },
+              onPressed: widget.onSave,
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF2E7D32),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(24),
-                ),
+                backgroundColor: ColorManager.primaryColor,
                 elevation: 0,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(24.r),
+                ),
               ),
-              child: const Text(
-                'Save :-)',
+              child: Text(
+                appLocalizations.save,
                 style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
+                  color: ColorManager.white,
+                  fontSize: 16.sp,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -167,63 +156,58 @@ class _AddDailyInputState extends State<AddDailyInput> {
     bool isReport = false,
     int maxLines = 1,
   }) {
-    final fieldDecoration = InputDecoration(
+    final decoration = InputDecoration(
       hintText: hint,
-      hintStyle: const TextStyle(color: Colors.black38, fontSize: 13),
-      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      hintStyle: TextStyle(color: Colors.black38, fontSize: 13.sp),
+      contentPadding: REdgeInsets.symmetric(horizontal: 16, vertical: 12),
       filled: true,
       fillColor: const Color(0xFFFAFAFA),
       enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12),
-        borderSide: const BorderSide(color: Color(0xFF004D40), width: 1),
+        borderRadius: BorderRadius.circular(12.r),
+        borderSide: BorderSide(color: ColorManager.primaryColor),
       ),
       focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12),
-        borderSide: const BorderSide(color: Color(0xFF004D40), width: 1.8),
+        borderRadius: BorderRadius.circular(12.r),
+        borderSide: BorderSide(color: ColorManager.primaryColor, width: 1.8.w),
       ),
     );
 
     final labelWidget = SizedBox(
-      width: 110,
+      width: 110.w,
       child: Row(
         children: [
           Container(
-            width: 16,
-            height: 16,
+            width: 16.w,
+            height: 16.h,
             decoration: BoxDecoration(color: color, shape: BoxShape.circle),
           ),
-          const SizedBox(width: 12),
+          SizedBox(width: 12.w),
           Expanded(
             child: Text(
               label,
-              style: const TextStyle(
-                color: Colors.black87,
-                fontSize: 15,
-                fontWeight: FontWeight.w600,
-              ),
+              style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w600),
             ),
           ),
         ],
       ),
     );
 
-    return isReport
-        ? Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        labelWidget,
-        const SizedBox(height: 12),
-        TextField(
-          controller: controller,
-          keyboardType: keyboardType,
-          maxLines: 4,
-          style: const TextStyle(fontSize: 14),
-          decoration: fieldDecoration,
-        ),
-      ],
-    )
-        : Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
+    if (isReport) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          labelWidget,
+          SizedBox(height: 12.h),
+          TextField(
+            controller: controller,
+            keyboardType: keyboardType,
+            maxLines: maxLines,
+            decoration: decoration,
+          ),
+        ],
+      );
+    }
+    return Row(
       children: [
         labelWidget,
         Expanded(
@@ -231,8 +215,7 @@ class _AddDailyInputState extends State<AddDailyInput> {
             controller: controller,
             keyboardType: keyboardType,
             maxLines: maxLines,
-            style: const TextStyle(fontSize: 14),
-            decoration: fieldDecoration,
+            decoration: decoration,
           ),
         ),
       ],

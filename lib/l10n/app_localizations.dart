@@ -263,11 +263,11 @@ abstract class AppLocalizations {
   /// **'Welcome!'**
   String get welcome_;
 
-  /// No description provided for @welcome_back_.
+  /// No description provided for @welcome_back.
   ///
   /// In en, this message translates to:
-  /// **'Welcome back!'**
-  String get welcome_back_;
+  /// **'Welcome back'**
+  String get welcome_back;
 
   /// No description provided for @login_with_Google.
   ///
@@ -298,6 +298,264 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Login'**
   String get login;
+
+  /// No description provided for @nET_SALARY_WITH_REWARD.
+  ///
+  /// In en, this message translates to:
+  /// **'NET SALARY WITH REWARD'**
+  String get nET_SALARY_WITH_REWARD;
+
+  /// No description provided for @nET_SALARY.
+  ///
+  /// In en, this message translates to:
+  /// **'NET SALARY'**
+  String get nET_SALARY;
+
+  /// No description provided for @lE.
+  ///
+  /// In en, this message translates to:
+  /// **'LE'**
+  String get lE;
+
+  /// No description provided for @basicSalary.
+  ///
+  /// In en, this message translates to:
+  /// **'Basic Salary'**
+  String get basicSalary;
+
+  /// No description provided for @overtime.
+  ///
+  /// In en, this message translates to:
+  /// **'Overtime'**
+  String get overtime;
+
+  /// No description provided for @days.
+  ///
+  /// In en, this message translates to:
+  /// **'Days'**
+  String get days;
+
+  /// No description provided for @bonus.
+  ///
+  /// In en, this message translates to:
+  /// **'Bonus'**
+  String get bonus;
+
+  /// No description provided for @deductions.
+  ///
+  /// In en, this message translates to:
+  /// **'Deductions'**
+  String get deductions;
+
+  /// No description provided for @vacationBalance.
+  ///
+  /// In en, this message translates to:
+  /// **'Vacation Balance'**
+  String get vacationBalance;
+
+  /// No description provided for @days_remaining_from.
+  ///
+  /// In en, this message translates to:
+  /// **'days remaining from'**
+  String get days_remaining_from;
+
+  /// No description provided for @salary_calculations_saved_successfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Salary calculations saved successfully'**
+  String get salary_calculations_saved_successfully;
+
+  /// No description provided for @deductions_Rewards.
+  ///
+  /// In en, this message translates to:
+  /// **'Deductions & Rewards'**
+  String get deductions_Rewards;
+
+  /// No description provided for @deductionFormula.
+  ///
+  /// In en, this message translates to:
+  /// **'Deduction Formula'**
+  String get deductionFormula;
+
+  /// No description provided for @count.
+  ///
+  /// In en, this message translates to:
+  /// **'Count'**
+  String get count;
+
+  /// No description provided for @rewardFormula.
+  ///
+  /// In en, this message translates to:
+  /// **'Reward Formula'**
+  String get rewardFormula;
+
+  /// No description provided for @value.
+  ///
+  /// In en, this message translates to:
+  /// **'Value'**
+  String get value;
+
+  /// No description provided for @amount.
+  ///
+  /// In en, this message translates to:
+  /// **'Amount'**
+  String get amount;
+
+  /// No description provided for @totalSalary.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Salary'**
+  String get totalSalary;
+
+  /// No description provided for @basic.
+  ///
+  /// In en, this message translates to:
+  /// **'Basic'**
+  String get basic;
+
+  /// No description provided for @oT.
+  ///
+  /// In en, this message translates to:
+  /// **'OT'**
+  String get oT;
+
+  /// No description provided for @total_Salary_with_Reward.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Salary with Reward'**
+  String get total_Salary_with_Reward;
+
+  /// No description provided for @reward.
+  ///
+  /// In en, this message translates to:
+  /// **'Reward'**
+  String get reward;
+
+  /// No description provided for @enter_basic_salary.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter basic salary'**
+  String get enter_basic_salary;
+
+  /// No description provided for @dailyCount.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily Count'**
+  String get dailyCount;
+
+  /// No description provided for @overtimeDays.
+  ///
+  /// In en, this message translates to:
+  /// **'Overtime Days'**
+  String get overtimeDays;
+
+  /// No description provided for @overtimeMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'Overtime Month'**
+  String get overtimeMonth;
+
+  /// No description provided for @oT_Days.
+  ///
+  /// In en, this message translates to:
+  /// **'OT Days'**
+  String get oT_Days;
+
+  /// No description provided for @bonusDays.
+  ///
+  /// In en, this message translates to:
+  /// **'Bonus Days'**
+  String get bonusDays;
+
+  /// No description provided for @bonusMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'Bonus Month'**
+  String get bonusMonth;
+
+  /// No description provided for @absentDays.
+  ///
+  /// In en, this message translates to:
+  /// **'Absent Days'**
+  String get absentDays;
+
+  /// No description provided for @vacation.
+  ///
+  /// In en, this message translates to:
+  /// **'Vacation'**
+  String get vacation;
+
+  /// No description provided for @total.
+  ///
+  /// In en, this message translates to:
+  /// **'Total'**
+  String get total;
+
+  /// No description provided for @absent.
+  ///
+  /// In en, this message translates to:
+  /// **'Absent'**
+  String get absent;
+
+  /// No description provided for @salaryCalculator.
+  ///
+  /// In en, this message translates to:
+  /// **'Salary Calculator'**
+  String get salaryCalculator;
+
+  /// No description provided for @save.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get save;
+
+  /// No description provided for @saved_Successfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved Successfully'**
+  String get saved_Successfully;
+
+  /// No description provided for @over_time.
+  ///
+  /// In en, this message translates to:
+  /// **'Over time'**
+  String get over_time;
+
+  /// No description provided for @enter_days.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter days'**
+  String get enter_days;
+
+  /// No description provided for @enter_unit.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter unit'**
+  String get enter_unit;
+
+  /// No description provided for @reports.
+  ///
+  /// In en, this message translates to:
+  /// **'Reports'**
+  String get reports;
+
+  /// No description provided for @enter_report.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter report'**
+  String get enter_report;
+
+  /// No description provided for @attendance.
+  ///
+  /// In en, this message translates to:
+  /// **'Attendance'**
+  String get attendance;
+
+  /// No description provided for @unit.
+  ///
+  /// In en, this message translates to:
+  /// **'Unit'**
+  String get unit;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

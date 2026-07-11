@@ -1,16 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:smart_salary/core/costants/color_manager.dart';
+import 'package:smart_salary/core/helper/salary_period_helper.dart';
+import 'package:smart_salary/core/session_service/session_service.dart';
+import 'package:smart_salary/l10n/app_localizations.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class AttendanceCard extends StatefulWidget {
   final DateTime selectedDay;
   final ValueChanged<DateTime> onDayChanged;
+  final int refresh;
 
   const AttendanceCard({
     super.key,
     required this.selectedDay,
     required this.onDayChanged,
+    required this.refresh,
   });
 
   @override
@@ -23,50 +29,79 @@ class _AttendanceCardState extends State<AttendanceCard> {
   static const bonusColor = ColorManager.secondary;
   static const absentColor = ColorManager.red;
   static const reportsColor = Color(0xffFFB300);
-
   late DateTime _focusedDay;
 
-  final Map<DateTime, List<Color>> attendance = {
-    DateTime(2026, 7, 1): [absentColor],
-    DateTime(2026, 7, 2): [overTimeColor],
-    DateTime(2026, 7, 3): [overTimeColor],
-    DateTime(2026, 7, 4): [overTimeColor],
-    DateTime(2026, 7, 5): [overTimeColor, bonusColor],
-    DateTime(2026, 7, 6): [overTimeColor],
-    DateTime(2026, 7, 9): [absentColor],
-    DateTime(2026, 7, 10): [bonusColor],
-    DateTime(2026, 7, 11): [bonusColor],
-    DateTime(2026, 7, 12): [overTimeColor, absentColor],
-    DateTime(2026, 7, 13): [absentColor],
-    DateTime(2026, 7, 16): [overTimeColor],
-    DateTime(2026, 7, 17): [overTimeColor],
-    DateTime(2026, 7, 18): [overTimeColor],
-    DateTime(2026, 7, 19): [overTimeColor],
-    DateTime(2026, 7, 20): [overTimeColor],
-  };
+  Map<DateTime, List<Color>> attendance = {};
+
+  Future<void> _loadAttendance() async {
+    attendance.clear();
+    final days = SalaryPeriodHelper.getAllDays(_focusedDay);
+    for (final date in days) {
+      final data = await SessionService.loadDailyInput(date);
+      List<Color> colors = [];
+      if ((double.tryParse(data["overtime"] ?? "0") ?? 0) > 0) {
+        colors.add(overTimeColor);
+      }
+      if ((double.tryParse(data["bonus"] ?? "0") ?? 0) > 0) {
+        colors.add(bonusColor);
+      }
+      if ((double.tryParse(data["absent"] ?? "0") ?? 0) > 0) {
+        colors.add(absentColor);
+      }
+      if ((data["report"] ?? "").trim().isNotEmpty) {
+        colors.add(reportsColor);
+      }
+      if (colors.isNotEmpty) {
+        attendance[DateTime(date.year, date.month, date.day)] = colors;
+      }
+    }
+    setState(() {});
+  }
+  Future<void> _syncSelectedMonth() async {
+    final month = await SessionService.loadSelectedMonth();
+
+    setState(() {
+      _focusedDay = DateTime(
+        month.year,
+        month.month,
+        widget.selectedDay.day,
+      );
+    });
+
+    await _loadAttendance();
+  }
 
   @override
   void initState() {
     super.initState();
     _focusedDay = widget.selectedDay;
+    _loadAttendance();
   }
 
   List<Color> _markers(DateTime day) {
     return attendance.entries
         .firstWhere(
           (e) => isSameDay(e.key, day),
-      orElse: () => MapEntry(day, []),
-    )
+          orElse: () => MapEntry(day, []),
+        )
         .value;
+  }
+  @override
+  void didUpdateWidget(covariant AttendanceCard oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (oldWidget.refresh != widget.refresh) {
+      _loadAttendance();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(24),
+      padding: REdgeInsets.all(24),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(30),
+        borderRadius: BorderRadius.circular(30.r),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(.05),
@@ -78,62 +113,58 @@ class _AttendanceCardState extends State<AttendanceCard> {
       child: Column(
         children: [
           _buildHeader(),
-          const SizedBox(height: 25),
+          SizedBox(height: 25.h),
           _buildCalendar(),
-          const SizedBox(height: 5),
-          const Divider(),
-          const SizedBox(height: 12),
-          _buildLegend(),
+          SizedBox(height: 5.h),
+          // const Divider(),
+          // const SizedBox(height: 12),
+          // _buildLegend(),
         ],
       ),
     );
   }
 
   Widget _buildHeader() {
+    AppLocalizations appLocalizations = AppLocalizations.of(context)!;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              "ATTENDANCE",
-              style: TextStyle(
-                color: primaryColor,
-                fontSize: 13,
-                fontWeight: FontWeight.bold,
-                letterSpacing: 1,
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                appLocalizations.attendance.toUpperCase(),
+                style: TextStyle(
+                  color: primaryColor,
+                  fontSize: 13.sp,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 1,
+                ),
               ),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              DateFormat.yMMMM().format(_focusedDay),
-              style: const TextStyle(
-                fontSize: 28,
-                fontWeight: FontWeight.bold,
+              SizedBox(height: 4.h),
+              Text(
+                DateFormat.yMMMM().format(_focusedDay),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(fontSize: 28.sp, fontWeight: FontWeight.bold),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
         Row(
           children: [
-            _navButton(
-              Icons.chevron_left,
-                  () {
-                setState(() {
-                  _focusedDay = DateTime(_focusedDay.year, _focusedDay.month - 1);
-                });
-              },
-            ),
-            const SizedBox(width: 10),
-            _navButton(
-              Icons.chevron_right,
-                  () {
-                setState(() {
-                  _focusedDay = DateTime(_focusedDay.year, _focusedDay.month + 1);
-                });
-              },
-            ),
+            _navButton(Icons.chevron_left, () async {
+              _focusedDay = DateTime(_focusedDay.year, _focusedDay.month - 1);
+              await _loadAttendance();
+              setState(() {});
+            }),
+            SizedBox(width: 10.w),
+            _navButton(Icons.chevron_right, () async {
+              _focusedDay = DateTime(_focusedDay.year, _focusedDay.month + 1);
+              await _loadAttendance();
+              setState(() {});
+            }),
           ],
         ),
       ],
@@ -143,10 +174,10 @@ class _AttendanceCardState extends State<AttendanceCard> {
   Widget _navButton(IconData icon, VoidCallback onTap) {
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(30),
+      borderRadius: BorderRadius.circular(30.r),
       child: Container(
-        width: 42,
-        height: 42,
+        width: 42.w,
+        height: 42.h,
         decoration: const BoxDecoration(
           color: Color(0xffF4F4F4),
           shape: BoxShape.circle,
@@ -158,6 +189,7 @@ class _AttendanceCardState extends State<AttendanceCard> {
 
   Widget _buildCalendar() {
     return TableCalendar(
+      //key: ValueKey(widget.refresh),
       firstDay: DateTime(2020),
       lastDay: DateTime(2035),
       focusedDay: _focusedDay,
@@ -167,22 +199,28 @@ class _AttendanceCardState extends State<AttendanceCard> {
         setState(() {
           _focusedDay = focusedDay;
         });
-        widget.onDayChanged(selectedDay); // نمرر اليوم الجديد للأب
+        widget.onDayChanged(selectedDay);
       },
       onPageChanged: (focusedDay) {
         setState(() {
           _focusedDay = focusedDay;
         });
       },
-      calendarStyle: const CalendarStyle(
+      calendarStyle: CalendarStyle(
         markersMaxCount: 3,
         canMarkersOverflow: false,
-        markerMargin: EdgeInsets.only(top: 4),
-        cellMargin: EdgeInsets.all(4),
+        markerMargin: REdgeInsets.only(top: 4),
+        cellMargin: REdgeInsets.all(4),
       ),
       daysOfWeekStyle: const DaysOfWeekStyle(
-        weekdayStyle: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold),
-        weekendStyle: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold),
+        weekdayStyle: TextStyle(
+          color: Colors.grey,
+          fontWeight: FontWeight.bold,
+        ),
+        weekendStyle: TextStyle(
+          color: Colors.grey,
+          fontWeight: FontWeight.bold,
+        ),
       ),
       calendarBuilders: CalendarBuilders(
         defaultBuilder: (context, day, focusedDay) {
@@ -190,22 +228,27 @@ class _AttendanceCardState extends State<AttendanceCard> {
             child: Text(
               "${day.day}",
               style: TextStyle(
-                color: day.month == _focusedDay.month ? Colors.black87 : Colors.black26,
+                color: day.month == _focusedDay.month
+                    ? Colors.black87
+                    : Colors.black26,
               ),
             ),
           );
         },
         selectedBuilder: (context, day, focusedDay) {
           return Container(
-            margin: const EdgeInsets.all(6),
+            margin: REdgeInsets.all(6),
             decoration: BoxDecoration(
               color: primaryColor,
-              borderRadius: BorderRadius.circular(14),
+              borderRadius: BorderRadius.circular(14.r),
             ),
             child: Center(
               child: Text(
                 "${day.day}",
-                style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           );
@@ -214,15 +257,18 @@ class _AttendanceCardState extends State<AttendanceCard> {
           final dots = _markers(day);
           if (dots.isEmpty) return const SizedBox();
           return Positioned(
-            bottom: 4,
+            bottom: 4.h,
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: dots.map((color) {
                 return Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 1),
-                  width: 5,
-                  height: 5,
-                  decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+                  margin: REdgeInsets.symmetric(horizontal: 1),
+                  width: 5.w,
+                  height: 5.h,
+                  decoration: BoxDecoration(
+                    color: color,
+                    shape: BoxShape.circle,
+                  ),
                 );
               }).toList(),
             ),
@@ -233,13 +279,14 @@ class _AttendanceCardState extends State<AttendanceCard> {
   }
 
   Widget _buildLegend() {
+    AppLocalizations appLocalizations = AppLocalizations.of(context)!;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        _legend("Over time", overTimeColor),
-        _legend("Bonus", bonusColor),
-        _legend("Absent", absentColor),
-        _legend("Reports", reportsColor),
+        _legend(appLocalizations.over_time, overTimeColor),
+        _legend(appLocalizations.bonus, bonusColor),
+        _legend(appLocalizations.absent, absentColor),
+        _legend(appLocalizations.reports, reportsColor),
       ],
     );
   }
@@ -248,12 +295,15 @@ class _AttendanceCardState extends State<AttendanceCard> {
     return Row(
       children: [
         Container(
-          width: 8,
-          height: 8,
+          width: 8.w,
+          height: 8.h,
           decoration: BoxDecoration(color: color, shape: BoxShape.circle),
         ),
-        const SizedBox(width: 5),
-        Text(title, style: const TextStyle(fontSize: 12, color: Colors.black54)),
+        SizedBox(width: 5.w),
+        Text(
+          title,
+          style: TextStyle(fontSize: 12.sp, color: Colors.black54),
+        ),
       ],
     );
   }
