@@ -12,6 +12,8 @@
   "view_salary_history_reports_and_analytics_for_every_month__Stay_informed_about_your_financial_progress": "View salary history, reports and analytics for every month. Stay informed about your financial progress.",
   "precisionPayrollManagement": "Precision Payroll Management",
   "email": "Email",
+  "phoneNumber": "Phone Number",
+  "enterYourPhone": "Enter Your Phone",
   "password": "Password",
   "enterYourEmail": "Enter your email",
   "name": "Name",
@@ -83,5 +85,11 @@
   "language": "Language",
   "are_you_sure_you_want_to_log_out": "Are you sure you want to log out",
   "cancel": "Cancel",
+  "this_field_is_required": "this field is required",
+  "name_must_be_at_least_characters": "Name must be at least 3 characters",
+  "enter_a_valid_email": "Enter a valid email",
+  "enter_a_valid_phone_number": "Enter a valid phone number",
+  "password_must_contain_at_least_characters": "Password must contain at least 8 characters",
+  "passwords_do_not_match": "Passwords do not match",
   "ok": "Ok"
 }

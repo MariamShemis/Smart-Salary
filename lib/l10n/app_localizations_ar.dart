@@ -48,6 +48,12 @@ class AppLocalizationsAr extends AppLocalizations {
   String get email => 'البريد الإلكتروني';
 
   @override
+  String get phoneNumber => 'رقم الهاتف';
+
+  @override
+  String get enterYourPhone => 'أدخل رقم الهاتف';
+
+  @override
   String get password => 'كلمة المرور';
 
   @override
@@ -259,6 +265,24 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get cancel => 'إلغاء';
+
+  @override
+  String get this_field_is_required => 'هذا الحقل مطلوب';
+
+  @override
+  String get name_must_be_at_least_characters => 'يجب أن يتكون الاسم من 3 أحرف على الأقل';
+
+  @override
+  String get enter_a_valid_email => 'أدخل بريدًا إلكترونيًا صالحًا';
+
+  @override
+  String get enter_a_valid_phone_number => 'أدخل رقم هاتف صالح';
+
+  @override
+  String get password_must_contain_at_least_characters => 'يجب أن تحتوي كلمة المرور على 8 أحرف على الأقل';
+
+  @override
+  String get passwords_do_not_match => 'كلمتا المرور غير متطابقتين';
 
   @override
   String get ok => 'موافق';

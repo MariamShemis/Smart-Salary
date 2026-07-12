@@ -5,6 +5,9 @@ import 'package:smart_salary/core/routes/app_routes.dart';
 import 'package:smart_salary/features/main_layout/profile/presentation/widgets/profile_header.dart';
 import 'package:smart_salary/features/main_layout/profile/presentation/widgets/profile_menu_item.dart';
 import 'package:smart_salary/l10n/app_localizations.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:smart_salary/features/auth/data/cubit/auth_cubit.dart';
+import 'package:smart_salary/features/auth/data/cubit/auth_state.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});

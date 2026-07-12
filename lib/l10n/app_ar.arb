@@ -12,6 +12,8 @@
   "view_salary_history_reports_and_analytics_for_every_month__Stay_informed_about_your_financial_progress": "اطلع على سجل الرواتب والتقارير والتحليلات الشهرية وابقَ على اطلاع بتقدمك المالي",
   "precisionPayrollManagement": "إدارة الرواتب بدقة",
   "email": "البريد الإلكتروني",
+  "phoneNumber": "رقم الهاتف",
+  "enterYourPhone": "أدخل رقم الهاتف",
   "password": "كلمة المرور",
   "enterYourEmail": "أدخل بريدك الإلكتروني",
   "name": "الاسم",
@@ -83,5 +85,11 @@
   "language": "اللغة",
   "are_you_sure_you_want_to_log_out": "هل أنت متأكد أنك تريد تسجيل الخروج؟",
   "cancel": "إلغاء",
+  "this_field_is_required": "هذا الحقل مطلوب",
+  "name_must_be_at_least_characters": "يجب أن يتكون الاسم من 3 أحرف على الأقل",
+  "enter_a_valid_email": "أدخل بريدًا إلكترونيًا صالحًا",
+  "enter_a_valid_phone_number": "أدخل رقم هاتف صالح",
+  "password_must_contain_at_least_characters": "يجب أن تحتوي كلمة المرور على 8 أحرف على الأقل",
+  "passwords_do_not_match": "كلمتا المرور غير متطابقتين",
   "ok": "موافق"
 }

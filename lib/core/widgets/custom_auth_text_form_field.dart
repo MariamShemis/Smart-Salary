@@ -57,6 +57,7 @@ class _CustomAuthTextFormFieldState extends State<CustomAuthTextFormField> {
           TextFormField(
             controller: widget.controller,
             keyboardType: widget.keyboardType,
+            validator: widget.validator,
             obscureText: widget.isPassword ? _obscureText : false,
             style: TextStyle(
               fontSize: 14.sp,

@@ -173,6 +173,18 @@ abstract class AppLocalizations {
   /// **'Email'**
   String get email;
 
+  /// No description provided for @phoneNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone Number'**
+  String get phoneNumber;
+
+  /// No description provided for @enterYourPhone.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter Your Phone'**
+  String get enterYourPhone;
+
   /// No description provided for @password.
   ///
   /// In en, this message translates to:
@@ -598,6 +610,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Cancel'**
   String get cancel;
+
+  /// No description provided for @this_field_is_required.
+  ///
+  /// In en, this message translates to:
+  /// **'this field is required'**
+  String get this_field_is_required;
+
+  /// No description provided for @name_must_be_at_least_characters.
+  ///
+  /// In en, this message translates to:
+  /// **'Name must be at least 3 characters'**
+  String get name_must_be_at_least_characters;
+
+  /// No description provided for @enter_a_valid_email.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a valid email'**
+  String get enter_a_valid_email;
+
+  /// No description provided for @enter_a_valid_phone_number.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a valid phone number'**
+  String get enter_a_valid_phone_number;
+
+  /// No description provided for @password_must_contain_at_least_characters.
+  ///
+  /// In en, this message translates to:
+  /// **'Password must contain at least 8 characters'**
+  String get password_must_contain_at_least_characters;
+
+  /// No description provided for @passwords_do_not_match.
+  ///
+  /// In en, this message translates to:
+  /// **'Passwords do not match'**
+  String get passwords_do_not_match;
 
   /// No description provided for @ok.
   ///
