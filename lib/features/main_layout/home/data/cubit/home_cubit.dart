@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smart_salary/core/session_service/session_service.dart';
+import 'package:smart_salary/features/firebase/firebase_services.dart';
 
 import 'home_state.dart';
 
@@ -12,10 +13,13 @@ class HomeCubit extends Cubit<HomeState> {
     final month = await SessionService.loadSelectedMonth();
     final data = await SessionService.loadSalaryResults(month);
 
+    final user = await FirebaseServices.getCurrentUser();
+
     emit(
       HomeLoaded(
         month: month,
         homeData: data,
+        user: user,
       ),
     );
   }

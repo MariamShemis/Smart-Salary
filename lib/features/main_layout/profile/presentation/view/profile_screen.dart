@@ -2,127 +2,173 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:smart_salary/core/costants/color_manager.dart';
 import 'package:smart_salary/core/routes/app_routes.dart';
+import 'package:smart_salary/features/auth/data/model/user_model.dart';
 import 'package:smart_salary/features/main_layout/profile/presentation/widgets/profile_header.dart';
 import 'package:smart_salary/features/main_layout/profile/presentation/widgets/profile_menu_item.dart';
 import 'package:smart_salary/l10n/app_localizations.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:smart_salary/features/auth/data/cubit/auth_cubit.dart';
-import 'package:smart_salary/features/auth/data/cubit/auth_state.dart';
+import 'package:smart_salary/features/main_layout/profile/data/cubit/profile_cubit.dart';
+import 'package:smart_salary/features/main_layout/profile/data/cubit/profile_state.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
+
+  @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<ProfileCubit>().getProfile();
+  }
 
   @override
   Widget build(BuildContext context) {
     AppLocalizations appLocalizations = AppLocalizations.of(context)!;
-    return SafeArea(
-      child: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        child: Padding(
-          padding: REdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(height: 10.h),
-              ProfileHeader(
-                name: 'Alexander Sterling',
-                job: 'Senior Product Designer',
-                phoneNumber: '01054574545',
-                image: CircleAvatar(
-                  radius: 40.r,
-                  backgroundColor: ColorManager.greyText,
-                  child: Icon(
-                    Icons.person,
-                    size: 35.sp,
-                    color: ColorManager.white,
-                  ),
-                ),
-              ),
-              SizedBox(height: 40.h),
-              Text(
-                appLocalizations.general_settings.toUpperCase(),
-                style: TextStyle(
-                  color: ColorManager.greyDark.withOpacity(0.5),
-                  fontSize: 15.sp,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 0.8,
-                ),
-              ),
-              SizedBox(height: 8.h),
-              Container(
-                decoration: BoxDecoration(
-                  color: ColorManager.white,
-                  borderRadius: BorderRadius.circular(20.r),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.015),
-                      blurRadius: 15,
-                      offset: const Offset(0, 4),
-                    ),
-                  ],
-                ),
-                child: Column(
-                  children: [
-                    ProfileMenuTile(
-                      icon: Icons.person_outline_outlined,
-                      title: appLocalizations.editProfile,
-                      onTap: () {},
-                    ),
-                    ProfileMenuTile(
-                      icon: Icons.security_rounded,
-                      title: appLocalizations.account_Security,
-                      onTap: () {},
-                    ),
-                    ProfileMenuTile(
-                      icon: Icons.language_rounded,
-                      title: appLocalizations.language,
-                      trailingText: 'English',
-                      onTap: () {},
-                      showDivider: false,
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(height: 44.h),
-              SizedBox(
-                width: double.infinity,
-                height: 52.h,
-                child: TextButton(
-                  onPressed: () {
-                    _showDialogLogOut(context);
-                  },
-                  style: TextButton.styleFrom(
-                    backgroundColor: ColorManager.red.withOpacity(0.1),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16.r),
-                    ),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.logout_rounded,
-                        color: ColorManager.red,
-                        size: 20.sp,
+    return BlocConsumer<ProfileCubit, ProfileState>(
+      listener: (context, state) {
+        if (state is LogoutSuccess) {
+          Navigator.pushNamedAndRemoveUntil(
+            context,
+            AppRoutes.login,
+                (route) => false,
+          );
+        }
+        if (state is LogoutError) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(state.message),
+            ),
+          );
+        }
+      },
+      builder: (context, state) {
+        if (state is ProfileLoading) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+        if (state is ProfileError) {
+          return Center(
+            child: Text(state.message),
+          );
+        }
+        UserModel? user;
+        if (state is ProfileSuccess) {
+          user = state.user;
+        }
+        return SafeArea(
+          child: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            child: Padding(
+              padding: REdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: 10.h),
+                  ProfileHeader(
+                    name: user?.name ?? '',
+                    job: user?.email ?? 'Senior Product Designer',
+                    phoneNumber: user?.phone ?? '',
+                    image: CircleAvatar(
+                      radius: 40.r,
+                      backgroundColor: ColorManager.greyText,
+                      child: Icon(
+                        Icons.person,
+                        size: 35.sp,
+                        color: ColorManager.white,
                       ),
-                      SizedBox(width: 8.w),
-                      Text(
-                        appLocalizations.log_out,
-                        style: TextStyle(
-                          color: ColorManager.red,
-                          fontSize: 16.sp,
-                          fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: 40.h),
+                  Text(
+                    appLocalizations.general_settings.toUpperCase(),
+                    style: TextStyle(
+                      color: ColorManager.greyDark.withOpacity(0.5),
+                      fontSize: 15.sp,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 0.8,
+                    ),
+                  ),
+                  SizedBox(height: 8.h),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: ColorManager.white,
+                      borderRadius: BorderRadius.circular(20.r),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.015),
+                          blurRadius: 15,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      children: [
+                        ProfileMenuTile(
+                          icon: Icons.person_outline_outlined,
+                          title: appLocalizations.editProfile,
+                          onTap: () {},
+                        ),
+                        ProfileMenuTile(
+                          icon: Icons.security_rounded,
+                          title: appLocalizations.account_Security,
+                          onTap: () {},
+                        ),
+                        ProfileMenuTile(
+                          icon: Icons.language_rounded,
+                          title: appLocalizations.language,
+                          trailingText: 'English',
+                          onTap: () {},
+                          showDivider: false,
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 44.h),
+                  SizedBox(
+                    width: double.infinity,
+                    height: 52.h,
+                    child: TextButton(
+                      onPressed: () {
+                        _showDialogLogOut(context);
+                      },
+                      style: TextButton.styleFrom(
+                        backgroundColor: ColorManager.red.withOpacity(0.1),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16.r),
                         ),
                       ),
-                    ],
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.logout_rounded,
+                            color: ColorManager.red,
+                            size: 20.sp,
+                          ),
+                          SizedBox(width: 8.w),
+                          Text(
+                            appLocalizations.log_out,
+                            style: TextStyle(
+                              color: ColorManager.red,
+                              fontSize: 16.sp,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
-                ),
+                  SizedBox(height: 24.h),
+                ],
               ),
-              SizedBox(height: 24.h),
-            ],
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 
@@ -131,48 +177,49 @@ class ProfileScreen extends StatelessWidget {
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (context) => AlertDialog(
-        backgroundColor: ColorManager.white,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16.r),
-        ),
-        title: Text(
-          appLocalizations.log_out,
-          style: TextStyle(
-            color: ColorManager.primaryColor,
-            fontSize: 25.sp,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        content: Text(
-          appLocalizations.are_you_sure_you_want_to_log_out,
-          style: TextStyle(
-            color: ColorManager.black,
-            fontSize: 18.sp,
-            fontWeight: FontWeight.w700,
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text(
-              appLocalizations.cancel,
-              style: TextStyle(color: ColorManager.red),
+      builder: (context) =>
+          AlertDialog(
+            backgroundColor: ColorManager.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16.r),
             ),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pushNamedAndRemoveUntil(
-              context,
-              AppRoutes.login,
-              (route) => false,
+            title: Text(
+              appLocalizations.log_out,
+              style: TextStyle(
+                color: ColorManager.primaryColor,
+                fontSize: 25.sp,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-            child: Text(
-              appLocalizations.ok,
-              style: TextStyle(color: ColorManager.primaryColor),
+            content: Text(
+              appLocalizations.are_you_sure_you_want_to_log_out,
+              style: TextStyle(
+                color: ColorManager.black,
+                fontSize: 18.sp,
+                fontWeight: FontWeight.w700,
+              ),
             ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text(
+                  appLocalizations.cancel,
+                  style: TextStyle(color: ColorManager.red),
+                ),
+              ),
+              TextButton(
+                onPressed: () async {
+                  Navigator.pop(context);
+
+                  await context.read<ProfileCubit>().logout();
+                },
+                child: Text(
+                  appLocalizations.ok,
+                  style: TextStyle(color: ColorManager.primaryColor),
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
     );
   }
 }

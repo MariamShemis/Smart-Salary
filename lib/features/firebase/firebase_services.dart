@@ -62,4 +62,20 @@ class FirebaseServices {
     final doc = await getUsersCollection().doc(uid).get();
     return doc.data();
   }
+
+  static Future<UserModel> getCurrentUser() async {
+    User? firebaseUser = _auth.currentUser;
+
+    if (firebaseUser == null) {
+      throw Exception("No user is logged in.");
+    }
+
+    UserModel? user = await getUserFromFireStore(firebaseUser.uid);
+
+    if (user == null) {
+      throw Exception("User not found.");
+    }
+
+    return user;
+  }
 }

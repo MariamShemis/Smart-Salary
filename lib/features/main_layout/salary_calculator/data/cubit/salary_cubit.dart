@@ -1,5 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smart_salary/core/session_service/session_service.dart';
+import 'package:smart_salary/features/firebase/salary_firestore_services.dart';
 
 import 'salary_state.dart';
 
@@ -68,7 +70,8 @@ class SalaryCubit extends Cubit<SalaryState> {
     final totalSalaryWithReward =
         totalSalary + reward;
 
-    await SessionService.saveSalaryResults(
+    await SalaryFirestoreServices.saveSalaryResult(
+      uid: FirebaseAuth.instance.currentUser!.uid,
       month: month,
       totalSalary: totalSalary,
       totalSalaryWithReward: totalSalaryWithReward,

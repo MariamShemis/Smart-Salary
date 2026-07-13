@@ -6,13 +6,12 @@ import 'package:smart_salary/features/main_layout/daily_reports/data/cubit/daily
 import 'package:smart_salary/features/main_layout/home/data/cubit/home_cubit.dart';
 import 'package:smart_salary/features/main_layout/salary_calculator/data/cubit/salary_cubit.dart';
 import 'package:smart_salary/smart_salary.dart';
+import 'features/main_layout/profile/data/cubit/profile_cubit.dart';
 import 'firebase_options.dart';
 
-void main() async{
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(
     MultiBlocProvider(
       providers: [
@@ -20,6 +19,7 @@ void main() async{
         BlocProvider(create: (_) => SalaryCubit()),
         BlocProvider(create: (_) => DailyReportsCubit()),
         BlocProvider(create: (_) => HomeCubit()..loadHome()),
+        BlocProvider(create: (_) => ProfileCubit()),
       ],
       child: SmartSalary(),
     ),

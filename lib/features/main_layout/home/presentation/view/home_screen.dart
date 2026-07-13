@@ -54,9 +54,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const HomeTitle(),
+                    HomeTitle(
+                      name: homeState.user.name,
+                    ),
                     SizedBox(height: 3.h),
-
                     Divider(
                       color: ColorManager.greyDark.withOpacity(.2),
                       thickness: 1.5,
