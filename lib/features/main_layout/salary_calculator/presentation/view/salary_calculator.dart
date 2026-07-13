@@ -1,8 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:smart_salary/core/costants/color_manager.dart';
-import 'package:smart_salary/core/session_service/session_service.dart';
+import 'package:smart_salary/core/utils/ui_utils.dart';
+import 'package:smart_salary/features/firebase/salary_firestore_services.dart';
 import 'package:smart_salary/features/main_layout/daily_reports/data/cubit/daily_reports_cubit.dart';
 import 'package:smart_salary/features/main_layout/home/data/cubit/home_cubit.dart';
 import 'package:smart_salary/features/main_layout/salary_calculator/data/cubit/salary_cubit.dart';
@@ -25,12 +27,12 @@ class _SalaryCalculatorState extends State<SalaryCalculator> {
   final TextEditingController _basicSalaryController = TextEditingController();
 
   final TextEditingController _dailyCountDivisorController =
-  TextEditingController(text: "30");
+      TextEditingController(text: "30");
 
   final TextEditingController _overtimeDaysController = TextEditingController();
 
   final TextEditingController _overtimeMultiplierController =
-  TextEditingController();
+      TextEditingController();
 
   final TextEditingController _bonusDaysController = TextEditingController();
 
@@ -41,15 +43,15 @@ class _SalaryCalculatorState extends State<SalaryCalculator> {
   final TextEditingController _absentDaysController = TextEditingController();
 
   final TextEditingController _deductionAbsentController =
-  TextEditingController();
+      TextEditingController();
 
   final TextEditingController _deductionCustomController =
-  TextEditingController();
+      TextEditingController();
 
   final TextEditingController _rewardValueController = TextEditingController();
 
   final TextEditingController _rewardMultiplierController =
-  TextEditingController();
+      TextEditingController();
 
   @override
   void initState() {
@@ -59,25 +61,98 @@ class _SalaryCalculatorState extends State<SalaryCalculator> {
   }
 
   Future<void> _initialize() async {
-    _selectedMonth = await SessionService.loadSelectedMonth();
+    final uid = FirebaseAuth.instance.currentUser!.uid;
 
-    final savedData = await SessionService.loadSalaryInputs();
+    _selectedMonth = await SalaryFirestoreServices.loadSelectedMonth(uid);
+
+    final savedData = await SalaryFirestoreServices.loadSalaryInputs(uid);
 
     _basicSalaryController.text = savedData['basic']!;
     _dailyCountDivisorController.text = savedData['divisor']!;
-    _bonusValueController.text = savedData['bonusValue']!;
-    _overtimeMultiplierController.text = savedData['otMultiplier']!;
+    // _bonusValueController.text = savedData['bonusValue']!;
+    // _overtimeMultiplierController.text = savedData['otMultiplier']!;
 
     await _loadMonthData(_selectedMonth);
   }
 
   Future<void> _saveData() async {
+    final uid = FirebaseAuth.instance.currentUser!.uid;
     AppLocalizations appLocalizations = AppLocalizations.of(context)!;
-    await SessionService.saveSalaryInputs(
+    UiUtils.showLoading(context);
+    try {
+      await SalaryFirestoreServices.saveSalaryInputs(
+        uid: uid,
+        basic: _basicSalaryController.text,
+        divisor: _dailyCountDivisorController.text,
+      );
+      await SalaryFirestoreServices.saveMonthlySalaryData(
+        uid: uid,
+        month: _selectedMonth,
+        deductAbsent: _deductionAbsentController.text,
+        deductCustom: _deductionCustomController.text,
+        rewardValue: _rewardValueController.text,
+        rewardMultiplier: _rewardMultiplierController.text,
+        overtimeMultiplier: _overtimeMultiplierController.text,
+        bonusValue: _bonusValueController.text,
+      );
+      await context.read<SalaryCubit>().loadSalary(_selectedMonth);
+      await context.read<HomeCubit>().loadHome();
+      context.read<DailyReportsCubit>().loadDaily(
+        DateTime(_selectedMonth.year, _selectedMonth.month, 1),
+      );
+      if (!mounted) return;
+      UiUtils.hideLoading(context);
+      UiUtils.showToast(
+        appLocalizations.salary_calculations_saved_successfully,
+      );
+    } catch (e) {
+      if (!mounted) return;
+      UiUtils.hideLoading(context);
+      UiUtils.showToast("Something went wrong", backgroundColor: Colors.red);
+    }
+  }
+
+  Future<void> _loadMonthData(DateTime month) async {
+    _selectedMonth = month;
+    final uid = FirebaseAuth.instance.currentUser!.uid;
+
+    final totals = await SalaryFirestoreServices.loadMonthlyTotals(
+      uid: uid,
+      month: month,
+    );
+
+    final monthData = await SalaryFirestoreServices.loadMonthlySalaryData(
+      uid: uid,
+      month: month,
+    );
+
+    setState(() {
+      _overtimeDaysController.text = totals["overtime"]!.toInt().toString();
+      _bonusDaysController.text = totals["bonus"]!.toInt().toString();
+      _absentDaysController.text = totals["absent"]!.toInt().toString();
+
+      _deductionAbsentController.text = monthData["deductAbsent"]!;
+      _deductionCustomController.text = monthData["deductCustom"]!;
+      _rewardValueController.text = monthData["rewardValue"]!;
+      _rewardMultiplierController.text = monthData["rewardMultiplier"]!;
+      _overtimeMultiplierController.text = monthData["overtimeMultiplier"]!;
+      _bonusValueController.text = monthData["bonusValue"]!;
+    });
+
+    context.read<SalaryCubit>().loadSalary(month);
+  }
+
+  Future<void> _saveWithoutMessage() async {
+    final uid = FirebaseAuth.instance.currentUser!.uid;
+
+    await SalaryFirestoreServices.saveSalaryInputs(
+      uid: uid,
       basic: _basicSalaryController.text,
       divisor: _dailyCountDivisorController.text,
     );
-    await SessionService.saveMonthlySalaryData(
+
+    await SalaryFirestoreServices.saveMonthlySalaryData(
+      uid: uid,
       month: _selectedMonth,
       deductAbsent: _deductionAbsentController.text,
       deductCustom: _deductionCustomController.text,
@@ -86,40 +161,6 @@ class _SalaryCalculatorState extends State<SalaryCalculator> {
       overtimeMultiplier: _overtimeMultiplierController.text,
       bonusValue: _bonusValueController.text,
     );
-    await context.read<HomeCubit>().loadHome();
-    context.read<DailyReportsCubit>().loadDaily(
-      DateTime(_selectedMonth.year, _selectedMonth.month, 1),
-    );
-    if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            "${appLocalizations.salary_calculations_saved_successfully}!",
-          ),
-          backgroundColor: Color(0xff004D40),
-        ),
-      );
-    }
-  }
-
-  Future<void> _loadMonthData(DateTime month) async {
-    _selectedMonth = month;
-    final totals = await SessionService.loadMonthlyTotals(month);
-    final monthData = await SessionService.loadMonthlySalaryData(month);
-    _overtimeDaysController.text = totals["overtime"]!.toInt().toString();
-    _bonusDaysController.text = totals["bonus"]!.toInt().toString();
-    _absentDaysController.text = totals["absent"]!.toInt().toString();
-    _deductionAbsentController.text = monthData["deductAbsent"]!;
-    _deductionCustomController.text = monthData["deductCustom"]!;
-    _rewardValueController.text = monthData["rewardValue"]!;
-    _rewardMultiplierController.text = monthData["rewardMultiplier"]!;
-    _overtimeMultiplierController.text =
-    monthData["overtimeMultiplier"]!;
-
-    _bonusValueController.text =
-    monthData["bonusValue"]!;
-    final yearlyAbsent = await SessionService.loadYearlyAbsent(month);
-    context.read<SalaryCubit>().loadSalary(month);
   }
 
   @override
@@ -145,7 +186,7 @@ class _SalaryCalculatorState extends State<SalaryCalculator> {
       builder: (context, state) {
         if (state is! SalarySuccess) {
           return Center(
-            child: CircularProgressIndicator(color: ColorManager.primaryColor,),
+            child: CircularProgressIndicator(color: ColorManager.primaryColor),
           );
         }
         return SafeArea(
@@ -156,12 +197,35 @@ class _SalaryCalculatorState extends State<SalaryCalculator> {
               children: [
                 SalaryHeader(
                   selectedMonth: _selectedMonth,
-                    onMonthChanged: (month) async {
-                      await SessionService.saveSelectedMonth(month);
-                      await _saveData();
+                  onMonthChanged: (month) async {
+                    UiUtils.showLoading(context);
+
+                    try {
+                      await _saveWithoutMessage();
+
+                      await SalaryFirestoreServices.saveSelectedMonth(
+                        uid: FirebaseAuth.instance.currentUser!.uid,
+                        month: month,
+                      );
+
                       await _loadMonthData(month);
+
                       await context.read<HomeCubit>().loadHome();
+
+                      if (mounted) {
+                        UiUtils.hideLoading(context);
+                      }
+                    } catch (e) {
+                      if (mounted) {
+                        UiUtils.hideLoading(context);
+
+                        UiUtils.showToast(
+                          "Something went wrong",
+                          backgroundColor: Colors.red,
+                        );
+                      }
                     }
+                  },
                 ),
                 SizedBox(height: 20.h),
                 SalaryCard(
@@ -181,20 +245,27 @@ class _SalaryCalculatorState extends State<SalaryCalculator> {
                     context.read<SalaryCubit>().calculateSalary(
                       month: _selectedMonth,
                       basic: double.tryParse(_basicSalaryController.text) ?? 0,
-                      divisor: double.tryParse(_dailyCountDivisorController.text) ?? 30,
-                      overtimeDays: double.tryParse(_overtimeDaysController.text) ?? 0,
+                      divisor:
+                          double.tryParse(_dailyCountDivisorController.text) ??
+                          30,
+                      overtimeDays:
+                          double.tryParse(_overtimeDaysController.text) ?? 0,
                       overtimeMultiplier:
-                      double.tryParse(_overtimeMultiplierController.text) ?? 1,
-                      bonusDays: double.tryParse(_bonusDaysController.text) ?? 0,
-                      bonusValue: double.tryParse(_bonusValueController.text) ?? 20,
+                          double.tryParse(_overtimeMultiplierController.text) ??
+                          1,
+                      bonusDays:
+                          double.tryParse(_bonusDaysController.text) ?? 0,
+                      bonusValue:
+                          double.tryParse(_bonusValueController.text) ?? 20,
                       deductionAbsent:
-                      double.tryParse(_deductionAbsentController.text) ?? 0,
+                          double.tryParse(_deductionAbsentController.text) ?? 0,
                       deductionCustom:
-                      double.tryParse(_deductionCustomController.text) ?? 0,
+                          double.tryParse(_deductionCustomController.text) ?? 0,
                       rewardValue:
-                      double.tryParse(_rewardValueController.text) ?? 0,
+                          double.tryParse(_rewardValueController.text) ?? 0,
                       rewardMultiplier:
-                      double.tryParse(_rewardMultiplierController.text) ?? 0,
+                          double.tryParse(_rewardMultiplierController.text) ??
+                          0,
                       vacation: state.vacation,
                     );
                   },
@@ -215,20 +286,27 @@ class _SalaryCalculatorState extends State<SalaryCalculator> {
                     context.read<SalaryCubit>().calculateSalary(
                       month: _selectedMonth,
                       basic: double.tryParse(_basicSalaryController.text) ?? 0,
-                      divisor: double.tryParse(_dailyCountDivisorController.text) ?? 30,
-                      overtimeDays: double.tryParse(_overtimeDaysController.text) ?? 0,
+                      divisor:
+                          double.tryParse(_dailyCountDivisorController.text) ??
+                          30,
+                      overtimeDays:
+                          double.tryParse(_overtimeDaysController.text) ?? 0,
                       overtimeMultiplier:
-                      double.tryParse(_overtimeMultiplierController.text) ?? 1,
-                      bonusDays: double.tryParse(_bonusDaysController.text) ?? 0,
-                      bonusValue: double.tryParse(_bonusValueController.text) ?? 20,
+                          double.tryParse(_overtimeMultiplierController.text) ??
+                          1,
+                      bonusDays:
+                          double.tryParse(_bonusDaysController.text) ?? 0,
+                      bonusValue:
+                          double.tryParse(_bonusValueController.text) ?? 20,
                       deductionAbsent:
-                      double.tryParse(_deductionAbsentController.text) ?? 0,
+                          double.tryParse(_deductionAbsentController.text) ?? 0,
                       deductionCustom:
-                      double.tryParse(_deductionCustomController.text) ?? 0,
+                          double.tryParse(_deductionCustomController.text) ?? 0,
                       rewardValue:
-                      double.tryParse(_rewardValueController.text) ?? 0,
+                          double.tryParse(_rewardValueController.text) ?? 0,
                       rewardMultiplier:
-                      double.tryParse(_rewardMultiplierController.text) ?? 0,
+                          double.tryParse(_rewardMultiplierController.text) ??
+                          0,
                       vacation: state.vacation,
                     );
                   },

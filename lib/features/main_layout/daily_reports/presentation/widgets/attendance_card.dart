@@ -1,9 +1,13 @@
+import 'dart:async';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:smart_salary/core/costants/color_manager.dart';
-import 'package:smart_salary/core/helper/salary_period_helper.dart';
-import 'package:smart_salary/core/session_service/session_service.dart';
+import 'package:smart_salary/core/utils/helper/salary_period_helper.dart';
+import 'package:smart_salary/features/firebase/salary_firestore_services.dart';
 import 'package:smart_salary/l10n/app_localizations.dart';
 import 'package:table_calendar/table_calendar.dart';
 
@@ -29,53 +33,112 @@ class _AttendanceCardState extends State<AttendanceCard> {
   static const bonusColor = ColorManager.secondary;
   static const absentColor = ColorManager.red;
   static const reportsColor = Color(0xffFFB300);
-  late DateTime _focusedDay;
+  late DateTime _focusedDay = widget.selectedDay;
+  final String uid = FirebaseAuth.instance.currentUser!.uid;
+  StreamSubscription? _subscription;
 
   Map<DateTime, List<Color>> attendance = {};
 
-  Future<void> _loadAttendance() async {
-    attendance.clear();
-    final days = SalaryPeriodHelper.getAllDays(_focusedDay);
-    for (final date in days) {
-      final data = await SessionService.loadDailyInput(date);
-      List<Color> colors = [];
-      if ((double.tryParse(data["overtime"] ?? "0") ?? 0) > 0) {
-        colors.add(overTimeColor);
-      }
-      if ((double.tryParse(data["bonus"] ?? "0") ?? 0) > 0) {
-        colors.add(bonusColor);
-      }
-      if ((double.tryParse(data["absent"] ?? "0") ?? 0) > 0) {
-        colors.add(absentColor);
-      }
-      if ((data["report"] ?? "").trim().isNotEmpty) {
-        colors.add(reportsColor);
-      }
-      if (colors.isNotEmpty) {
-        attendance[DateTime(date.year, date.month, date.day)] = colors;
-      }
-    }
-    setState(() {});
-  }
+  // Future<void> _loadAttendance() async {
+  //   attendance.clear();
+  //   final days = SalaryPeriodHelper.getAllDays(_focusedDay);
+  //   for (final date in days) {
+  //     final data = await SalaryFirestoreServices.loadDailyInput(
+  //       uid: uid,
+  //       date: date,
+  //     );
+  //     List<Color> colors = [];
+  //     if ((double.tryParse(data["overtime"] ?? "0") ?? 0) > 0) {
+  //       colors.add(overTimeColor);
+  //     }
+  //     if ((double.tryParse(data["bonus"] ?? "0") ?? 0) > 0) {
+  //       colors.add(bonusColor);
+  //     }
+  //     if ((double.tryParse(data["absent"] ?? "0") ?? 0) > 0) {
+  //       colors.add(absentColor);
+  //     }
+  //     if ((data["report"] ?? "").trim().isNotEmpty) {
+  //       colors.add(reportsColor);
+  //     }
+  //     if (colors.isNotEmpty) {
+  //       attendance[DateTime(date.year, date.month, date.day)] = colors;
+  //     }
+  //   }
+  //   setState(() {});
+  // }
   Future<void> _syncSelectedMonth() async {
-    final month = await SessionService.loadSelectedMonth();
+    final month = await SalaryFirestoreServices.loadSelectedMonth(uid);
 
-    setState(() {
-      _focusedDay = DateTime(
-        month.year,
-        month.month,
-        widget.selectedDay.day,
-      );
-    });
+    // _focusedDay = DateTime(
+    //   month.year,
+    //   month.month,
+    //   widget.selectedDay.day,
+    // );
+    _focusedDay = DateTime(month.year, month.month, 1);
 
-    await _loadAttendance();
+    _listenToMonth();
+  }
+
+  void _listenToMonth() {
+    _subscription?.cancel();
+
+    final period = SalaryPeriodHelper.getPeriod(_focusedDay);
+
+    final firstDay = period.start.subtract(const Duration(days: 10));
+    final lastDay = period.end.add(const Duration(days: 10));
+
+    _subscription =
+        SalaryFirestoreServices.calendarReportsStream(
+          uid: uid,
+          firstDay: firstDay,
+          lastDay: lastDay,
+        ).listen((snapshot) {
+          attendance.clear();
+
+          for (final doc in snapshot.docs) {
+            final data = doc.data();
+            final date = (data["date"] as Timestamp).toDate();
+
+            final colors = <Color>[];
+
+            if ((double.tryParse(data["overtime"].toString()) ?? 0) > 0) {
+              colors.add(overTimeColor);
+            }
+
+            if ((double.tryParse(data["bonus"].toString()) ?? 0) > 0) {
+              colors.add(bonusColor);
+            }
+
+            if ((double.tryParse(data["absent"].toString()) ?? 0) > 0) {
+              colors.add(absentColor);
+            }
+
+            if ((data["report"] ?? "").toString().trim().isNotEmpty) {
+              colors.add(reportsColor);
+            }
+
+            if (colors.isNotEmpty) {
+              attendance[DateTime(date.year, date.month, date.day)] = colors;
+            }
+          }
+
+          if (mounted) {
+            setState(() {});
+          }
+        });
   }
 
   @override
   void initState() {
     super.initState();
     _focusedDay = widget.selectedDay;
-    _loadAttendance();
+    _syncSelectedMonth();
+  }
+
+  @override
+  void dispose() {
+    _subscription?.cancel();
+    super.dispose();
   }
 
   List<Color> _markers(DateTime day) {
@@ -85,14 +148,6 @@ class _AttendanceCardState extends State<AttendanceCard> {
           orElse: () => MapEntry(day, []),
         )
         .value;
-  }
-  @override
-  void didUpdateWidget(covariant AttendanceCard oldWidget) {
-    super.didUpdateWidget(oldWidget);
-
-    if (oldWidget.refresh != widget.refresh) {
-      _loadAttendance();
-    }
   }
 
   @override
@@ -156,14 +211,25 @@ class _AttendanceCardState extends State<AttendanceCard> {
           children: [
             _navButton(Icons.chevron_left, () async {
               _focusedDay = DateTime(_focusedDay.year, _focusedDay.month - 1);
-              await _loadAttendance();
-              setState(() {});
+              await SalaryFirestoreServices.saveSelectedMonth(
+                uid: uid,
+                month: _focusedDay,
+              );
+              _listenToMonth();
+              widget.onDayChanged(_focusedDay);
             }),
             SizedBox(width: 10.w),
             _navButton(Icons.chevron_right, () async {
               _focusedDay = DateTime(_focusedDay.year, _focusedDay.month + 1);
-              await _loadAttendance();
-              setState(() {});
+
+              await SalaryFirestoreServices.saveSelectedMonth(
+                uid: uid,
+                month: _focusedDay,
+              );
+
+              _listenToMonth();
+
+              widget.onDayChanged(_focusedDay);
             }),
           ],
         ),
@@ -195,16 +261,22 @@ class _AttendanceCardState extends State<AttendanceCard> {
       focusedDay: _focusedDay,
       headerVisible: false,
       selectedDayPredicate: (day) => isSameDay(widget.selectedDay, day),
-      onDaySelected: (selectedDay, focusedDay) {
-        setState(() {
-          _focusedDay = focusedDay;
-        });
+      onDaySelected: (selectedDay, focusedDay) async {
+        _focusedDay = focusedDay;
+        await SalaryFirestoreServices.saveSelectedMonth(
+          uid: uid,
+          month: focusedDay,
+        );
+        _listenToMonth();
         widget.onDayChanged(selectedDay);
       },
-      onPageChanged: (focusedDay) {
-        setState(() {
-          _focusedDay = focusedDay;
-        });
+      onPageChanged: (focusedDay) async {
+        _focusedDay = focusedDay;
+        await SalaryFirestoreServices.saveSelectedMonth(
+          uid: uid,
+          month: focusedDay,
+        );
+        _listenToMonth();
       },
       calendarStyle: CalendarStyle(
         markersMaxCount: 3,
@@ -228,7 +300,7 @@ class _AttendanceCardState extends State<AttendanceCard> {
             child: Text(
               "${day.day}",
               style: TextStyle(
-                color: day.month == _focusedDay.month
+                color: SalaryPeriodHelper.contains(_focusedDay, day)
                     ? Colors.black87
                     : Colors.black26,
               ),

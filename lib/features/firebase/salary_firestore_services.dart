@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:smart_salary/core/utils/helper/salary_period_helper.dart';
 
 class SalaryFirestoreServices {
   static final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -180,19 +181,19 @@ class SalaryFirestoreServices {
     return DateTime.parse(doc["month"]);
   }
 
-  static Future<QuerySnapshot<Map<String, dynamic>>> getMonthlyReports({
-    required String uid,
-    required DateTime month,
-  }) async {
-    final start = DateTime(month.year, month.month, 1);
-    final end = DateTime(month.year, month.month + 1, 1);
-
-    return await _userDoc(uid)
-        .collection("daily_reports")
-        .where("date", isGreaterThanOrEqualTo: Timestamp.fromDate(start))
-        .where("date", isLessThan: Timestamp.fromDate(end))
-        .get();
-  }
+  // static Future<QuerySnapshot<Map<String, dynamic>>> getMonthlyReports({
+  //   required String uid,
+  //   required DateTime month,
+  // }) async {
+  //   final start = DateTime(month.year, month.month, 1);
+  //   final end = DateTime(month.year, month.month + 1, 1);
+  //
+  //   return await _userDoc(uid)
+  //       .collection("daily_reports")
+  //       .where("date", isGreaterThanOrEqualTo: Timestamp.fromDate(start))
+  //       .where("date", isLessThan: Timestamp.fromDate(end))
+  //       .get();
+  // }
 
   static Future<QuerySnapshot<Map<String, dynamic>>> getYearReports({
     required String uid,
@@ -203,14 +204,92 @@ class SalaryFirestoreServices {
 
     return await _userDoc(uid)
         .collection("daily_reports")
-        .where(
-      "date",
-      isGreaterThanOrEqualTo: Timestamp.fromDate(start),
-    )
-        .where(
-      "date",
-      isLessThan: Timestamp.fromDate(end),
-    )
+        .where("date", isGreaterThanOrEqualTo: Timestamp.fromDate(start))
+        .where("date", isLessThan: Timestamp.fromDate(end))
+        .get();
+  }
+
+  static Future<Map<String, double>> loadMonthlyTotals({
+    required String uid,
+    required DateTime month,
+  }) async {
+    final reports = await getMonthlyReports(uid: uid, month: month);
+
+    double overtime = 0;
+    double bonus = 0;
+    double absent = 0;
+
+    for (final doc in reports.docs) {
+      final data = doc.data();
+      overtime += double.tryParse(data["overtime"]?.toString() ?? "0") ?? 0;
+      bonus += double.tryParse(data["bonus"]?.toString() ?? "0") ?? 0;
+      absent += double.tryParse(data["absent"]?.toString() ?? "0") ?? 0;
+    }
+    return {"overtime": overtime, "bonus": bonus, "absent": absent};
+  }
+
+  static Future<double> loadYearlyAbsent({
+    required String uid,
+    required int year,
+  }) async {
+    final reports = await getYearReports(uid: uid, year: year);
+    double absent = 0;
+    for (final doc in reports.docs) {
+      final data = doc.data();
+      absent += double.tryParse(data["absent"]?.toString() ?? "0") ?? 0;
+    }
+    return absent;
+  }
+
+  static Stream<QuerySnapshot<Map<String, dynamic>>> monthlyReportsStream({
+    required String uid,
+    required DateTime month,
+  }) {
+    final period = SalaryPeriodHelper.getPeriod(month);
+
+    return _userDoc(uid)
+        .collection("daily_reports")
+        .where("date", isGreaterThanOrEqualTo: Timestamp.fromDate(period.start))
+        .where("date", isLessThan: Timestamp.fromDate(period.end))
+        .snapshots();
+
+    // return FirebaseFirestore.instance
+    //     .collection("users")
+    //     .doc(uid)
+    //     .collection("daily_reports")
+    //     .where(
+    //   "date",
+    //   isGreaterThanOrEqualTo: Timestamp.fromDate(start),
+    // )
+    //     .where(
+    //   "date",
+    //   isLessThan: Timestamp.fromDate(end),
+    // )
+    //     .snapshots();
+  }
+
+  static Stream<QuerySnapshot<Map<String, dynamic>>> calendarReportsStream({
+    required String uid,
+    required DateTime firstDay,
+    required DateTime lastDay,
+  }) {
+    return _userDoc(uid)
+        .collection("daily_reports")
+        .where("date", isGreaterThanOrEqualTo: Timestamp.fromDate(firstDay))
+        .where("date", isLessThan: Timestamp.fromDate(lastDay))
+        .snapshots();
+  }
+
+  static Future<QuerySnapshot<Map<String, dynamic>>> getMonthlyReports({
+    required String uid,
+    required DateTime month,
+  }) async {
+    final period = SalaryPeriodHelper.getPeriod(month);
+
+    return await _userDoc(uid)
+        .collection("daily_reports")
+        .where("date", isGreaterThanOrEqualTo: Timestamp.fromDate(period.start))
+        .where("date", isLessThan: Timestamp.fromDate(period.end))
         .get();
   }
 }

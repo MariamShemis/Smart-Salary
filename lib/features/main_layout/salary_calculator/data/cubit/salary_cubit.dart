@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:smart_salary/core/session_service/session_service.dart';
 import 'package:smart_salary/features/firebase/salary_firestore_services.dart';
 
 import 'salary_state.dart';
@@ -9,10 +8,21 @@ class SalaryCubit extends Cubit<SalaryState> {
   SalaryCubit() : super(SalaryInitial());
 
   Future<void> loadSalary(DateTime month) async {
-    final salary = await SessionService.loadSalaryInputs();
-    final totals = await SessionService.loadMonthlyTotals(month);
-    final monthData = await SessionService.loadMonthlySalaryData(month);
-    final yearlyAbsent = await SessionService.loadYearlyAbsent(month);
+    final uid = FirebaseAuth.instance.currentUser!.uid;
+
+    final salary = await SalaryFirestoreServices.loadSalaryInputs(uid);
+    final totals = await SalaryFirestoreServices.loadMonthlyTotals(
+      uid: uid,
+      month: month,
+    );
+    final monthData = await SalaryFirestoreServices.loadMonthlySalaryData(
+      uid: uid,
+      month: month,
+    );
+    final yearlyAbsent = await SalaryFirestoreServices.loadYearlyAbsent(
+      uid: uid,
+      year: month.year,
+    );
 
     await calculateSalary(
       month: month,
