@@ -1,3 +1,5 @@
+import 'package:smart_salary/features/auth/data/model/user_model.dart';
+
 abstract class AuthState {}
 
 class AuthInitial extends AuthState {}
@@ -14,7 +16,11 @@ class RegisterError extends AuthState {
 
 class LoginLoading extends AuthState {}
 
-class LoginSuccess extends AuthState {}
+class LoginSuccess extends AuthState {
+  final UserModel user;
+
+  LoginSuccess(this.user);
+}
 
 class LoginError extends AuthState {
   final String message;

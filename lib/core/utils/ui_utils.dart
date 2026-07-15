@@ -7,15 +7,17 @@ class UiUtils {
     showDialog(
       barrierDismissible: isDismissible,
       context: context,
-      builder: (context) {
+      builder: (_) {
         return AlertDialog(
           content: Column(
             mainAxisSize: MainAxisSize.min,
-            children: [
+            children: const [
               Center(
                 child: PopScope(
                   canPop: false,
-                  child: CircularProgressIndicator(color: ColorManager.primaryColor,),
+                  child: CircularProgressIndicator(
+                    color: ColorManager.primaryColor,
+                  ),
                 ),
               ),
             ],
@@ -35,6 +37,26 @@ class UiUtils {
     showDialog(
       context: context,
       builder: (_) => AlertDialog(content: Text(message)),
+    );
+  }
+
+  static void showSuccess(BuildContext context, String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: Colors.green,
+        behavior: SnackBarBehavior.floating,
+      ),
+    );
+  }
+
+  static void showError(BuildContext context, String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: Colors.red,
+        behavior: SnackBarBehavior.floating,
+      ),
     );
   }
 

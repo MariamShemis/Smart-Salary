@@ -260,6 +260,7 @@ class _AttendanceCardState extends State<AttendanceCard> {
       lastDay: DateTime(2035),
       focusedDay: _focusedDay,
       headerVisible: false,
+      startingDayOfWeek: StartingDayOfWeek.saturday,
       selectedDayPredicate: (day) => isSameDay(widget.selectedDay, day),
       onDaySelected: (selectedDay, focusedDay) async {
         _focusedDay = focusedDay;

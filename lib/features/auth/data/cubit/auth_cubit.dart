@@ -27,7 +27,8 @@ class AuthCubit extends Cubit<AuthState> {
 
     try {
       await FirebaseServices.login(request);
-      emit(LoginSuccess());
+      final user = await FirebaseServices.getCurrentUser();
+      emit(LoginSuccess(user));
     } on FirebaseAuthException catch (e) {
       emit(LoginError(_firebaseErrorMessage(e)));
     } catch (_) {
@@ -49,11 +50,7 @@ class AuthCubit extends Cubit<AuthState> {
     } on FirebaseAuthException catch (e) {
       emit(ResetPasswordError(_firebaseErrorMessage(e)));
     } catch (_) {
-      emit(
-        ResetPasswordError(
-          "Something went wrong. Please try again.",
-        ),
-      );
+      emit(ResetPasswordError("Something went wrong. Please try again."));
     }
   }
 

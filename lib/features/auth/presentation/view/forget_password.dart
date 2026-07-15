@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:smart_salary/core/costants/assets_manager.dart';
 import 'package:smart_salary/core/costants/color_manager.dart';
+import 'package:smart_salary/core/utils/ui_utils.dart';
 import 'package:smart_salary/core/utils/validators/app_validators.dart';
 import 'package:smart_salary/core/widgets/custom_auth_text_form_field.dart';
 import 'package:smart_salary/core/widgets/main_gradient_background.dart';
@@ -33,21 +34,18 @@ class _ForgetPasswordState extends State<ForgetPassword> {
 
     return BlocConsumer<AuthCubit, AuthState>(
       listener: (context, state) {
+        if (state is ResetPasswordLoading) {
+          UiUtils.showLoading(context, isDismissible: false);
+        }
         if (state is ResetPasswordSuccess) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text("Password reset email sent successfully."),
-              backgroundColor: Colors.green,
-            ),
+          UiUtils.showSuccess(
+            context,
+            "Password reset email sent successfully.",
           );
-
           Navigator.pop(context);
         }
-
         if (state is ResetPasswordError) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(state.message), backgroundColor: Colors.red),
-          );
+          UiUtils.showError(context, state.message);
         }
       },
       builder: (context, state) {
@@ -136,19 +134,8 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                             ),
                             SizedBox(height: 24.h),
                             ElevatedButton(
-                              onPressed: state is ResetPasswordLoading
-                                  ? null
-                                  : _resetPassword,
-                              child: state is ResetPasswordLoading
-                                  ? SizedBox(
-                                      width: 22.w,
-                                      height: 22.h,
-                                      child: const CircularProgressIndicator(
-                                        strokeWidth: 2,
-                                        color: Colors.white,
-                                      ),
-                                    )
-                                  : Text(appLocalizations.resetPassword),
+                              onPressed: _resetPassword,
+                              child: Text(appLocalizations.resetPassword),
                             ),
                           ],
                         ),

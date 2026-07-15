@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:smart_salary/core/costants/color_manager.dart';
 import 'package:smart_salary/core/routes/app_routes.dart';
+import 'package:smart_salary/core/session_service/session_service.dart';
 import 'package:smart_salary/core/widgets/main_gradient_background.dart';
 import 'package:smart_salary/features/onboarding/data/cubit/onboarding_cubit.dart';
 import 'package:smart_salary/features/onboarding/data/cubit/onboarding_state.dart';
@@ -151,16 +152,19 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           Padding(
                             padding: REdgeInsets.symmetric(horizontal: 32.0),
                             child: ElevatedButton(
-                              onPressed: () {
+                              onPressed: () async {
+                                print("Pressed");
+
                                 if (isLastPage) {
+                                  await SessionService.completeOnboarding();
+                                  print("Saved");
+
                                   Navigator.pushReplacementNamed(
                                     context,
                                     AppRoutes.login,
                                   );
                                 } else {
-                                  cubit.nextPage(
-                                    getOnboardingData(context).length,
-                                  );
+                                  cubit.nextPage(getOnboardingData(context).length);
                                 }
                               },
                               style: Theme.of(

@@ -127,9 +127,9 @@ class _SalaryCalculatorState extends State<SalaryCalculator> {
     );
 
     setState(() {
-      _overtimeDaysController.text = totals["overtime"]!.toInt().toString();
-      _bonusDaysController.text = totals["bonus"]!.toInt().toString();
-      _absentDaysController.text = totals["absent"]!.toInt().toString();
+      _overtimeDaysController.text = totals["overtime"]!.toDouble().toString();
+      _bonusDaysController.text = totals["bonus"]!.toDouble().toString();
+      _absentDaysController.text = totals["absent"]!.toDouble().toString();
 
       _deductionAbsentController.text = monthData["deductAbsent"]!;
       _deductionCustomController.text = monthData["deductCustom"]!;

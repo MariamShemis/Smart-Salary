@@ -13,6 +13,8 @@ class SalarySuccess extends SalaryState {
   final double vacation;
   final double totalSalary;
   final double totalSalaryWithReward;
+  final double annualOvertime;
+  final double annualBonus;
 
   SalarySuccess({
     required this.dailyCount,
@@ -22,7 +24,7 @@ class SalarySuccess extends SalaryState {
     required this.reward,
     required this.vacation,
     required this.totalSalary,
-    required this.totalSalaryWithReward,
+    required this.totalSalaryWithReward, required this.annualOvertime, required this.annualBonus,
   });
 }
 

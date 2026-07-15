@@ -15,11 +15,15 @@ class SalaryCubit extends Cubit<SalaryState> {
       uid: uid,
       month: month,
     );
+    final yearlySalary = await SalaryFirestoreServices.loadYearlySalaryResults(
+      uid: uid,
+      year: month.year,
+    );
     final monthData = await SalaryFirestoreServices.loadMonthlySalaryData(
       uid: uid,
       month: month,
     );
-    final yearlyAbsent = await SalaryFirestoreServices.loadYearlyAbsent(
+    final double yearlyAbsent = await SalaryFirestoreServices.loadYearlyAbsent(
       uid: uid,
       year: month.year,
     );
@@ -29,19 +33,17 @@ class SalaryCubit extends Cubit<SalaryState> {
       basic: double.tryParse(salary["basic"] ?? "0") ?? 0,
       divisor: double.tryParse(salary["divisor"] ?? "30") ?? 30,
       overtimeMultiplier:
-      double.tryParse(monthData["overtimeMultiplier"] ?? "0") ?? 0,
-      bonusValue:
-      double.tryParse(monthData["bonusValue"] ?? "20") ?? 20,
+          double.tryParse(monthData["overtimeMultiplier"] ?? "0") ?? 0,
+      bonusValue: double.tryParse(monthData["bonusValue"] ?? "20") ?? 20,
       overtimeDays: totals["overtime"] ?? 0,
       bonusDays: totals["bonus"] ?? 0,
-      deductionAbsent:
-      double.tryParse(monthData["deductAbsent"] ?? "0") ?? 0,
-      deductionCustom:
-      double.tryParse(monthData["deductCustom"] ?? "0") ?? 0,
-      rewardValue:
-      double.tryParse(monthData["rewardValue"] ?? "0") ?? 0,
+      annualOvertime: yearlySalary["annualOvertime"] ?? 0,
+      annualBonus: yearlySalary["annualBonus"] ?? 0,
+      deductionAbsent: double.tryParse(monthData["deductAbsent"] ?? "0") ?? 0,
+      deductionCustom: double.tryParse(monthData["deductCustom"] ?? "0") ?? 0,
+      rewardValue: double.tryParse(monthData["rewardValue"] ?? "0") ?? 0,
       rewardMultiplier:
-      double.tryParse(monthData["rewardMultiplier"] ?? "0") ?? 0,
+          double.tryParse(monthData["rewardMultiplier"] ?? "0") ?? 0,
       vacation: 30 - yearlyAbsent,
     );
   }
@@ -59,26 +61,23 @@ class SalaryCubit extends Cubit<SalaryState> {
     required double rewardValue,
     required double rewardMultiplier,
     required double vacation,
+    double annualOvertime = 0,
+    double annualBonus = 0,
   }) async {
     final double dailyCount = divisor == 0 ? 0 : basic / divisor;
 
     final overtimeMonth =
-        (overtimeDays * dailyCount) +
-            (overtimeMultiplier * dailyCount);
+        (overtimeDays * dailyCount) + (overtimeMultiplier * dailyCount);
 
     final bonusMonth = bonusDays * bonusValue;
 
-    final deduction =
-        deductionAbsent + (deductionCustom * dailyCount);
+    final deduction = deductionAbsent + (deductionCustom * dailyCount);
 
-    final reward =
-        rewardValue + (basic * rewardMultiplier);
+    final reward = rewardValue + (basic * rewardMultiplier);
 
-    final totalSalary =
-        basic + overtimeMonth + bonusMonth - deduction;
+    final totalSalary = basic + overtimeMonth + bonusMonth - deduction;
 
-    final totalSalaryWithReward =
-        totalSalary + reward;
+    final totalSalaryWithReward = totalSalary + reward;
 
     await SalaryFirestoreServices.saveSalaryResult(
       uid: FirebaseAuth.instance.currentUser!.uid,
@@ -101,6 +100,8 @@ class SalaryCubit extends Cubit<SalaryState> {
         vacation: vacation,
         totalSalary: totalSalary,
         totalSalaryWithReward: totalSalaryWithReward,
+        annualOvertime: annualOvertime,
+        annualBonus: annualBonus,
       ),
     );
   }

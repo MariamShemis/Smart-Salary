@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:smart_salary/core/costants/color_manager.dart';
 import 'package:smart_salary/core/routes/app_routes.dart';
+import 'package:smart_salary/core/utils/ui_utils.dart';
 import 'package:smart_salary/core/utils/validators/app_validators.dart';
 import 'package:smart_salary/core/widgets/custom_auth_text_form_field.dart';
 import 'package:smart_salary/core/widgets/logo_app.dart';
@@ -39,14 +40,17 @@ class _LoginScreenState extends State<LoginScreen> {
     AppLocalizations appLocalizations = AppLocalizations.of(context)!;
     return BlocConsumer<AuthCubit, AuthState>(
       listener: (context, state) {
+        if (state is LoginLoading) {
+          UiUtils.showLoading(context, isDismissible: false);
+        }
         if (state is LoginSuccess) {
+          UiUtils.hideLoading(context);
+          UiUtils.showToast("Welcome ${state.user.name}, login successfully.");
           Navigator.pushReplacementNamed(context, AppRoutes.mainLayout);
         }
-
         if (state is LoginError) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(state.message), backgroundColor: Colors.red),
-          );
+          UiUtils.hideLoading(context);
+          UiUtils.showError(context, state.message);
         }
       },
       builder: (context, state) {
@@ -179,17 +183,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                           SizedBox(height: 18.h),
                           ElevatedButton(
-                            onPressed: state is LoginLoading ? null : _login,
-                            child: state is LoginLoading
-                                ? SizedBox(
-                                    width: 22.w,
-                                    height: 22.h,
-                                    child: const CircularProgressIndicator(
-                                      strokeWidth: 2,
-                                      color: Colors.white,
-                                    ),
-                                  )
-                                : Text(appLocalizations.login),
+                            onPressed: _login,
+                            child: Text(appLocalizations.login),
                           ),
                           SizedBox(height: 24.h),
                           Row(

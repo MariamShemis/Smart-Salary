@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:smart_salary/core/costants/color_manager.dart';
+import 'package:smart_salary/core/utils/ui_utils.dart';
 import 'package:smart_salary/core/utils/validators/app_validators.dart';
 import 'package:smart_salary/core/widgets/custom_auth_text_form_field.dart';
 import 'package:smart_salary/core/widgets/logo_app.dart';
@@ -43,16 +44,22 @@ class _RegisterScreenState extends State<RegisterScreen> {
     AppLocalizations appLocalizations = AppLocalizations.of(context)!;
     return BlocConsumer<AuthCubit, AuthState>(
       listener: (context, state) {
+        if (state is RegisterLoading) {
+          UiUtils.showLoading(context, isDismissible: false);
+        }
         if (state is RegisterSuccess) {
+          UiUtils.showSuccess(context, "Account created successfully.");
+          Navigator.pop(context);
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("Account created successfully"), backgroundColor: Colors.green,),
+            const SnackBar(
+              content: Text("Account created successfully"),
+              backgroundColor: Colors.green,
+            ),
           );
           Navigator.pop(context);
         }
         if (state is RegisterError) {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text(state.message) , backgroundColor: Colors.red,));
+          UiUtils.showError(context, state.message);
         }
       },
       builder: (context, state) {
@@ -169,19 +176,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           ),
                           SizedBox(height: 24.h),
                           ElevatedButton(
-                            onPressed: state is RegisterLoading
-                                ? null
-                                : _addRegister,
-                            child: state is RegisterLoading
-                                ? SizedBox(
-                                    width: 22.w,
-                                    height: 22.h,
-                                    child: const CircularProgressIndicator(
-                                      strokeWidth: 2,
-                                      color: Colors.white,
-                                    ),
-                                  )
-                                : Text(appLocalizations.sign_up),
+                            onPressed: _addRegister,
+                            child: Text(appLocalizations.sign_up),
                           ),
                           SizedBox(height: 24.h),
                           Row(

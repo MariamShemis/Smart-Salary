@@ -292,4 +292,34 @@ class SalaryFirestoreServices {
         .where("date", isLessThan: Timestamp.fromDate(period.end))
         .get();
   }
+
+  static Future<Map<String, double>> loadYearlySalaryResults({
+    required String uid,
+    required int year,
+  }) async {
+    double annualOvertime = 0;
+    double annualBonus = 0;
+
+    final snapshot =
+    await _userDoc(uid).collection("salary_results").get();
+
+    for (final doc in snapshot.docs) {
+      final id = doc.id.split("-");
+
+      if (int.parse(id[0]) != year) continue;
+
+      final data = doc.data();
+
+      annualOvertime +=
+          (data["overtimeMonth"] as num?)?.toDouble() ?? 0;
+
+      annualBonus +=
+          (data["bonusMonth"] as num?)?.toDouble() ?? 0;
+    }
+
+    return {
+      "annualOvertime": annualOvertime,
+      "annualBonus": annualBonus,
+    };
+  }
 }

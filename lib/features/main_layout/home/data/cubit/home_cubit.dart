@@ -20,8 +20,12 @@ class HomeCubit extends Cubit<HomeState> {
       month: month,
     );
 
-    final salaryInputs =
-    await SalaryFirestoreServices.loadSalaryInputs(uid);
+    final yearlyResult = await SalaryFirestoreServices.loadYearlySalaryResults(
+      uid: uid,
+      year: month.year,
+    );
+
+    final salaryInputs = await SalaryFirestoreServices.loadSalaryInputs(uid);
 
     final totals = await SalaryFirestoreServices.loadMonthlyTotals(
       uid: uid,
@@ -39,6 +43,7 @@ class HomeCubit extends Cubit<HomeState> {
           double.tryParse(salaryInputs["basic"] ?? "0") ?? 0,
           "overtimeDays": totals["overtime"] ?? 0,
           "bonusDays": totals["bonus"] ?? 0,
+
           "totalSalary": result["totalSalary"] ?? 0,
           "totalSalaryWithReward":
           result["totalSalaryWithReward"] ?? 0,
@@ -46,6 +51,9 @@ class HomeCubit extends Cubit<HomeState> {
           "bonusMonth": result["bonusMonth"] ?? 0,
           "deduction": result["deduction"] ?? 0,
           "vacationDays": result["vacationDays"] ?? 30,
+
+          "annualOvertime": yearlyResult["annualOvertime"] ?? 0,
+          "annualBonus": yearlyResult["annualBonus"] ?? 0,
         },
       ),
     );
