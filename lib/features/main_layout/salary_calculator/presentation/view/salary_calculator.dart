@@ -65,10 +65,13 @@ class _SalaryCalculatorState extends State<SalaryCalculator> {
 
     _selectedMonth = await SalaryFirestoreServices.loadSelectedMonth(uid);
 
-    final savedData = await SalaryFirestoreServices.loadSalaryInputs(uid);
+    final salary = await SalaryFirestoreServices.loadSalaryInputs(
+      uid: uid,
+      month: _selectedMonth,
+    );
 
-    _basicSalaryController.text = savedData['basic']!;
-    _dailyCountDivisorController.text = savedData['divisor']!;
+    _basicSalaryController.text = salary["basic"].toString();
+    _dailyCountDivisorController.text = salary["divisor"].toString();
     // _bonusValueController.text = savedData['bonusValue']!;
     // _overtimeMultiplierController.text = savedData['otMultiplier']!;
 
@@ -80,8 +83,9 @@ class _SalaryCalculatorState extends State<SalaryCalculator> {
     AppLocalizations appLocalizations = AppLocalizations.of(context)!;
     UiUtils.showLoading(context);
     try {
-      await SalaryFirestoreServices.saveSalaryInputs(
+      await SalaryFirestoreServices.saveSalaryHistory(
         uid: uid,
+        month: _selectedMonth,
         basic: _basicSalaryController.text,
         divisor: _dailyCountDivisorController.text,
       );
@@ -120,6 +124,10 @@ class _SalaryCalculatorState extends State<SalaryCalculator> {
       uid: uid,
       month: month,
     );
+    final salary = await SalaryFirestoreServices.loadSalaryInputs(
+      uid: uid,
+      month: _selectedMonth,
+    );
 
     final monthData = await SalaryFirestoreServices.loadMonthlySalaryData(
       uid: uid,
@@ -127,8 +135,8 @@ class _SalaryCalculatorState extends State<SalaryCalculator> {
     );
 
     setState(() {
-      _overtimeDaysController.text = totals["overtime"]!.toDouble().toString();
-      _bonusDaysController.text = totals["bonus"]!.toDouble().toString();
+      _basicSalaryController.text = salary["basic"].toString();
+      _dailyCountDivisorController.text = salary["divisor"].toString();
       _absentDaysController.text = totals["absent"]!.toDouble().toString();
 
       _deductionAbsentController.text = monthData["deductAbsent"]!;
@@ -142,26 +150,27 @@ class _SalaryCalculatorState extends State<SalaryCalculator> {
     context.read<SalaryCubit>().loadSalary(month);
   }
 
-  Future<void> _saveWithoutMessage() async {
-    final uid = FirebaseAuth.instance.currentUser!.uid;
-
-    await SalaryFirestoreServices.saveSalaryInputs(
-      uid: uid,
-      basic: _basicSalaryController.text,
-      divisor: _dailyCountDivisorController.text,
-    );
-
-    await SalaryFirestoreServices.saveMonthlySalaryData(
-      uid: uid,
-      month: _selectedMonth,
-      deductAbsent: _deductionAbsentController.text,
-      deductCustom: _deductionCustomController.text,
-      rewardValue: _rewardValueController.text,
-      rewardMultiplier: _rewardMultiplierController.text,
-      overtimeMultiplier: _overtimeMultiplierController.text,
-      bonusValue: _bonusValueController.text,
-    );
-  }
+  // Future<void> _saveWithoutMessage() async {
+  //   final uid = FirebaseAuth.instance.currentUser!.uid;
+  //
+  //   await SalaryFirestoreServices.saveSalaryHistory(
+  //     uid: uid,
+  //     basic: _basicSalaryController.text,
+  //     divisor: _dailyCountDivisorController.text,
+  //     month: _selectedMonth,
+  //   );
+  //
+  //   await SalaryFirestoreServices.saveMonthlySalaryData(
+  //     uid: uid,
+  //     month: _selectedMonth,
+  //     deductAbsent: _deductionAbsentController.text,
+  //     deductCustom: _deductionCustomController.text,
+  //     rewardValue: _rewardValueController.text,
+  //     rewardMultiplier: _rewardMultiplierController.text,
+  //     overtimeMultiplier: _overtimeMultiplierController.text,
+  //     bonusValue: _bonusValueController.text,
+  //   );
+  // }
 
   @override
   void dispose() {
@@ -201,24 +210,18 @@ class _SalaryCalculatorState extends State<SalaryCalculator> {
                     UiUtils.showLoading(context);
 
                     try {
-                      await _saveWithoutMessage();
-
                       await SalaryFirestoreServices.saveSelectedMonth(
                         uid: FirebaseAuth.instance.currentUser!.uid,
                         month: month,
                       );
-
                       await _loadMonthData(month);
-
                       await context.read<HomeCubit>().loadHome();
-
                       if (mounted) {
                         UiUtils.hideLoading(context);
                       }
                     } catch (e) {
                       if (mounted) {
                         UiUtils.hideLoading(context);
-
                         UiUtils.showToast(
                           "Something went wrong",
                           backgroundColor: Colors.red,

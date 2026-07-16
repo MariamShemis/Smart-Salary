@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smart_salary/features/auth/data/cubit/auth_cubit.dart';
+import 'package:smart_salary/features/language/data/cubit/language_cubit.dart';
 import 'package:smart_salary/features/main_layout/daily_reports/data/cubit/daily_reports_cubit.dart';
 import 'package:smart_salary/features/main_layout/home/data/cubit/home_cubit.dart';
 import 'package:smart_salary/features/main_layout/salary_calculator/data/cubit/salary_cubit.dart';
@@ -18,6 +19,7 @@ void main() async {
         BlocProvider(create: (_) => AuthCubit()),
         BlocProvider(create: (_) => SalaryCubit()),
         BlocProvider(create: (_) => DailyReportsCubit()),
+        BlocProvider(create: (_) => LanguageCubit()),
         BlocProvider(create: (_) => HomeCubit()..loadHome()),
         BlocProvider(create: (_) => ProfileCubit()),
       ],

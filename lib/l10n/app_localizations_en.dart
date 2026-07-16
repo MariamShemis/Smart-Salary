@@ -51,7 +51,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get phoneNumber => 'Phone Number';
 
   @override
-  String get enterYourPhone => 'Enter Your Phone';
+  String get enterYourPhoneNumber => 'Enter Your Phone Number';
 
   @override
   String get password => 'Password';
@@ -285,5 +285,38 @@ class AppLocalizationsEn extends AppLocalizations {
   String get passwords_do_not_match => 'Passwords do not match';
 
   @override
+  String get saveChanges => 'Save Changes';
+
+  @override
+  String get choose_your_preferred_language_for_the_app_interface => 'Choose your preferred language for the app interface.';
+
+  @override
+  String get selectLanguage => 'Select Language';
+
+  @override
   String get ok => 'Ok';
+
+  @override
+  String get jobTitle => 'Job Title';
+
+  @override
+  String get enter_your_job => 'enter_your_job';
+
+  @override
+  String get select_your_birthday => 'Select your birthday';
+
+  @override
+  String get selectGender => 'Select Gender';
+
+  @override
+  String get birthday => 'Birthday';
+
+  @override
+  String get annualOvertime => 'Annual Overtime';
+
+  @override
+  String get annualBonus => 'Annual Bonus';
+
+  @override
+  String get gender => 'Gender';
 }

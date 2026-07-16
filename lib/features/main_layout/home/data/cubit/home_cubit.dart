@@ -25,7 +25,7 @@ class HomeCubit extends Cubit<HomeState> {
       year: month.year,
     );
 
-    final salaryInputs = await SalaryFirestoreServices.loadSalaryInputs(uid);
+    final salaryInputs = await SalaryFirestoreServices.loadSalaryInputs(uid: uid , month: month);
 
     final totals = await SalaryFirestoreServices.loadMonthlyTotals(
       uid: uid,

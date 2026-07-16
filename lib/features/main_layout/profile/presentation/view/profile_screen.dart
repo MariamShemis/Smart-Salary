@@ -3,6 +3,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:smart_salary/core/costants/color_manager.dart';
 import 'package:smart_salary/core/routes/app_routes.dart';
 import 'package:smart_salary/features/auth/data/model/user_model.dart';
+import 'package:smart_salary/features/language/data/cubit/language_cubit.dart';
+import 'package:smart_salary/features/language/data/cubit/language_state.dart';
 import 'package:smart_salary/features/main_layout/profile/presentation/widgets/profile_header.dart';
 import 'package:smart_salary/features/main_layout/profile/presentation/widgets/profile_menu_item.dart';
 import 'package:smart_salary/l10n/app_localizations.dart';
@@ -46,8 +48,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
       },
       builder: (context, state) {
         if (state is ProfileLoading) {
-          return const Center(
-            child: CircularProgressIndicator(),
+          return Center(
+            child: CircularProgressIndicator(color: ColorManager.primaryColor,),
           );
         }
         if (state is ProfileError) {
@@ -110,19 +112,30 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ProfileMenuTile(
                           icon: Icons.person_outline_outlined,
                           title: appLocalizations.editProfile,
-                          onTap: () {},
+                          onTap: () {
+                            Navigator.pushNamed(context, AppRoutes.editProfile);
+                          },
                         ),
                         ProfileMenuTile(
                           icon: Icons.security_rounded,
                           title: appLocalizations.account_Security,
                           onTap: () {},
                         ),
-                        ProfileMenuTile(
-                          icon: Icons.language_rounded,
-                          title: appLocalizations.language,
-                          trailingText: 'English',
-                          onTap: () {},
-                          showDivider: false,
+                        BlocBuilder<LanguageCubit, LanguageState>(
+                          builder: (context, state) {
+                            return ProfileMenuTile(
+                              icon: Icons.language_rounded,
+                              title: appLocalizations.language,
+                              trailingText:
+                              state.locale.languageCode == "ar"
+                                  ? "العربية"
+                                  : "English",
+                              onTap: () {
+                                Navigator.pushNamed(context, AppRoutes.language);
+                              },
+                              showDivider: false,
+                            );
+                          },
                         ),
                       ],
                     ),

@@ -13,7 +13,7 @@
   "precisionPayrollManagement": "إدارة الرواتب بدقة",
   "email": "البريد الإلكتروني",
   "phoneNumber": "رقم الهاتف",
-  "enterYourPhone": "أدخل رقم الهاتف",
+  "enterYourPhoneNumber": "أدخل رقمك الهاتف",
   "password": "كلمة المرور",
   "enterYourEmail": "أدخل بريدك الإلكتروني",
   "name": "الاسم",
@@ -91,5 +91,17 @@
   "enter_a_valid_phone_number": "أدخل رقم هاتف صالح",
   "password_must_contain_at_least_characters": "يجب أن تحتوي كلمة المرور على 8 أحرف على الأقل",
   "passwords_do_not_match": "كلمتا المرور غير متطابقتين",
-  "ok": "موافق"
+  "saveChanges": "حفظ التغييرات",
+  "choose_your_preferred_language_for_the_app_interface": "اختر لغتك المفضلة لواجهة التطبيق.",
+  "selectLanguage": "تحديد اللغة",
+  "ok": "موافق",
+  "editProfile": "تعديل الملف الشخصي",
+  "jobTitle": "المسمى الوظيفي",
+  "enter_your_job": "أدخل وظيفتك",
+  "select_your_birthday": "حدد تاريخ ميلادك",
+  "selectGender": "تحديد الجنس",
+  "birthday": "تاريخ الميلاد",
+  "annualOvertime": "العمل الإضافي السنوي",
+  "annualBonus": "المكافأة السنوية",
+  "gender": "الجنس"
 }

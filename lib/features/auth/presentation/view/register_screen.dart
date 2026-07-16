@@ -48,17 +48,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
           UiUtils.showLoading(context, isDismissible: false);
         }
         if (state is RegisterSuccess) {
-          UiUtils.showSuccess(context, "Account created successfully.");
-          Navigator.pop(context);
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text("Account created successfully"),
-              backgroundColor: Colors.green,
-            ),
-          );
+          UiUtils.hideLoading(context);
+          UiUtils.showToast("Account created successfully.");
           Navigator.pop(context);
         }
         if (state is RegisterError) {
+          UiUtils.hideLoading(context);
           UiUtils.showError(context, state.message);
         }
       },
@@ -145,7 +140,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           CustomAuthTextFormField(
                             controller: _phoneController,
                             labelText: appLocalizations.phoneNumber,
-                            hintText: appLocalizations.enterYourPhone,
+                            hintText: appLocalizations.enterYourPhoneNumber,
                             keyboardType: TextInputType.phone,
                             validator: (value) =>
                                 AppValidators.validatePhone(value, context),

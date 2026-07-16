@@ -13,7 +13,7 @@
   "precisionPayrollManagement": "Precision Payroll Management",
   "email": "Email",
   "phoneNumber": "Phone Number",
-  "enterYourPhone": "Enter Your Phone",
+  "enterYourPhoneNumber": "Enter Your Phone Number",
   "password": "Password",
   "enterYourEmail": "Enter your email",
   "name": "Name",
@@ -91,5 +91,17 @@
   "enter_a_valid_phone_number": "Enter a valid phone number",
   "password_must_contain_at_least_characters": "Password must contain at least 8 characters",
   "passwords_do_not_match": "Passwords do not match",
-  "ok": "Ok"
+  "saveChanges": "Save Changes",
+  "choose_your_preferred_language_for_the_app_interface": "Choose your preferred language for the app interface.",
+  "selectLanguage": "Select Language",
+  "ok": "Ok",
+  "editProfile": "Edit Profile",
+  "jobTitle": "Job Title",
+  "enter_your_job": "enter_your_job",
+  "select_your_birthday": "Select your birthday",
+  "selectGender": "Select Gender",
+  "birthday": "Birthday",
+  "annualOvertime": "Annual Overtime",
+  "annualBonus": "Annual Bonus",
+  "gender": "Gender"
 }

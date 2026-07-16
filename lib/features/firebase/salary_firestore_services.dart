@@ -12,21 +12,43 @@ class SalaryFirestoreServices {
   /// Salary Inputs
   /// =========================
 
-  static Future<void> saveSalaryInputs({
+  static Future<void> saveSalaryHistory({
     required String uid,
+    required DateTime month,
     required String basic,
     required String divisor,
   }) async {
-    await _userDoc(uid).collection("settings").doc("salary").set({
+    await _userDoc(
+      uid,
+    ).collection("salary_history").doc("${month.year}-${month.month}").set({
       "basic": basic,
       "divisor": divisor,
-    }, SetOptions(merge: true));
+      "effectiveMonth": Timestamp.fromDate(DateTime(month.year, month.month)),
+    });
   }
 
-  static Future<Map<String, dynamic>> loadSalaryInputs(String uid) async {
-    final doc = await _userDoc(uid).collection("settings").doc("salary").get();
+  static Future<Map<String, dynamic>> loadSalaryInputs({
+    required String uid,
+    required DateTime month,
+  }) async {
+    final target = DateTime(month.year, month.month);
 
-    return doc.data() ?? {"basic": "", "divisor": "30"};
+    final snapshot = await _userDoc(
+      uid,
+    ).collection("salary_history").orderBy("effectiveMonth").get();
+
+    Map<String, dynamic>? salary;
+
+    for (final doc in snapshot.docs) {
+      final data = doc.data();
+      final effective = (data["effectiveMonth"] as Timestamp).toDate();
+      if (!effective.isAfter(target)) {
+        salary = data;
+      } else {
+        break;
+      }
+    }
+    return salary ?? {"basic": "0", "divisor": "30"};
   }
 
   /// =========================
@@ -300,8 +322,7 @@ class SalaryFirestoreServices {
     double annualOvertime = 0;
     double annualBonus = 0;
 
-    final snapshot =
-    await _userDoc(uid).collection("salary_results").get();
+    final snapshot = await _userDoc(uid).collection("salary_results").get();
 
     for (final doc in snapshot.docs) {
       final id = doc.id.split("-");
@@ -310,16 +331,11 @@ class SalaryFirestoreServices {
 
       final data = doc.data();
 
-      annualOvertime +=
-          (data["overtimeMonth"] as num?)?.toDouble() ?? 0;
+      annualOvertime += (data["overtimeMonth"] as num?)?.toDouble() ?? 0;
 
-      annualBonus +=
-          (data["bonusMonth"] as num?)?.toDouble() ?? 0;
+      annualBonus += (data["bonusMonth"] as num?)?.toDouble() ?? 0;
     }
 
-    return {
-      "annualOvertime": annualOvertime,
-      "annualBonus": annualBonus,
-    };
+    return {"annualOvertime": annualOvertime, "annualBonus": annualBonus};
   }
 }

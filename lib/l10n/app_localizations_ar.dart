@@ -51,7 +51,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get phoneNumber => 'رقم الهاتف';
 
   @override
-  String get enterYourPhone => 'أدخل رقم الهاتف';
+  String get enterYourPhoneNumber => 'أدخل رقمك الهاتف';
 
   @override
   String get password => 'كلمة المرور';
@@ -285,5 +285,38 @@ class AppLocalizationsAr extends AppLocalizations {
   String get passwords_do_not_match => 'كلمتا المرور غير متطابقتين';
 
   @override
+  String get saveChanges => 'حفظ التغييرات';
+
+  @override
+  String get choose_your_preferred_language_for_the_app_interface => 'اختر لغتك المفضلة لواجهة التطبيق.';
+
+  @override
+  String get selectLanguage => 'تحديد اللغة';
+
+  @override
   String get ok => 'موافق';
+
+  @override
+  String get jobTitle => 'المسمى الوظيفي';
+
+  @override
+  String get enter_your_job => 'أدخل وظيفتك';
+
+  @override
+  String get select_your_birthday => 'حدد تاريخ ميلادك';
+
+  @override
+  String get selectGender => 'تحديد الجنس';
+
+  @override
+  String get birthday => 'تاريخ الميلاد';
+
+  @override
+  String get annualOvertime => 'العمل الإضافي السنوي';
+
+  @override
+  String get annualBonus => 'المكافأة السنوية';
+
+  @override
+  String get gender => 'الجنس';
 }

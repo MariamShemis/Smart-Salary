@@ -10,7 +10,11 @@ class SalaryCubit extends Cubit<SalaryState> {
   Future<void> loadSalary(DateTime month) async {
     final uid = FirebaseAuth.instance.currentUser!.uid;
 
-    final salary = await SalaryFirestoreServices.loadSalaryInputs(uid);
+    final salary =
+    await SalaryFirestoreServices.loadSalaryInputs(
+      uid: uid,
+      month: month,
+    );
     final totals = await SalaryFirestoreServices.loadMonthlyTotals(
       uid: uid,
       month: month,

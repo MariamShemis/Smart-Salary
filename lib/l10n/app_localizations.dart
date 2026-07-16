@@ -179,11 +179,11 @@ abstract class AppLocalizations {
   /// **'Phone Number'**
   String get phoneNumber;
 
-  /// No description provided for @enterYourPhone.
+  /// No description provided for @enterYourPhoneNumber.
   ///
   /// In en, this message translates to:
-  /// **'Enter Your Phone'**
-  String get enterYourPhone;
+  /// **'Enter Your Phone Number'**
+  String get enterYourPhoneNumber;
 
   /// No description provided for @password.
   ///
@@ -647,11 +647,77 @@ abstract class AppLocalizations {
   /// **'Passwords do not match'**
   String get passwords_do_not_match;
 
+  /// No description provided for @saveChanges.
+  ///
+  /// In en, this message translates to:
+  /// **'Save Changes'**
+  String get saveChanges;
+
+  /// No description provided for @choose_your_preferred_language_for_the_app_interface.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose your preferred language for the app interface.'**
+  String get choose_your_preferred_language_for_the_app_interface;
+
+  /// No description provided for @selectLanguage.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Language'**
+  String get selectLanguage;
+
   /// No description provided for @ok.
   ///
   /// In en, this message translates to:
   /// **'Ok'**
   String get ok;
+
+  /// No description provided for @jobTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Job Title'**
+  String get jobTitle;
+
+  /// No description provided for @enter_your_job.
+  ///
+  /// In en, this message translates to:
+  /// **'enter_your_job'**
+  String get enter_your_job;
+
+  /// No description provided for @select_your_birthday.
+  ///
+  /// In en, this message translates to:
+  /// **'Select your birthday'**
+  String get select_your_birthday;
+
+  /// No description provided for @selectGender.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Gender'**
+  String get selectGender;
+
+  /// No description provided for @birthday.
+  ///
+  /// In en, this message translates to:
+  /// **'Birthday'**
+  String get birthday;
+
+  /// No description provided for @annualOvertime.
+  ///
+  /// In en, this message translates to:
+  /// **'Annual Overtime'**
+  String get annualOvertime;
+
+  /// No description provided for @annualBonus.
+  ///
+  /// In en, this message translates to:
+  /// **'Annual Bonus'**
+  String get annualBonus;
+
+  /// No description provided for @gender.
+  ///
+  /// In en, this message translates to:
+  /// **'Gender'**
+  String get gender;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
