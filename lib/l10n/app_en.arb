@@ -97,11 +97,13 @@
   "ok": "Ok",
   "editProfile": "Edit Profile",
   "jobTitle": "Job Title",
-  "enter_your_job": "enter_your_job",
+  "enter_your_job": "Enter your job",
   "select_your_birthday": "Select your birthday",
   "selectGender": "Select Gender",
   "birthday": "Birthday",
   "annualOvertime": "Annual Overtime",
   "annualBonus": "Annual Bonus",
+  "take_a_photo": "Take a photo",
+  "choose_from_gallery": "Choose from gallery",
   "gender": "Gender"
 }

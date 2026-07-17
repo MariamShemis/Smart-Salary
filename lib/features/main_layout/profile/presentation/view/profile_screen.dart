@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:smart_salary/core/costants/color_manager.dart';
 import 'package:smart_salary/core/routes/app_routes.dart';
 import 'package:smart_salary/features/auth/data/model/user_model.dart';
 import 'package:smart_salary/features/language/data/cubit/language_cubit.dart';
 import 'package:smart_salary/features/language/data/cubit/language_state.dart';
+import 'package:smart_salary/features/main_layout/profile/data/cubit/profile_cubit.dart';
+import 'package:smart_salary/features/main_layout/profile/data/cubit/profile_state.dart';
 import 'package:smart_salary/features/main_layout/profile/presentation/widgets/profile_header.dart';
 import 'package:smart_salary/features/main_layout/profile/presentation/widgets/profile_menu_item.dart';
 import 'package:smart_salary/l10n/app_localizations.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:smart_salary/features/main_layout/profile/data/cubit/profile_cubit.dart';
-import 'package:smart_salary/features/main_layout/profile/data/cubit/profile_state.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -23,7 +23,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   void initState() {
     super.initState();
-    context.read<ProfileCubit>().getProfile();
+    context.read<ProfileCubit>().listenProfile();
   }
 
   @override
@@ -35,27 +35,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
           Navigator.pushNamedAndRemoveUntil(
             context,
             AppRoutes.login,
-                (route) => false,
+            (route) => false,
           );
         }
         if (state is LogoutError) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(state.message),
-            ),
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(state.message)));
         }
       },
       builder: (context, state) {
         if (state is ProfileLoading) {
           return Center(
-            child: CircularProgressIndicator(color: ColorManager.primaryColor,),
+            child: CircularProgressIndicator(color: ColorManager.primaryColor),
           );
         }
         if (state is ProfileError) {
-          return Center(
-            child: Text(state.message),
-          );
+          return Center(child: Text(state.message));
         }
         UserModel? user;
         if (state is ProfileSuccess) {
@@ -72,16 +68,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   SizedBox(height: 10.h),
                   ProfileHeader(
                     name: user?.name ?? '',
-                    job: user?.email ?? 'Senior Product Designer',
+                    job: user?.jobTitle?.isNotEmpty == true
+                        ? user!.jobTitle!
+                        : user?.email ?? "",
                     phoneNumber: user?.phone ?? '',
                     image: CircleAvatar(
                       radius: 40.r,
                       backgroundColor: ColorManager.greyText,
-                      child: Icon(
-                        Icons.person,
-                        size: 35.sp,
-                        color: ColorManager.white,
-                      ),
+                      backgroundImage: (user?.image?.isNotEmpty ?? false)
+                          ? NetworkImage(user!.image!)
+                          : null,
+
+                      child: (user?.image?.isNotEmpty ?? false)
+                          ? null
+                          : Icon(
+                              Icons.person,
+                              size: 35.sp,
+                              color: ColorManager.white,
+                            ),
                     ),
                   ),
                   SizedBox(height: 40.h),
@@ -126,12 +130,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             return ProfileMenuTile(
                               icon: Icons.language_rounded,
                               title: appLocalizations.language,
-                              trailingText:
-                              state.locale.languageCode == "ar"
+                              trailingText: state.locale.languageCode == "ar"
                                   ? "العربية"
                                   : "English",
                               onTap: () {
-                                Navigator.pushNamed(context, AppRoutes.language);
+                                Navigator.pushNamed(
+                                  context,
+                                  AppRoutes.language,
+                                );
                               },
                               showDivider: false,
                             );
@@ -190,49 +196,48 @@ class _ProfileScreenState extends State<ProfileScreen> {
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (context) =>
-          AlertDialog(
-            backgroundColor: ColorManager.white,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16.r),
-            ),
-            title: Text(
-              appLocalizations.log_out,
-              style: TextStyle(
-                color: ColorManager.primaryColor,
-                fontSize: 25.sp,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            content: Text(
-              appLocalizations.are_you_sure_you_want_to_log_out,
-              style: TextStyle(
-                color: ColorManager.black,
-                fontSize: 18.sp,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: Text(
-                  appLocalizations.cancel,
-                  style: TextStyle(color: ColorManager.red),
-                ),
-              ),
-              TextButton(
-                onPressed: () async {
-                  Navigator.pop(context);
-
-                  await context.read<ProfileCubit>().logout();
-                },
-                child: Text(
-                  appLocalizations.ok,
-                  style: TextStyle(color: ColorManager.primaryColor),
-                ),
-              ),
-            ],
+      builder: (context) => AlertDialog(
+        backgroundColor: ColorManager.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16.r),
+        ),
+        title: Text(
+          appLocalizations.log_out,
+          style: TextStyle(
+            color: ColorManager.primaryColor,
+            fontSize: 25.sp,
+            fontWeight: FontWeight.bold,
           ),
+        ),
+        content: Text(
+          appLocalizations.are_you_sure_you_want_to_log_out,
+          style: TextStyle(
+            color: ColorManager.black,
+            fontSize: 18.sp,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(
+              appLocalizations.cancel,
+              style: TextStyle(color: ColorManager.red),
+            ),
+          ),
+          TextButton(
+            onPressed: () async {
+              Navigator.pop(context);
+
+              await context.read<ProfileCubit>().logout();
+            },
+            child: Text(
+              appLocalizations.ok,
+              style: TextStyle(color: ColorManager.primaryColor),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

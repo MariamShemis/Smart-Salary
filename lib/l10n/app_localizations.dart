@@ -680,7 +680,7 @@ abstract class AppLocalizations {
   /// No description provided for @enter_your_job.
   ///
   /// In en, this message translates to:
-  /// **'enter_your_job'**
+  /// **'Enter your job'**
   String get enter_your_job;
 
   /// No description provided for @select_your_birthday.
@@ -712,6 +712,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Annual Bonus'**
   String get annualBonus;
+
+  /// No description provided for @take_a_photo.
+  ///
+  /// In en, this message translates to:
+  /// **'Take a photo'**
+  String get take_a_photo;
+
+  /// No description provided for @choose_from_gallery.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose from gallery'**
+  String get choose_from_gallery;
 
   /// No description provided for @gender.
   ///

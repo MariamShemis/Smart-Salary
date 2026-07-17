@@ -318,5 +318,11 @@ class AppLocalizationsAr extends AppLocalizations {
   String get annualBonus => 'المكافأة السنوية';
 
   @override
+  String get take_a_photo => 'التقاط صورة';
+
+  @override
+  String get choose_from_gallery => 'اختيار من المعرض';
+
+  @override
   String get gender => 'الجنس';
 }

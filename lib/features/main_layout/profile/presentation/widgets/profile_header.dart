@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:smart_salary/core/costants/color_manager.dart';
+import 'package:smart_salary/features/main_layout/profile/presentation/widgets/user_image_profile.dart';
 
 class ProfileHeader extends StatelessWidget {
   const ProfileHeader({
@@ -34,35 +35,7 @@ class ProfileHeader extends StatelessWidget {
       ),
       child: Column(
         children: [
-          Stack(
-            alignment: Alignment.bottomRight,
-            children: [
-              Container(
-                padding: REdgeInsets.all(4),
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(
-                    color: ColorManager.primaryColor.withOpacity(0.3),
-                    width: 3,
-                  ),
-                ),
-                child: image,
-              ),
-              Positioned(
-                right: -1,
-                bottom: 1,
-                child: CircleAvatar(
-                  radius: 15.r,
-                  backgroundColor: ColorManager.primaryColor,
-                  child: Icon(
-                    Icons.camera_alt,
-                    color: ColorManager.white,
-                    size: 18.sp,
-                  ),
-                ),
-              ),
-            ],
-          ),
+          UserImageProfile(image: image),
           SizedBox(height: 12.h),
           Text(
             name,

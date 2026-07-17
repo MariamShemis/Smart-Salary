@@ -33,40 +33,47 @@ class CustomLanguageCard extends StatelessWidget {
           width: 1.5,
         ),
       ),
-      child: RadioListTile<String>(
-        value: languageCode,
-        groupValue: selectedLanguage,
-        activeColor: ColorManager.secondary,
-        radioScaleFactor: 1.5,
-        radioSide: BorderSide(
-          color: isSelected ? ColorManager.secondary : ColorManager.greyText,
-          width: 1,
-        ),
-        onChanged: onChanged,
-        title: Text(
-          title,
-          style: Theme.of(context).textTheme.headlineLarge!.copyWith(
-            fontWeight: FontWeight.bold,
-            fontSize: 18.sp,
+      child: Material( // 1. أضفنا ويدجت Material هنا لحل المشكلة
+        color: Colors.transparent, // 2. جعلناها شفافة تماماً
+        borderRadius: BorderRadius.circular(20.r), // 3. الحفاظ على انحناء الحواف عند الضغط
+        child: RadioListTile<String>(
+          value: languageCode,
+          groupValue: selectedLanguage,
+          activeColor: ColorManager.secondary,
+          radioScaleFactor: 1.5,
+          shape: RoundedRectangleBorder( // 4. تحديد حواف الـ Tile نفسها عشان تأثير الضغط ميتخطاش الكارد
+            borderRadius: BorderRadius.circular(20.r),
           ),
-        ),
-        subtitle: Text(
-          subTitle,
-          style: Theme.of(
-            context,
-          ).textTheme.bodySmall!.copyWith(fontWeight: FontWeight.w500),
-        ),
-        secondary: CircleAvatar(
-          backgroundColor: ColorManager.secondary,
-          child: Text(
-            languageCode.toUpperCase(),
+          radioSide: BorderSide(
+            color: isSelected ? ColorManager.secondary : ColorManager.greyText,
+            width: 1,
+          ),
+          onChanged: onChanged,
+          title: Text(
+            title,
             style: Theme.of(context).textTheme.headlineLarge!.copyWith(
               fontWeight: FontWeight.bold,
-              fontSize: 16.sp,
+              fontSize: 18.sp,
             ),
           ),
+          subtitle: Text(
+            subTitle,
+            style: Theme.of(
+              context,
+            ).textTheme.bodySmall!.copyWith(fontWeight: FontWeight.w500),
+          ),
+          secondary: CircleAvatar(
+            backgroundColor: ColorManager.secondary,
+            child: Text(
+              languageCode.toUpperCase(),
+              style: Theme.of(context).textTheme.headlineLarge!.copyWith(
+                fontWeight: FontWeight.bold,
+                fontSize: 16.sp,
+              ),
+            ),
+          ),
+          controlAffinity: ListTileControlAffinity.trailing,
         ),
-        controlAffinity: ListTileControlAffinity.trailing,
       ),
     );
   }

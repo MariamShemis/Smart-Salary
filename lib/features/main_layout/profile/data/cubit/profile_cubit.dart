@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smart_salary/features/auth/data/model/user_model.dart';
 import 'package:smart_salary/features/firebase/firebase_services.dart';
@@ -7,27 +9,34 @@ import 'profile_state.dart';
 class ProfileCubit extends Cubit<ProfileState> {
   ProfileCubit() : super(ProfileInitial());
 
-  Future<void> getProfile() async {
-    emit(ProfileLoading());
+  StreamSubscription? _subscription;
 
-    try {
-      UserModel user = await FirebaseServices.getCurrentUser();
+  void listenProfile() {
+    _subscription?.cancel();
 
-      emit(ProfileSuccess(user));
-    } catch (e) {
-      emit(ProfileError(e.toString()));
-    }
+    _subscription = FirebaseServices.profileStream().listen(
+          (user) {
+        emit(ProfileSuccess(user));
+      },
+      onError: (e) {
+        emit(ProfileError(e.toString()));
+      },
+    );
   }
 
   Future<void> logout() async {
-    emit(LogoutLoading());
-
     try {
+      await _subscription?.cancel();
       await FirebaseServices.logout();
-
       emit(LogoutSuccess());
     } catch (e) {
-      emit(LogoutError("Failed to logout"));
+      emit(LogoutError(e.toString()));
     }
+  }
+
+  @override
+  Future<void> close() {
+    _subscription?.cancel();
+    return super.close();
   }
 }

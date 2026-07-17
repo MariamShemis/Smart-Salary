@@ -300,7 +300,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get jobTitle => 'Job Title';
 
   @override
-  String get enter_your_job => 'enter_your_job';
+  String get enter_your_job => 'Enter your job';
 
   @override
   String get select_your_birthday => 'Select your birthday';
@@ -316,6 +316,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get annualBonus => 'Annual Bonus';
+
+  @override
+  String get take_a_photo => 'Take a photo';
+
+  @override
+  String get choose_from_gallery => 'Choose from gallery';
 
   @override
   String get gender => 'Gender';
