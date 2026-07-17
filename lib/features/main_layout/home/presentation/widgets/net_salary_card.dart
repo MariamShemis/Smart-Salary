@@ -106,31 +106,51 @@ class _NetSalaryCardState extends State<NetSalaryCard> {
                     ),
                     SizedBox(height: 4.h),
                     Row(
-                      crossAxisAlignment: CrossAxisAlignment.baseline,
-                      textBaseline: TextBaseline.alphabetic,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          parts[0],
-                          style: TextStyle(
-                            color: ColorManager.primaryColor,
-                            fontSize: 34.sp,
-                            fontWeight: FontWeight.bold,
-                          ),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.baseline,
+                          textBaseline: TextBaseline.alphabetic,
+                          children: [
+                            Text(
+                              parts[0],
+                              style: TextStyle(
+                                color: ColorManager.primaryColor,
+                                fontSize: 34.sp,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Text(
+                              ".${parts[1]} ",
+                              style: TextStyle(
+                                color: ColorManager.primaryColor,
+                                fontSize: 20.sp,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Text(
+                              appLocalizations.lE,
+                              style: TextStyle(
+                                color: ColorManager.primaryColor,
+                                fontSize: 28.sp,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
                         ),
-                        Text(
-                          ".${parts[1]} ",
-                          style: TextStyle(
-                            color: ColorManager.primaryColor,
-                            fontSize: 20.sp,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Text(
-                          appLocalizations.lE,
-                          style: TextStyle(
-                            color: ColorManager.primaryColor,
-                            fontSize: 28.sp,
-                            fontWeight: FontWeight.bold,
+                        IconButton(
+                          onPressed: () {
+                            setState(() {
+                              _showReward = !_showReward;
+                            });
+                          },
+                          icon: AnimatedRotation(
+                            duration: const Duration(milliseconds: 300),
+                            turns: _showReward ? .5 : 0,
+                            child: Icon(
+                              Icons.arrow_forward_ios_rounded,
+                              color: ColorManager.primaryColor,
+                            ),
                           ),
                         ),
                       ],
@@ -139,21 +159,6 @@ class _NetSalaryCardState extends State<NetSalaryCard> {
                 ),
               ),
             ],
-          ),
-          IconButton(
-            onPressed: () {
-              setState(() {
-                _showReward = !_showReward;
-              });
-            },
-            icon: AnimatedRotation(
-              duration: const Duration(milliseconds: 300),
-              turns: _showReward ? .5 : 0,
-              child: Icon(
-                Icons.arrow_forward_ios_rounded,
-                color: ColorManager.primaryColor,
-              ),
-            ),
           ),
         ],
       ),

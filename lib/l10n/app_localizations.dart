@@ -173,6 +173,18 @@ abstract class AppLocalizations {
   /// **'Email'**
   String get email;
 
+  /// No description provided for @phoneNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone Number'**
+  String get phoneNumber;
+
+  /// No description provided for @enterYourPhoneNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter Your Phone Number'**
+  String get enterYourPhoneNumber;
+
   /// No description provided for @password.
   ///
   /// In en, this message translates to:
@@ -556,6 +568,168 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Unit'**
   String get unit;
+
+  /// No description provided for @general_settings.
+  ///
+  /// In en, this message translates to:
+  /// **'General Settings'**
+  String get general_settings;
+
+  /// No description provided for @editProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Profile'**
+  String get editProfile;
+
+  /// No description provided for @account_Security.
+  ///
+  /// In en, this message translates to:
+  /// **'Account & Security'**
+  String get account_Security;
+
+  /// No description provided for @log_out.
+  ///
+  /// In en, this message translates to:
+  /// **'Log out'**
+  String get log_out;
+
+  /// No description provided for @language.
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get language;
+
+  /// No description provided for @are_you_sure_you_want_to_log_out.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to log out'**
+  String get are_you_sure_you_want_to_log_out;
+
+  /// No description provided for @cancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get cancel;
+
+  /// No description provided for @this_field_is_required.
+  ///
+  /// In en, this message translates to:
+  /// **'this field is required'**
+  String get this_field_is_required;
+
+  /// No description provided for @name_must_be_at_least_characters.
+  ///
+  /// In en, this message translates to:
+  /// **'Name must be at least 3 characters'**
+  String get name_must_be_at_least_characters;
+
+  /// No description provided for @enter_a_valid_email.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a valid email'**
+  String get enter_a_valid_email;
+
+  /// No description provided for @enter_a_valid_phone_number.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a valid phone number'**
+  String get enter_a_valid_phone_number;
+
+  /// No description provided for @password_must_contain_at_least_characters.
+  ///
+  /// In en, this message translates to:
+  /// **'Password must contain at least 8 characters'**
+  String get password_must_contain_at_least_characters;
+
+  /// No description provided for @passwords_do_not_match.
+  ///
+  /// In en, this message translates to:
+  /// **'Passwords do not match'**
+  String get passwords_do_not_match;
+
+  /// No description provided for @saveChanges.
+  ///
+  /// In en, this message translates to:
+  /// **'Save Changes'**
+  String get saveChanges;
+
+  /// No description provided for @choose_your_preferred_language_for_the_app_interface.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose your preferred language for the app interface.'**
+  String get choose_your_preferred_language_for_the_app_interface;
+
+  /// No description provided for @selectLanguage.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Language'**
+  String get selectLanguage;
+
+  /// No description provided for @ok.
+  ///
+  /// In en, this message translates to:
+  /// **'Ok'**
+  String get ok;
+
+  /// No description provided for @jobTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Job Title'**
+  String get jobTitle;
+
+  /// No description provided for @enter_your_job.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your job'**
+  String get enter_your_job;
+
+  /// No description provided for @select_your_birthday.
+  ///
+  /// In en, this message translates to:
+  /// **'Select your birthday'**
+  String get select_your_birthday;
+
+  /// No description provided for @selectGender.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Gender'**
+  String get selectGender;
+
+  /// No description provided for @birthday.
+  ///
+  /// In en, this message translates to:
+  /// **'Birthday'**
+  String get birthday;
+
+  /// No description provided for @annualOvertime.
+  ///
+  /// In en, this message translates to:
+  /// **'Annual Overtime'**
+  String get annualOvertime;
+
+  /// No description provided for @annualBonus.
+  ///
+  /// In en, this message translates to:
+  /// **'Annual Bonus'**
+  String get annualBonus;
+
+  /// No description provided for @take_a_photo.
+  ///
+  /// In en, this message translates to:
+  /// **'Take a photo'**
+  String get take_a_photo;
+
+  /// No description provided for @choose_from_gallery.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose from gallery'**
+  String get choose_from_gallery;
+
+  /// No description provided for @gender.
+  ///
+  /// In en, this message translates to:
+  /// **'Gender'**
+  String get gender;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

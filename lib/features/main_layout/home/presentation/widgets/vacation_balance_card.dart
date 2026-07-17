@@ -47,14 +47,13 @@ class VacationBalanceCard extends StatelessWidget {
               ),
               SizedBox(height: 10.h),
               Text(
-                "${remainingDays.toInt()} ${appLocalizations.days_remaining_from} $totalDays",
+                "${remainingDays.toDouble()} ${appLocalizations.days_remaining_from} $totalDays",
                 style: TextStyle(
                   color: ColorManager.greyDark.withOpacity(.6),
                   fontSize: 12.sp,
                   fontWeight: FontWeight.w500,
                 ),
               ),
-
               SizedBox(height: 16.h),
             ],
           ),
@@ -80,7 +79,7 @@ class VacationBalanceCard extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    remainingDays.toInt().toString(),
+                    remainingDays.toDouble().toString(),
                     style: TextStyle(
                       color: ColorManager.primaryColor,
                       fontSize: 18.sp,

@@ -1,8 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:smart_salary/core/costants/assets_manager.dart';
 import 'package:smart_salary/core/costants/color_manager.dart';
 import 'package:smart_salary/core/routes/app_routes.dart';
+import 'package:smart_salary/core/session_service/session_service.dart';
 import 'package:smart_salary/core/widgets/logo_app.dart';
 import 'package:smart_salary/l10n/app_localizations.dart';
 
@@ -73,13 +75,21 @@ class _SplashScreenState extends State<SplashScreen>
       ),
     );
     _controller.forward();
-    _navigateToHomeScreen();
+    _navigate();
   }
 
-  void _navigateToHomeScreen() async {
-    await Future.delayed(const Duration(seconds: 5));
-    if (mounted) {
+  void _navigate() async {
+    await Future.delayed(const Duration(seconds: 3));
+    if (!mounted) return;
+    final onboardingDone = await SessionService.onboardingCompleted;
+    if (!onboardingDone) {
       Navigator.pushReplacementNamed(context, AppRoutes.onboarding);
+      return;
+    }
+    if (FirebaseAuth.instance.currentUser != null) {
+      Navigator.pushReplacementNamed(context, AppRoutes.mainLayout);
+    } else {
+      Navigator.pushReplacementNamed(context, AppRoutes.login);
     }
   }
 

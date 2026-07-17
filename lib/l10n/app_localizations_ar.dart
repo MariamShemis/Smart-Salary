@@ -48,6 +48,12 @@ class AppLocalizationsAr extends AppLocalizations {
   String get email => 'البريد الإلكتروني';
 
   @override
+  String get phoneNumber => 'رقم الهاتف';
+
+  @override
+  String get enterYourPhoneNumber => 'أدخل رقمك الهاتف';
+
+  @override
   String get password => 'كلمة المرور';
 
   @override
@@ -238,4 +244,85 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get unit => 'القيمة';
+
+  @override
+  String get general_settings => 'الإعدادات العامة';
+
+  @override
+  String get editProfile => 'تعديل الملف الشخصي';
+
+  @override
+  String get account_Security => 'الحساب والأمان';
+
+  @override
+  String get log_out => 'تسجيل الخروج';
+
+  @override
+  String get language => 'اللغة';
+
+  @override
+  String get are_you_sure_you_want_to_log_out => 'هل أنت متأكد أنك تريد تسجيل الخروج؟';
+
+  @override
+  String get cancel => 'إلغاء';
+
+  @override
+  String get this_field_is_required => 'هذا الحقل مطلوب';
+
+  @override
+  String get name_must_be_at_least_characters => 'يجب أن يتكون الاسم من 3 أحرف على الأقل';
+
+  @override
+  String get enter_a_valid_email => 'أدخل بريدًا إلكترونيًا صالحًا';
+
+  @override
+  String get enter_a_valid_phone_number => 'أدخل رقم هاتف صالح';
+
+  @override
+  String get password_must_contain_at_least_characters => 'يجب أن تحتوي كلمة المرور على 8 أحرف على الأقل';
+
+  @override
+  String get passwords_do_not_match => 'كلمتا المرور غير متطابقتين';
+
+  @override
+  String get saveChanges => 'حفظ التغييرات';
+
+  @override
+  String get choose_your_preferred_language_for_the_app_interface => 'اختر لغتك المفضلة لواجهة التطبيق.';
+
+  @override
+  String get selectLanguage => 'تحديد اللغة';
+
+  @override
+  String get ok => 'موافق';
+
+  @override
+  String get jobTitle => 'المسمى الوظيفي';
+
+  @override
+  String get enter_your_job => 'أدخل وظيفتك';
+
+  @override
+  String get select_your_birthday => 'حدد تاريخ ميلادك';
+
+  @override
+  String get selectGender => 'تحديد الجنس';
+
+  @override
+  String get birthday => 'تاريخ الميلاد';
+
+  @override
+  String get annualOvertime => 'العمل الإضافي السنوي';
+
+  @override
+  String get annualBonus => 'المكافأة السنوية';
+
+  @override
+  String get take_a_photo => 'التقاط صورة';
+
+  @override
+  String get choose_from_gallery => 'اختيار من المعرض';
+
+  @override
+  String get gender => 'الجنس';
 }

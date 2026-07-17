@@ -12,6 +12,8 @@ class SalaryDetailsGrid extends StatelessWidget {
     required this.bonusDays,
     required this.bonusMonth,
     required this.deduction,
+    required this.annualOvertime,
+    required this.annualBonus,
   });
 
   final double basicSalary;
@@ -20,6 +22,8 @@ class SalaryDetailsGrid extends StatelessWidget {
   final double bonusDays;
   final double bonusMonth;
   final double deduction;
+  final double annualOvertime;
+  final double annualBonus;
 
   @override
   Widget build(BuildContext context) {
@@ -43,8 +47,7 @@ class SalaryDetailsGrid extends StatelessWidget {
 
         _SalaryItemCard(
           title: appLocalizations.overtime,
-          amount:
-          "${overtimeMonth.toStringAsFixed(2)} ${appLocalizations.lE}",
+          amount: "${overtimeMonth.toStringAsFixed(2)} ${appLocalizations.lE}",
           isDays: true,
           amountDays: "${overtimeDays.toInt()} ${appLocalizations.days}",
           icon: Icons.more_time_rounded,
@@ -53,14 +56,24 @@ class SalaryDetailsGrid extends StatelessWidget {
 
         _SalaryItemCard(
           title: appLocalizations.bonus,
-          amount:
-          "${bonusMonth.toStringAsFixed(2)} ${appLocalizations.lE}",
+          amount: "${bonusMonth.toStringAsFixed(2)} ${appLocalizations.lE}",
           isDays: true,
           amountDays: "${bonusDays.toInt()} ${appLocalizations.unit}",
           icon: Icons.emoji_events_outlined,
           iconColor: ColorManager.lightBrown,
         ),
-
+        _SalaryItemCard(
+          title: "Annual Overtime",
+          amount: "${annualOvertime.toStringAsFixed(2)} ${appLocalizations.lE}",
+          icon: Icons.schedule,
+          iconColor: const Color(0xFFF59E0B),
+        ),
+        _SalaryItemCard(
+          title: "Annual Bonus",
+          amount: "${annualBonus.toStringAsFixed(2)} ${appLocalizations.lE}",
+          icon: Icons.workspace_premium_outlined,
+          iconColor: Colors.amber,
+        ),
         _SalaryItemCard(
           title: appLocalizations.deductions,
           amount: "${deduction.toStringAsFixed(2)} ${appLocalizations.lE}",
@@ -80,7 +93,8 @@ class _SalaryItemCard extends StatelessWidget {
     required this.icon,
     required this.iconColor,
     this.isDeduction = false,
-    this.isDays = false, this.amountDays
+    this.isDays = false,
+    this.amountDays,
   });
 
   final String title;
@@ -109,11 +123,7 @@ class _SalaryItemCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(
-            icon,
-            color: iconColor,
-            size: 30.sp,
-          ),
+          Icon(icon, color: iconColor, size: 30.sp),
 
           const Spacer(),
 
@@ -128,38 +138,41 @@ class _SalaryItemCard extends StatelessWidget {
 
           SizedBox(height: 4.h),
 
-          isDays? Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                amount,
-                style: TextStyle(
-                  fontSize: 15.sp,
-                  fontWeight: FontWeight.bold,
-                  color:
-                  isDeduction ? ColorManager.red : const Color(0xff1A1A1A),
+          isDays
+              ? Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      amount,
+                      style: TextStyle(
+                        fontSize: 15.sp,
+                        fontWeight: FontWeight.bold,
+                        color: isDeduction
+                            ? ColorManager.red
+                            : const Color(0xff1A1A1A),
+                      ),
+                    ),
+                    Text(
+                      amountDays ?? "",
+                      style: TextStyle(
+                        fontSize: 13.sp,
+                        fontWeight: FontWeight.bold,
+                        color: ColorManager.greyText,
+                      ),
+                    ),
+                  ],
+                )
+              : Text(
+                  amount,
+                  style: TextStyle(
+                    fontSize: 15.sp,
+                    height: 1.3,
+                    fontWeight: FontWeight.bold,
+                    color: isDeduction
+                        ? ColorManager.red
+                        : const Color(0xff1A1A1A),
+                  ),
                 ),
-              ),
-              Text(
-                amountDays ?? "",
-                style: TextStyle(
-                  fontSize: 13.sp,
-                  fontWeight: FontWeight.bold,
-                  color:
-                  ColorManager.greyText
-                ),
-              ),
-            ],
-          ) :Text(
-            amount,
-            style: TextStyle(
-              fontSize: 15.sp,
-              height: 1.3,
-              fontWeight: FontWeight.bold,
-              color:
-              isDeduction ? ColorManager.red : const Color(0xff1A1A1A),
-            ),
-          ),
         ],
       ),
     );

@@ -54,9 +54,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const HomeTitle(),
+                    HomeTitle(
+                      name: homeState.user.name,
+                    ),
                     SizedBox(height: 3.h),
-
                     Divider(
                       color: ColorManager.greyDark.withOpacity(.2),
                       thickness: 1.5,
@@ -82,14 +83,13 @@ class _HomeScreenState extends State<HomeScreen> {
                       bonusDays: homeState.homeData["bonusDays"]!,
                       bonusMonth: homeState.homeData["bonusMonth"]!,
                       deduction: homeState.homeData["deduction"]!,
+                      annualOvertime: homeState.homeData["annualOvertime"]!,
+                      annualBonus: homeState.homeData["annualBonus"]!,
                     ),
-
                     SizedBox(height: 20.h),
-
                     VacationBalanceCard(
                       remainingDays: homeState.homeData["vacationDays"]!,
                     ),
-
                     SizedBox(height: 24.h),
                   ],
                 ),

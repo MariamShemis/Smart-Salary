@@ -1,13 +1,15 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:smart_salary/core/costants/color_manager.dart';
-import 'package:smart_salary/core/session_service/session_service.dart';
+import 'package:smart_salary/core/utils/ui_utils.dart';
+import 'package:smart_salary/features/firebase/salary_firestore_services.dart';
 import 'package:smart_salary/features/main_layout/daily_reports/data/cubit/daily_reports_cubit.dart';
 import 'package:smart_salary/features/main_layout/daily_reports/data/cubit/daily_reports_state.dart';
 import 'package:smart_salary/features/main_layout/daily_reports/presentation/widgets/add_daily_input.dart';
 import 'package:smart_salary/features/main_layout/daily_reports/presentation/widgets/attendance_card.dart';
 import 'package:smart_salary/features/main_layout/home/data/cubit/home_cubit.dart';
+import 'package:smart_salary/features/main_layout/salary_calculator/data/cubit/salary_cubit.dart';
 import 'package:smart_salary/l10n/app_localizations.dart';
 
 class DailyReports extends StatefulWidget {
@@ -35,19 +37,15 @@ class _DailyReportsState extends State<DailyReports> {
   }
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    _initialize();
-  }
-
-  @override
   void initState() {
     super.initState();
     _initialize();
   }
 
   Future<void> _initialize() async {
-    final selectedMonth = await SessionService.loadSelectedMonth();
+    final selectedMonth = await SalaryFirestoreServices.loadSelectedMonth(
+      FirebaseAuth.instance.currentUser!.uid,
+    );
     _selectedDay = DateTime(
       selectedMonth.year,
       selectedMonth.month,
@@ -69,24 +67,36 @@ class _DailyReportsState extends State<DailyReports> {
 
   Future<void> _saveDailyReport() async {
     AppLocalizations appLocalizations = AppLocalizations.of(context)!;
-    await context.read<DailyReportsCubit>().saveDaily(
-      day: _selectedDay,
-      overtime: _overtimeController.text,
-      bonus: _bonusController.text,
-      absent: _absentController.text,
-      report: _reportController.text,
-    );
-    await context.read<HomeCubit>().loadHome();
-    setState(() {
-      refresh++;
-    });
-    if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(appLocalizations.saved_Successfully),
-        backgroundColor: ColorManager.primaryColor,
-      ),
-    );
+
+    UiUtils.showLoading(context);
+
+    try {
+      await context.read<DailyReportsCubit>().saveDaily(
+        day: _selectedDay,
+        overtime: _overtimeController.text,
+        bonus: _bonusController.text,
+        absent: _absentController.text,
+        report: _reportController.text,
+      );
+      final month = await SalaryFirestoreServices.loadSelectedMonth(
+        FirebaseAuth.instance.currentUser!.uid,
+      );
+
+      await context.read<SalaryCubit>().loadSalary(month);
+      await context.read<HomeCubit>().loadHome();
+      if (mounted) {
+        UiUtils.hideLoading(context);
+        UiUtils.showToast(appLocalizations.saved_Successfully);
+      }
+      setState(() {
+        refresh++;
+      });
+    } catch (e) {
+      if (mounted) {
+        UiUtils.hideLoading(context);
+        UiUtils.showToast("Something went wrong", backgroundColor: Colors.red);
+      }
+    }
   }
 
   @override

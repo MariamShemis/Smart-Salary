@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:smart_salary/core/costants/assets_manager.dart';
 import 'package:smart_salary/core/costants/color_manager.dart';
 import 'package:smart_salary/core/routes/app_routes.dart';
+import 'package:smart_salary/core/utils/ui_utils.dart';
+import 'package:smart_salary/core/utils/validators/app_validators.dart';
 import 'package:smart_salary/core/widgets/custom_auth_text_form_field.dart';
 import 'package:smart_salary/core/widgets/logo_app.dart';
 import 'package:smart_salary/core/widgets/main_gradient_background.dart';
+import 'package:smart_salary/features/auth/data/cubit/auth_cubit.dart';
+import 'package:smart_salary/features/auth/data/cubit/auth_state.dart';
+import 'package:smart_salary/features/auth/data/model/login_request.dart';
 import 'package:smart_salary/features/auth/presentation/widgets/custom_login_outline_border.dart';
 import 'package:smart_salary/l10n/app_localizations.dart';
 
@@ -20,6 +24,9 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  bool rememberMe = false;
 
   @override
   void dispose() {
@@ -31,190 +38,242 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     AppLocalizations appLocalizations = AppLocalizations.of(context)!;
-    return MainGradientBackground(
-      child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          elevation: 5,
-          title: Text(
-            appLocalizations.login,
-            style: TextStyle(
-              color: ColorManager.primaryColor,
-              fontSize: 20.sp,
-              fontWeight: FontWeight.bold,
+    return BlocConsumer<AuthCubit, AuthState>(
+      listener: (context, state) {
+        if (state is LoginLoading) {
+          UiUtils.showLoading(context, isDismissible: false);
+        }
+        if (state is LoginSuccess) {
+          UiUtils.hideLoading(context);
+          UiUtils.showToast("Welcome ${state.user.name}, login successfully.");
+          Navigator.pushReplacementNamed(context, AppRoutes.mainLayout);
+        }
+        if (state is LoginError) {
+          UiUtils.hideLoading(context);
+          UiUtils.showError(context, state.message);
+        }
+      },
+      builder: (context, state) {
+        return MainGradientBackground(
+          child: Scaffold(
+            appBar: AppBar(
+              backgroundColor: Colors.transparent,
+              elevation: 5,
+              title: Text(
+                appLocalizations.login,
+                style: TextStyle(
+                  color: ColorManager.primaryColor,
+                  fontSize: 20.sp,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              centerTitle: true,
             ),
-          ),
-          centerTitle: true,
-        ),
-        body: SafeArea(
-          child: Center(
-            child: SingleChildScrollView(
-              padding: REdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
-              child: Container(
-                padding: REdgeInsets.symmetric(
-                  horizontal: 24.0,
-                  vertical: 32.0,
-                ),
-                decoration: BoxDecoration(
-                  color: ColorManager.white,
-                  borderRadius: BorderRadius.circular(28.r),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.03),
-                      blurRadius: 20.r,
-                      offset: const Offset(0, 10),
+            body: SafeArea(
+              child: Center(
+                child: SingleChildScrollView(
+                  padding: REdgeInsets.symmetric(
+                    horizontal: 24.0,
+                    vertical: 16.0,
+                  ),
+                  child: Container(
+                    padding: REdgeInsets.symmetric(
+                      horizontal: 24.0,
+                      vertical: 32.0,
                     ),
-                  ],
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    LogoApp(width: 65.w, height: 65.h, size: 43),
-                    SizedBox(height: 16.h),
-                    Text(
-                      appLocalizations.smartSalary,
-                      style: TextStyle(
-                        fontSize: 26.sp,
-                        fontWeight: FontWeight.bold,
-                        color: ColorManager.primaryColor,
-                      ),
+                    decoration: BoxDecoration(
+                      color: ColorManager.white,
+                      borderRadius: BorderRadius.circular(28.r),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.03),
+                          blurRadius: 20.r,
+                          offset: const Offset(0, 10),
+                        ),
+                      ],
                     ),
-                    SizedBox(height: 25.h),
-                    CustomAuthTextFormField(
-                      controller: _emailController,
-                      labelText: appLocalizations.email,
-                      hintText: appLocalizations.enterYourEmail,
-                      keyboardType: TextInputType.emailAddress,
-                    ),
-                    SizedBox(height: 20.h),
-                    CustomAuthTextFormField(
-                      controller: _passwordController,
-                      labelText: appLocalizations.password,
-                      hintText: '••••••••',
-                      keyboardType: TextInputType.visiblePassword,
-                      isPassword: true,
-                    ),
-                    SizedBox(height: 16.h),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            SizedBox(
-                              width: 24,
-                              height: 24,
-                              child: Checkbox(
-                                value: false,
-                                onChanged: (value) {},
-                                activeColor: ColorManager.primaryColor,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(4),
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          LogoApp(width: 65.w, height: 65.h, size: 43),
+                          SizedBox(height: 16.h),
+                          Text(
+                            appLocalizations.smartSalary,
+                            style: TextStyle(
+                              fontSize: 26.sp,
+                              fontWeight: FontWeight.bold,
+                              color: ColorManager.primaryColor,
+                            ),
+                          ),
+                          SizedBox(height: 25.h),
+                          CustomAuthTextFormField(
+                            controller: _emailController,
+                            labelText: appLocalizations.email,
+                            hintText: appLocalizations.enterYourEmail,
+                            keyboardType: TextInputType.emailAddress,
+                            validator: (value) =>
+                                AppValidators.validateEmail(value, context),
+                          ),
+                          SizedBox(height: 20.h),
+                          CustomAuthTextFormField(
+                            controller: _passwordController,
+                            labelText: appLocalizations.password,
+                            hintText: '••••••••',
+                            keyboardType: TextInputType.visiblePassword,
+                            isPassword: true,
+                            validator: (value) =>
+                                AppValidators.validatePassword(value, context),
+                          ),
+                          SizedBox(height: 16.h),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                children: [
+                                  SizedBox(
+                                    width: 24,
+                                    height: 24,
+                                    child: Checkbox(
+                                      value: rememberMe,
+                                      onChanged: (value) {
+                                        setState(() {
+                                          rememberMe = value ?? false;
+                                        });
+                                      },
+                                      activeColor: ColorManager.primaryColor,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(4),
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(width: 4.w),
+                                  Text(
+                                    appLocalizations.rememberMe,
+                                    style: TextStyle(
+                                      fontSize: 13.sp,
+                                      color: ColorManager.greyDark,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.pushNamed(
+                                    context,
+                                    AppRoutes.forgetPassword,
+                                  );
+                                },
+                                style: TextButton.styleFrom(
+                                  padding: EdgeInsets.zero,
+                                  minimumSize: Size.zero,
+                                ),
+                                child: Text(
+                                  appLocalizations.forget_password_,
+                                  style: TextStyle(
+                                    fontSize: 13.sp,
+                                    color: ColorManager.primaryColor,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                               ),
-                            ),
-                            SizedBox(width: 4.w),
-                            Text(
-                              appLocalizations.rememberMe,
-                              style: TextStyle(
-                                fontSize: 13.sp,
-                                color: ColorManager.greyDark,
-                                fontWeight: FontWeight.w500,
+                            ],
+                          ),
+                          SizedBox(height: 18.h),
+                          ElevatedButton(
+                            onPressed: _login,
+                            child: Text(appLocalizations.login),
+                          ),
+                          SizedBox(height: 24.h),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Divider(
+                                  color: Color(0xFFE5E9E7),
+                                  thickness: 1,
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            Navigator.pushNamed(context, AppRoutes.forgetPassword);
-                          },
-                          style: TextButton.styleFrom(
-                            padding: EdgeInsets.zero,
-                            minimumSize: Size.zero,
+                              Padding(
+                                padding: REdgeInsets.symmetric(
+                                  horizontal: 16.0,
+                                ),
+                                child: Text(
+                                  appLocalizations.orContinueWith,
+                                  style: TextStyle(
+                                    fontSize: 11.sp,
+                                    fontWeight: FontWeight.bold,
+                                    color: ColorManager.greyDark,
+                                    letterSpacing: 0.5,
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                child: Divider(
+                                  color: Color(0xFFE5E9E7),
+                                  thickness: 1,
+                                ),
+                              ),
+                            ],
                           ),
-                          child: Text(
-                            appLocalizations.forget_password_,
-                            style: TextStyle(
-                              fontSize: 13.sp,
-                              color: ColorManager.primaryColor,
-                              fontWeight: FontWeight.bold,
-                            ),
+                          SizedBox(height: 24.h),
+                          CustomLoginOutlineBorder(
+                            onPressed: () {},
+                            isGoogleLogin: true,
+                            isGoogle: false,
                           ),
-                        ),
-                      ],
+                          SizedBox(height: 24.h),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                "${appLocalizations.dontHaveAnAccount}  ",
+                                style: TextStyle(
+                                  fontSize: 14.sp,
+                                  color: ColorManager.greyDark,
+                                ),
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.pushNamed(
+                                    context,
+                                    AppRoutes.register,
+                                  );
+                                },
+                                child: Text(
+                                  appLocalizations.register,
+                                  style: TextStyle(
+                                    fontSize: 14.sp,
+                                    fontWeight: FontWeight.bold,
+                                    color: ColorManager.primaryColor,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
-                    SizedBox(height: 18.h),
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.pushReplacementNamed(
-                          context,
-                          AppRoutes.mainLayout,
-                        );
-                      },
-                      child: Text(appLocalizations.login),
-                    ),
-                    SizedBox(height: 24.h),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Divider(
-                            color: Color(0xFFE5E9E7),
-                            thickness: 1,
-                          ),
-                        ),
-                        Padding(
-                          padding: REdgeInsets.symmetric(horizontal: 16.0),
-                          child: Text(
-                            appLocalizations.orContinueWith,
-                            style: TextStyle(
-                              fontSize: 11.sp,
-                              fontWeight: FontWeight.bold,
-                              color: ColorManager.greyDark,
-                              letterSpacing: 0.5,
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          child: Divider(
-                            color: Color(0xFFE5E9E7),
-                            thickness: 1,
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 24.h),
-                    CustomLoginOutlineBorder(onPressed: (){} , isGoogleLogin: true, isGoogle: false,),
-                    SizedBox(height: 24.h),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          "${appLocalizations.dontHaveAnAccount}  ",
-                          style: TextStyle(
-                            fontSize: 14.sp,
-                            color: ColorManager.greyDark,
-                          ),
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.pushNamed(context, AppRoutes.register);
-                          },
-                          child: Text(
-                            appLocalizations.register,
-                            style: TextStyle(
-                              fontSize: 14.sp,
-                              fontWeight: FontWeight.bold,
-                              color: ColorManager.primaryColor,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
+                  ),
                 ),
               ),
             ),
           ),
-        ),
+        );
+      },
+    );
+  }
+
+  void _login() {
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
+
+    context.read<AuthCubit>().login(
+      LoginRequest(
+        email: _emailController.text.trim(),
+        password: _passwordController.text,
       ),
     );
   }

@@ -5,7 +5,8 @@ import 'package:smart_salary/core/costants/color_manager.dart';
 import 'package:smart_salary/l10n/app_localizations.dart';
 
 class HomeTitle extends StatelessWidget {
-  const HomeTitle({super.key});
+  const HomeTitle({super.key, required this.name});
+  final String name;
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +48,7 @@ class HomeTitle extends StatelessWidget {
               ),
             ),
             Text(
-              "Alex Rivera",
+              name,
               style: TextStyle(
                 fontSize: 18.sp,
                 color: ColorManager.primaryColor,

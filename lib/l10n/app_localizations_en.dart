@@ -48,6 +48,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get email => 'Email';
 
   @override
+  String get phoneNumber => 'Phone Number';
+
+  @override
+  String get enterYourPhoneNumber => 'Enter Your Phone Number';
+
+  @override
   String get password => 'Password';
 
   @override
@@ -238,4 +244,85 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get unit => 'Unit';
+
+  @override
+  String get general_settings => 'General Settings';
+
+  @override
+  String get editProfile => 'Edit Profile';
+
+  @override
+  String get account_Security => 'Account & Security';
+
+  @override
+  String get log_out => 'Log out';
+
+  @override
+  String get language => 'Language';
+
+  @override
+  String get are_you_sure_you_want_to_log_out => 'Are you sure you want to log out';
+
+  @override
+  String get cancel => 'Cancel';
+
+  @override
+  String get this_field_is_required => 'this field is required';
+
+  @override
+  String get name_must_be_at_least_characters => 'Name must be at least 3 characters';
+
+  @override
+  String get enter_a_valid_email => 'Enter a valid email';
+
+  @override
+  String get enter_a_valid_phone_number => 'Enter a valid phone number';
+
+  @override
+  String get password_must_contain_at_least_characters => 'Password must contain at least 8 characters';
+
+  @override
+  String get passwords_do_not_match => 'Passwords do not match';
+
+  @override
+  String get saveChanges => 'Save Changes';
+
+  @override
+  String get choose_your_preferred_language_for_the_app_interface => 'Choose your preferred language for the app interface.';
+
+  @override
+  String get selectLanguage => 'Select Language';
+
+  @override
+  String get ok => 'Ok';
+
+  @override
+  String get jobTitle => 'Job Title';
+
+  @override
+  String get enter_your_job => 'Enter your job';
+
+  @override
+  String get select_your_birthday => 'Select your birthday';
+
+  @override
+  String get selectGender => 'Select Gender';
+
+  @override
+  String get birthday => 'Birthday';
+
+  @override
+  String get annualOvertime => 'Annual Overtime';
+
+  @override
+  String get annualBonus => 'Annual Bonus';
+
+  @override
+  String get take_a_photo => 'Take a photo';
+
+  @override
+  String get choose_from_gallery => 'Choose from gallery';
+
+  @override
+  String get gender => 'Gender';
 }
