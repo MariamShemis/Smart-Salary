@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:smart_salary/features/main_layout/salary_calculator/presentation/widgets/summary_item.dart';
+import 'package:smart_salary/core/costants/color_manager.dart';
 
 class FormulaRow extends StatelessWidget {
   const FormulaRow({
@@ -30,6 +30,13 @@ class FormulaRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.sizeOf(context).width;
+    final bool isSmallScreen = screenWidth < 360;
+
+    final displayController = isVacation
+        ? TextEditingController(text: fixedValue ?? "30")
+        : controller;
+
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
@@ -38,108 +45,119 @@ class FormulaRow extends StatelessWidget {
           child: Text(
             label,
             style: TextStyle(
-              fontSize: 15.sp,
+              fontSize: isSmallScreen ? 13.sp : 14.sp,
               fontWeight: FontWeight.w600,
+              color: ColorManager.black,
             ),
+            overflow: TextOverflow.ellipsis,
           ),
         ),
-
-        SizedBox(width: 10.w),
+        SizedBox(width: 4.w),
         Expanded(
-          flex: 7,
+          flex: 8,
           child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              FittedBox(
-                fit: BoxFit.scaleDown,
-                alignment: Alignment.centerLeft,
+              Flexible(
+                fit: FlexFit.loose,
                 child: Text(
                   prefixText,
                   style: TextStyle(
-                    fontSize: 13.sp,
-                    color: Colors.black54,
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w600,
+                    color: ColorManager.greyDark,
                   ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
-              SizedBox(width: 8.w),
-              Expanded(
-                child: isVacation
-                    ? SummaryItem(
-                  value: fixedValue ?? "30",
-                  isTitle: false,
-                )
-                    : SizedBox(
-                  height: 42.h,
-                  child: TextField(
-                    controller: controller,
-                    keyboardType: TextInputType.number,
-                    textAlign: TextAlign.center,
-                    onChanged: (_) => onChanged(),
-                    style: TextStyle(fontSize: 13.sp),
-                    decoration: InputDecoration(
-                      hintText: hint,
-                      isDense: true,
-                      contentPadding: EdgeInsets.symmetric(
-                        vertical: 10.h,
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.r),
-                        borderSide: BorderSide(color: primaryColor),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.r),
-                        borderSide: BorderSide(
-                          color: primaryColor,
-                          width: 1.5,
-                        ),
-                      ),
+              SizedBox(width: 4.w),
+              SizedBox(
+                width: 52.w,
+                height: 40.h,
+                child: TextField(
+                  controller: displayController,
+                  readOnly: isVacation,
+                  enabled: !isVacation,
+                  keyboardType: TextInputType.number,
+                  textAlign: TextAlign.center,
+                  onChanged: (_) => onChanged(),
+                  style: TextStyle(
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.bold,
+                    color: isVacation ? Colors.black87 : Colors.black,
+                  ),
+                  decoration: InputDecoration(
+                    hintText: hint,
+                    isDense: true,
+                    filled: isVacation,
+                    fillColor: isVacation
+                        ? const Color(0xffF5F5F5)
+                        : Colors.transparent,
+                    contentPadding: EdgeInsets.symmetric(
+                      vertical: 8.h,
+                      horizontal: 2.w,
+                    ),
+                    disabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.r),
+                      borderSide: const BorderSide(color: Colors.black12),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.r),
+                      borderSide: BorderSide(color: primaryColor),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.r),
+                      borderSide: BorderSide(color: primaryColor, width: 1.5),
                     ),
                   ),
                 ),
               ),
-
               if (suffixText != null) ...[
-                SizedBox(width: 13.w),
-                Text(
-                  suffixText!,
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 1,
-                  style: TextStyle(
-                    fontSize: 13.sp,
-                    color: Colors.black54,
+                SizedBox(width: 4.w),
+                Flexible(
+                  fit: FlexFit.loose,
+                  child: Text(
+                    suffixText!,
+                    style: TextStyle(
+                      fontSize: 12.sp,
+                      fontWeight: FontWeight.w600,
+                      color: ColorManager.greyDark,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
               ],
-
-              SizedBox(width: 8.w),
-
-              Text(
-                "=",
-                overflow: TextOverflow.ellipsis,
-                maxLines: 1,
-                style: TextStyle(
-                  fontSize: 18.sp,
-                  fontWeight: FontWeight.bold,
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 4.w),
+                child: Text(
+                  "=",
+                  style: TextStyle(
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
 
-              SizedBox(width: 8.w),
-
-              Expanded(
-                child: Container(
-                  height: 40.h,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    color: const Color(0xffF5F5F5),
-                    borderRadius: BorderRadius.circular(10.r),
-                    border: Border.all(color: Colors.black12),
-                  ),
+              /// مربع النتيجة النهائية
+              Container(
+                width: 58.w,
+                height: 40.h,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: const Color(0xffF5F5F5),
+                  borderRadius: BorderRadius.circular(10.r),
+                  border: Border.all(color: Colors.black12),
+                ),
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
                   child: Text(
                     resultValue.toStringAsFixed(1),
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
                     style: TextStyle(
                       fontSize: 14.sp,
                       fontWeight: FontWeight.bold,
+                      color: primaryColor,
                     ),
                   ),
                 ),

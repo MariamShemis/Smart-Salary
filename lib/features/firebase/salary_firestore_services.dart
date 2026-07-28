@@ -48,6 +48,16 @@ class SalaryFirestoreServices {
         break;
       }
     }
+    final snapshot1 = await _userDoc(
+      uid,
+    ).collection("salary_history").orderBy("effectiveMonth").get();
+
+    // print("salary docs = ${snapshot1.docs.length}");
+    //
+    // for (final doc in snapshot1.docs) {
+    //   print(doc.id);
+    //   print(doc.data());
+    // }
     return salary ?? {"basic": "0", "divisor": "30"};
   }
 
@@ -337,5 +347,36 @@ class SalaryFirestoreServices {
     }
 
     return {"annualOvertime": annualOvertime, "annualBonus": annualBonus};
+  }
+
+  static Stream<Map<String, double>> monthlyTotalsStream({
+    required String uid,
+    required DateTime month,
+  }) {
+    final start = DateTime(month.year, month.month, 1);
+    final end = DateTime(month.year, month.month + 1, 1);
+
+    return _firestore
+        .collection("users")
+        .doc(uid)
+        .collection("daily_reports")
+        .where("date", isGreaterThanOrEqualTo: Timestamp.fromDate(start))
+        .where("date", isLessThan: Timestamp.fromDate(end))
+        .snapshots()
+        .map((snapshot) {
+          double overtime = 0;
+          double bonus = 0;
+          double absent = 0;
+
+          for (var doc in snapshot.docs) {
+            overtime += double.tryParse(doc["overtime"].toString()) ?? 0;
+
+            bonus += double.tryParse(doc["bonus"].toString()) ?? 0;
+
+            absent += double.tryParse(doc["absent"].toString()) ?? 0;
+          }
+
+          return {"overtime": overtime, "bonus": bonus, "absent": absent};
+        });
   }
 }

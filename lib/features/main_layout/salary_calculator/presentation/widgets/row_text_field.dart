@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:smart_salary/core/costants/color_manager.dart';
 
 class RowTextField extends StatelessWidget {
   const RowTextField({
@@ -24,10 +25,10 @@ class RowTextField extends StatelessWidget {
           width: 110,
           child: Text(
             label,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 15,
               fontWeight: FontWeight.w600,
-              color: Colors.black87,
+              color: ColorManager.black,
             ),
           ),
         ),

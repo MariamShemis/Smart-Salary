@@ -101,15 +101,15 @@ class _AttendanceCardState extends State<AttendanceCard> {
 
             final colors = <Color>[];
 
-            if ((double.tryParse(data["overtime"].toString()) ?? 0) > 0) {
+            if ((double.tryParse(data["overtime"].toString()) ?? 0) != 0) {
               colors.add(overTimeColor);
             }
 
-            if ((double.tryParse(data["bonus"].toString()) ?? 0) > 0) {
+            if ((double.tryParse(data["bonus"].toString()) ?? 0) != 0) {
               colors.add(bonusColor);
             }
 
-            if ((double.tryParse(data["absent"].toString()) ?? 0) > 0) {
+            if ((double.tryParse(data["absent"].toString()) ?? 0) != 0) {
               colors.add(absentColor);
             }
 

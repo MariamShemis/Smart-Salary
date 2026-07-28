@@ -45,7 +45,9 @@ class _LoginScreenState extends State<LoginScreen> {
         }
         if (state is LoginSuccess) {
           UiUtils.hideLoading(context);
-          UiUtils.showToast("Welcome ${state.user.name}, login successfully.");
+          UiUtils.showToast(
+            "${appLocalizations.welcome} ${state.user.name}, ${appLocalizations.login_successfully}.",
+          );
           Navigator.pushReplacementNamed(context, AppRoutes.mainLayout);
         }
         if (state is LoginError) {
@@ -219,7 +221,11 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                           SizedBox(height: 24.h),
                           CustomLoginOutlineBorder(
-                            onPressed: () {},
+                            onPressed: () {
+                              context.read<AuthCubit>().signInWithGoogle(
+                                context,
+                              );
+                            },
                             isGoogleLogin: true,
                             isGoogle: false,
                           ),
@@ -275,6 +281,7 @@ class _LoginScreenState extends State<LoginScreen> {
         email: _emailController.text.trim(),
         password: _passwordController.text,
       ),
+      context,
     );
   }
 }

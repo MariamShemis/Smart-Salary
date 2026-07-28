@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:smart_salary/features/account_security/data/cubit/account_security_cubit.dart';
 import 'package:smart_salary/features/auth/data/cubit/auth_cubit.dart';
 import 'package:smart_salary/features/edit_profile/data/cubit/edit_profile_cubit.dart';
 import 'package:smart_salary/features/language/data/cubit/language_cubit.dart';
@@ -17,6 +18,7 @@ void main() async {
   runApp(
     MultiBlocProvider(
       providers: [
+        BlocProvider(create: (_) => AccountSecurityCubit()),
         BlocProvider(create: (_) => AuthCubit()),
         BlocProvider(create: (_) => SalaryCubit()),
         BlocProvider(create: (_) => DailyReportsCubit()),

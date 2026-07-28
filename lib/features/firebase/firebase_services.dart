@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:smart_salary/features/auth/data/model/login_request.dart';
 import 'package:smart_salary/features/auth/data/model/register_request.dart';
 import 'package:smart_salary/features/auth/data/model/user_model.dart';
@@ -41,6 +42,7 @@ class FirebaseServices {
   }
 
   static Future<void> logout() async {
+    await GoogleSignIn().signOut();
     await _auth.signOut();
   }
 
@@ -119,5 +121,121 @@ class FirebaseServices {
         .doc(uid)
         .snapshots()
         .map((event) => event.data()!);
+  }
+
+  static Future<UserModel> signInWithGoogle() async {
+    final GoogleSignIn googleSignIn = GoogleSignIn();
+
+    await googleSignIn.signOut();
+
+    final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
+
+    if (googleUser == null) {
+      throw FirebaseAuthException(
+        code: "google-sign-in-cancelled",
+        message: "Google Sign In cancelled",
+      );
+    }
+
+    final GoogleSignInAuthentication googleAuth =
+        await googleUser.authentication;
+
+    final credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken,
+    );
+
+    final UserCredential userCredential = await FirebaseAuth.instance
+        .signInWithCredential(credential);
+
+    final firebaseUser = userCredential.user!;
+
+    UserModel? user = await getUserFromFireStore(firebaseUser.uid);
+
+    if (user == null) {
+      user = UserModel(
+        id: firebaseUser.uid,
+        name: firebaseUser.displayName ?? "",
+        email: firebaseUser.email ?? "",
+        phone: firebaseUser.phoneNumber ?? "",
+        image: firebaseUser.photoURL ?? "",
+        birthday: "",
+        gender: "",
+        jobTitle: "",
+      );
+
+      await addUserToFireStore(user);
+    }
+
+    return user;
+  }
+
+  static Future<void> sendVerificationEmail() async {
+    try {
+      final user = _auth.currentUser;
+
+      if (user == null) {
+        throw FirebaseAuthException(
+          code: "user-not-found",
+          message: "No user is logged in",
+        );
+      }
+
+      if (!user.emailVerified) {
+        await user.sendEmailVerification();
+      }
+    } on FirebaseAuthException {
+      rethrow;
+    }
+  }
+
+  /// Current Firebase User
+  static User? currentFirebaseUser() {
+    return _auth.currentUser;
+  }
+
+  /// Current UID
+  static String? currentUserId() {
+    return _auth.currentUser?.uid;
+  }
+
+  static Future<void> reauthenticate(String password) async {
+    final user = _auth.currentUser!;
+
+    final provider = user.providerData.first.providerId;
+
+    if (provider == "password") {
+      final credential = EmailAuthProvider.credential(
+        email: user.email!,
+        password: password,
+      );
+
+      await user.reauthenticateWithCredential(credential);
+      return;
+    }
+
+    if (provider == "google.com") {
+      final googleUser = await GoogleSignIn().signIn();
+
+      if (googleUser == null) return;
+
+      final googleAuth = await googleUser.authentication;
+
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      await user.reauthenticateWithCredential(credential);
+    }
+  }
+  static Future<void> deleteUser(String uid) async {
+    await getUsersCollection().doc(uid).delete();
+  }
+
+  static Future<void> updateCurrentUserEmail(String email) async {
+    final user = _auth.currentUser!;
+
+    await user.verifyBeforeUpdateEmail(email);
   }
 }

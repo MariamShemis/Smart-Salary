@@ -96,7 +96,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get sign_up => 'إنشاء حساب';
 
   @override
-  String get welcome_ => 'مرحباً!';
+  String get welcome => 'مرحباً';
 
   @override
   String get welcome_back => 'مرحباً بعودتك';
@@ -324,5 +324,86 @@ class AppLocalizationsAr extends AppLocalizations {
   String get choose_from_gallery => 'اختيار من المعرض';
 
   @override
+  String get something_went_wrong_Please_try_again => 'حدث خطأ ما، يرجى المحاولة مرة أخرى.';
+
+  @override
+  String get this_email_is_already_in_use => 'هذا البريد الإلكتروني مستخدم بالفعل.';
+
+  @override
+  String get please_enter_a_valid_email_address => 'يرجى إدخال بريد إلكتروني صالح.';
+
+  @override
+  String get password_is_too_weak => 'كلمة المرور ضعيفة للغاية.';
+
+  @override
+  String get no_account_found_with_this_email => 'لا يوجد حساب مرتبط بهذا البريد الإلكتروني.';
+
+  @override
+  String get incorrect_email_or_password => 'البريد الإلكتروني أو كلمة المرور غير صحيحة.';
+
+  @override
+  String get please_check_your_internet_connection => 'يرجى التحقق من اتصالك بالإنترنت.';
+
+  @override
+  String get too_many_attempts_Please_try_again_later => 'محاولات كثيرة جداً، يرجى المحاولة لاحقاً.';
+
+  @override
+  String get google_sign_in_was_cancelled => 'تم إلغاء تسجيل الدخول بواسطة جوجل.';
+
+  @override
+  String get password_reset_email_sent_successfully => 'تم إرسال بريد إعادة تعيين كلمة المرور بنجاح.';
+
+  @override
+  String get login_successfully => 'تم تسجيل الدخول بنجاح';
+
+  @override
+  String get account_created_successfully => 'تم إنشاء الحساب بنجاح.';
+
+  @override
+  String get profile_updated_successfully => 'تم تحديث الملف الشخصي بنجاح';
+
+  @override
   String get gender => 'الجنس';
+
+  @override
+  String get password_changed_successfully => 'تم تغيير كلمة السر بنجاح';
+
+  @override
+  String get account_deleted_successfully => 'تم حذف الحساب بنجاح';
+
+  @override
+  String get changePassword => 'تغيير كلمة السر';
+
+  @override
+  String get update_your_account_password => 'تحديث كلمة السر الخاصة بحسابك';
+
+  @override
+  String get deleteAccount => 'حذف الحساب';
+
+  @override
+  String get permanently_delete_your_account => 'حذف حسابك بشكل نهائي';
+
+  @override
+  String get currentPassword => 'كلمة السر الحالية';
+
+  @override
+  String get newPassword => 'كلمة السر الجديدة';
+
+  @override
+  String get updatePassword => 'تحديث كلمة السر';
+
+  @override
+  String get this_action_is_permanent_Enter_your_password_to_continue => 'هذا الإجراء نهائي ولا يمكن التراجع عنه. أدخل كلمة السر للمتابعة.';
+
+  @override
+  String get password_must_contain_letters_and_numbers => 'يجب أن تحتوي كلمة السر على حروف وأرقام';
+
+  @override
+  String get verifyEmail => 'تأكيد البريد الإلكتروني';
+
+  @override
+  String get send_verification_email => 'إرسال بريد التأكيد';
+
+  @override
+  String get delete => 'حذف';
 }

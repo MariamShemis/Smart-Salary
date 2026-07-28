@@ -269,11 +269,11 @@ abstract class AppLocalizations {
   /// **'Sign Up'**
   String get sign_up;
 
-  /// No description provided for @welcome_.
+  /// No description provided for @welcome.
   ///
   /// In en, this message translates to:
-  /// **'Welcome!'**
-  String get welcome_;
+  /// **'Welcome'**
+  String get welcome;
 
   /// No description provided for @welcome_back.
   ///
@@ -725,11 +725,173 @@ abstract class AppLocalizations {
   /// **'Choose from gallery'**
   String get choose_from_gallery;
 
+  /// No description provided for @something_went_wrong_Please_try_again.
+  ///
+  /// In en, this message translates to:
+  /// **'Something went wrong. Please try again.'**
+  String get something_went_wrong_Please_try_again;
+
+  /// No description provided for @this_email_is_already_in_use.
+  ///
+  /// In en, this message translates to:
+  /// **'This email is already in use.'**
+  String get this_email_is_already_in_use;
+
+  /// No description provided for @please_enter_a_valid_email_address.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a valid email address.'**
+  String get please_enter_a_valid_email_address;
+
+  /// No description provided for @password_is_too_weak.
+  ///
+  /// In en, this message translates to:
+  /// **'Password is too weak.'**
+  String get password_is_too_weak;
+
+  /// No description provided for @no_account_found_with_this_email.
+  ///
+  /// In en, this message translates to:
+  /// **'No account found with this email.'**
+  String get no_account_found_with_this_email;
+
+  /// No description provided for @incorrect_email_or_password.
+  ///
+  /// In en, this message translates to:
+  /// **'Incorrect email or password.'**
+  String get incorrect_email_or_password;
+
+  /// No description provided for @please_check_your_internet_connection.
+  ///
+  /// In en, this message translates to:
+  /// **'Please check your internet connection.'**
+  String get please_check_your_internet_connection;
+
+  /// No description provided for @too_many_attempts_Please_try_again_later.
+  ///
+  /// In en, this message translates to:
+  /// **'Too many attempts. Please try again later.'**
+  String get too_many_attempts_Please_try_again_later;
+
+  /// No description provided for @google_sign_in_was_cancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Google sign in was cancelled.'**
+  String get google_sign_in_was_cancelled;
+
+  /// No description provided for @password_reset_email_sent_successfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Password reset email sent successfully.'**
+  String get password_reset_email_sent_successfully;
+
+  /// No description provided for @login_successfully.
+  ///
+  /// In en, this message translates to:
+  /// **'login successfully'**
+  String get login_successfully;
+
+  /// No description provided for @account_created_successfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Account created successfully.'**
+  String get account_created_successfully;
+
+  /// No description provided for @profile_updated_successfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile updated successfully'**
+  String get profile_updated_successfully;
+
   /// No description provided for @gender.
   ///
   /// In en, this message translates to:
   /// **'Gender'**
   String get gender;
+
+  /// No description provided for @password_changed_successfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Password changed successfully'**
+  String get password_changed_successfully;
+
+  /// No description provided for @account_deleted_successfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Account deleted successfully'**
+  String get account_deleted_successfully;
+
+  /// No description provided for @changePassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Change Password'**
+  String get changePassword;
+
+  /// No description provided for @update_your_account_password.
+  ///
+  /// In en, this message translates to:
+  /// **'Update your account password'**
+  String get update_your_account_password;
+
+  /// No description provided for @deleteAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Account'**
+  String get deleteAccount;
+
+  /// No description provided for @permanently_delete_your_account.
+  ///
+  /// In en, this message translates to:
+  /// **'Permanently delete your account'**
+  String get permanently_delete_your_account;
+
+  /// No description provided for @currentPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Current Password'**
+  String get currentPassword;
+
+  /// No description provided for @newPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'New Password'**
+  String get newPassword;
+
+  /// No description provided for @updatePassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Update Password'**
+  String get updatePassword;
+
+  /// No description provided for @this_action_is_permanent_Enter_your_password_to_continue.
+  ///
+  /// In en, this message translates to:
+  /// **'This action is permanent. Enter your password to continue.'**
+  String get this_action_is_permanent_Enter_your_password_to_continue;
+
+  /// No description provided for @password_must_contain_letters_and_numbers.
+  ///
+  /// In en, this message translates to:
+  /// **'Password must contain letters and numbers'**
+  String get password_must_contain_letters_and_numbers;
+
+  /// No description provided for @verifyEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Verify Email'**
+  String get verifyEmail;
+
+  /// No description provided for @send_verification_email.
+  ///
+  /// In en, this message translates to:
+  /// **'Send verification email'**
+  String get send_verification_email;
+
+  /// No description provided for @delete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get delete;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

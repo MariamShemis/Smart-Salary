@@ -75,7 +75,7 @@ class ProfileMenuTile extends StatelessWidget {
           if (showDivider)
             Divider(
               height: 1,
-              thickness: 0.5,
+              thickness: 1,
               color: ColorManager.greyDark.withOpacity(0.08),
               indent: 16.w,
               endIndent: 16.w,
