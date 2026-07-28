@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:smart_salary/core/costants/assets_manager.dart';
 import 'package:smart_salary/core/costants/color_manager.dart';
 import 'package:smart_salary/core/utils/ui_utils.dart';
 import 'package:smart_salary/core/utils/validators/app_validators.dart';
@@ -108,7 +109,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          LogoApp(width: 65.w, height: 65.h, size: 43),
+                          Image.asset(ImageAssets.logoApp, width: 80.w, height: 80.h,),
+                          //LogoApp(width: 65.w, height: 65.h, size: 43),
                           SizedBox(height: 16.h),
                           Text(
                             appLocalizations.smartSalary,

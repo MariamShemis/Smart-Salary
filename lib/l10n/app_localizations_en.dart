@@ -405,5 +405,38 @@ class AppLocalizationsEn extends AppLocalizations {
   String get send_verification_email => 'Send verification email';
 
   @override
+  String get backup_Restore => 'Backup & Restore';
+
+  @override
+  String get backup_completed_successfully => 'Backup completed successfully';
+
+  @override
+  String get restore_completed_successfully => 'Restore completed successfully';
+
+  @override
+  String get no_backup_created_yet => 'No backup created yet';
+
+  @override
+  String get last_backup => 'Last backup';
+
+  @override
+  String get backupLocation => 'Backup Location';
+
+  @override
+  String get googleDrive => 'Google Drive';
+
+  @override
+  String get localDevice => 'Local Device';
+
+  @override
+  String get createBackup => 'Create Backup';
+
+  @override
+  String get restoreBackup => 'Restore Backup';
+
+  @override
+  String get operation_cancelled => 'Operation cancelled';
+
+  @override
   String get delete => 'Delete';
 }

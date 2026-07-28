@@ -27,39 +27,46 @@ class _DeleteAccountDialogState extends State<DeleteAccountDialog> {
 
   @override
   Widget build(BuildContext context) {
-    AppLocalizations appLocalizations = AppLocalizations.of(context)!;
+    final appLocalizations = AppLocalizations.of(context)!;
+
     return AlertDialog(
+      insetPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 24.h),
       icon: Icon(
         Icons.delete_forever_rounded,
-        size: 45.sp,
+        size: 40.r,
         color: ColorManager.red,
       ),
-      title: Text(appLocalizations.deleteAccount),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            appLocalizations
-                .this_action_is_permanent_Enter_your_password_to_continue,
-          ),
-          SizedBox(height: 20.h),
-          Form(
-            key: formKey,
-            child: PasswordTextField(
-              controller: passwordController,
-              label: appLocalizations.currentPassword,
-              validator: (value) =>
-                  AppValidators.validatePassword(value, context),
+      title: Text(
+        appLocalizations.deleteAccount,
+        textAlign: TextAlign.center,
+      ),
+      content: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              appLocalizations
+                  .this_action_is_permanent_Enter_your_password_to_continue,
+              textAlign: TextAlign.center,
             ),
-          ),
-        ],
+            SizedBox(height: 16.h),
+            Form(
+              key: formKey,
+              child: PasswordTextField(
+                controller: passwordController,
+                label: appLocalizations.currentPassword,
+                validator: (value) =>
+                    AppValidators.validatePassword(value, context),
+              ),
+            ),
+          ],
+        ),
       ),
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context),
           child: Text(appLocalizations.cancel),
         ),
-
         BlocBuilder<AccountSecurityCubit, AccountSecurityState>(
           builder: (context, state) {
             return TextButton(

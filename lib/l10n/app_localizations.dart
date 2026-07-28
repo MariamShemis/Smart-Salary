@@ -887,6 +887,72 @@ abstract class AppLocalizations {
   /// **'Send verification email'**
   String get send_verification_email;
 
+  /// No description provided for @backup_Restore.
+  ///
+  /// In en, this message translates to:
+  /// **'Backup & Restore'**
+  String get backup_Restore;
+
+  /// No description provided for @backup_completed_successfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Backup completed successfully'**
+  String get backup_completed_successfully;
+
+  /// No description provided for @restore_completed_successfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore completed successfully'**
+  String get restore_completed_successfully;
+
+  /// No description provided for @no_backup_created_yet.
+  ///
+  /// In en, this message translates to:
+  /// **'No backup created yet'**
+  String get no_backup_created_yet;
+
+  /// No description provided for @last_backup.
+  ///
+  /// In en, this message translates to:
+  /// **'Last backup'**
+  String get last_backup;
+
+  /// No description provided for @backupLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Backup Location'**
+  String get backupLocation;
+
+  /// No description provided for @googleDrive.
+  ///
+  /// In en, this message translates to:
+  /// **'Google Drive'**
+  String get googleDrive;
+
+  /// No description provided for @localDevice.
+  ///
+  /// In en, this message translates to:
+  /// **'Local Device'**
+  String get localDevice;
+
+  /// No description provided for @createBackup.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Backup'**
+  String get createBackup;
+
+  /// No description provided for @restoreBackup.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore Backup'**
+  String get restoreBackup;
+
+  /// No description provided for @operation_cancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Operation cancelled'**
+  String get operation_cancelled;
+
   /// No description provided for @delete.
   ///
   /// In en, this message translates to:

@@ -405,5 +405,38 @@ class AppLocalizationsAr extends AppLocalizations {
   String get send_verification_email => 'إرسال بريد التأكيد';
 
   @override
+  String get backup_Restore => 'النسخ الاحتياطي والاستعادة';
+
+  @override
+  String get backup_completed_successfully => 'تم إكمال النسخ الاحتياطي بنجاح';
+
+  @override
+  String get restore_completed_successfully => 'تمت استعادة البيانات بنجاح';
+
+  @override
+  String get no_backup_created_yet => 'لم يتم إنشاء نسخة احتياطية بعد';
+
+  @override
+  String get last_backup => 'آخر نسخة احتياطية';
+
+  @override
+  String get backupLocation => 'مكان النسخة الاحتياطية';
+
+  @override
+  String get googleDrive => 'جوجل درايف';
+
+  @override
+  String get localDevice => 'الجهاز المحلي';
+
+  @override
+  String get createBackup => 'إنشاء نسخة احتياطية';
+
+  @override
+  String get restoreBackup => 'استعادة النسخة الاحتياطية';
+
+  @override
+  String get operation_cancelled => 'تم إلغاء العملية';
+
+  @override
   String get delete => 'حذف';
 }

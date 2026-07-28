@@ -133,5 +133,16 @@
   "password_must_contain_letters_and_numbers": "يجب أن تحتوي كلمة السر على حروف وأرقام",
   "verifyEmail": "تأكيد البريد الإلكتروني",
   "send_verification_email": "إرسال بريد التأكيد",
+  "backup_Restore": "النسخ الاحتياطي والاستعادة",
+  "backup_completed_successfully": "تم إكمال النسخ الاحتياطي بنجاح",
+  "restore_completed_successfully": "تمت استعادة البيانات بنجاح",
+  "no_backup_created_yet": "لم يتم إنشاء نسخة احتياطية بعد",
+  "last_backup": "آخر نسخة احتياطية",
+  "backupLocation": "مكان النسخة الاحتياطية",
+  "googleDrive": "جوجل درايف",
+  "localDevice": "الجهاز المحلي",
+  "createBackup": "إنشاء نسخة احتياطية",
+  "restoreBackup": "استعادة النسخة الاحتياطية",
+  "operation_cancelled": "تم إلغاء العملية",
   "delete": "حذف"
 }

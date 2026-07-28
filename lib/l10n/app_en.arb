@@ -134,5 +134,16 @@
   "password_must_contain_letters_and_numbers": "Password must contain letters and numbers",
   "verifyEmail": "Verify Email",
   "send_verification_email": "Send verification email",
+  "backup_Restore": "Backup & Restore",
+  "backup_completed_successfully": "Backup completed successfully",
+  "restore_completed_successfully": "Restore completed successfully",
+  "no_backup_created_yet": "No backup created yet",
+  "last_backup": "Last backup",
+  "backupLocation": "Backup Location",
+  "googleDrive": "Google Drive",
+  "localDevice": "Local Device",
+  "createBackup": "Create Backup",
+  "restoreBackup": "Restore Backup",
+  "operation_cancelled": "Operation cancelled",
   "delete": "Delete"
 }

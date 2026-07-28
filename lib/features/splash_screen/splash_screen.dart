@@ -134,7 +134,8 @@ class _SplashScreenState extends State<SplashScreen>
                         return Transform(
                           alignment: Alignment.center,
                           transform: transformMatrix,
-                          child: LogoApp(width: 110.w, height: 110.h, size: 55.sp,),
+                          child: Image.asset(ImageAssets.logoApp, width: 150.w, height: 150.h,),
+                          //LogoApp(width: 110.w, height: 110.h, size: 55.sp,),
                         );
                       },
                     ),

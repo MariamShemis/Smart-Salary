@@ -379,4 +379,135 @@ class SalaryFirestoreServices {
           return {"overtime": overtime, "bonus": bonus, "absent": absent};
         });
   }
+
+  static Future<void> createBackup({required String uid}) async {
+    final userDoc = _userDoc(uid);
+
+    final collections = [
+      "salary_history",
+      "salary_months",
+      "daily_reports",
+      "salary_results",
+      "settings",
+    ];
+
+    final backup = <String, dynamic>{};
+
+    for (final collection in collections) {
+      final snapshot = await userDoc.collection(collection).get();
+
+      backup[collection] = snapshot.docs.map((doc) {
+        return {"id": doc.id, ...doc.data()};
+      }).toList();
+    }
+
+    await userDoc.collection("backup").doc("latest").set({
+      "createdAt": Timestamp.now(),
+      "data": backup,
+    });
+  }
+
+  static Future<Map<String, dynamic>> getBackupData({
+    required String uid,
+  }) async {
+    final user = await _userDoc(uid).get();
+
+    final salaryHistory = await _userDoc(
+      uid,
+    ).collection("salary_history").get();
+
+    final salaryMonths = await _userDoc(uid).collection("salary_months").get();
+
+    final dailyReports = await _userDoc(uid).collection("daily_reports").get();
+
+    final salaryResults = await _userDoc(
+      uid,
+    ).collection("salary_results").get();
+
+    return {
+      "user": user.data(),
+      "salary_history": salaryHistory.docs
+          .map((e) => {"id": e.id, ...e.data()})
+          .toList(),
+      "salary_months": salaryMonths.docs
+          .map((e) => {"id": e.id, ...e.data()})
+          .toList(),
+      "daily_reports": dailyReports.docs
+          .map((e) => {"id": e.id, ...e.data()})
+          .toList(),
+      "salary_results": salaryResults.docs
+          .map((e) => {"id": e.id, ...e.data()})
+          .toList(),
+      "createdAt": DateTime.now().toIso8601String(),
+    };
+  }
+
+  static Future<void> saveBackupInfo({
+    required String uid,
+    required String type,
+  }) async {
+    await _userDoc(
+      uid,
+    ).collection("backup").doc(type).set({"createdAt": Timestamp.now()});
+  }
+
+  static Stream<DocumentSnapshot<Map<String, dynamic>>> backupStream({
+    required String uid,
+    required String type,
+  }) {
+    return _userDoc(uid).collection("backup").doc(type).snapshots();
+  }
+  /// =========================
+  /// Restore Backup Data to Firestore
+  /// =========================
+  static Future<void> restoreBackupData({
+    required String uid,
+    required Map<String, dynamic> backupData,
+  }) async {
+    final batch = _firestore.batch();
+
+    if (backupData["salary_history"] != null) {
+      for (var item in backupData["salary_history"]) {
+        final id = item["id"];
+        final docRef = _userDoc(uid).collection("salary_history").doc(id);
+        final mapData = Map<String, dynamic>.from(item)..remove("id");
+
+        if (mapData["effectiveMonth"] != null) {
+          mapData["effectiveMonth"] = Timestamp.fromDate(DateTime.parse(mapData["effectiveMonth"]));
+        }
+        batch.set(docRef, mapData, SetOptions(merge: true));
+      }
+    }
+
+    if (backupData["salary_months"] != null) {
+      for (var item in backupData["salary_months"]) {
+        final id = item["id"];
+        final docRef = _userDoc(uid).collection("salary_months").doc(id);
+        final mapData = Map<String, dynamic>.from(item)..remove("id");
+        batch.set(docRef, mapData, SetOptions(merge: true));
+      }
+    }
+
+    if (backupData["daily_reports"] != null) {
+      for (var item in backupData["daily_reports"]) {
+        final id = item["id"];
+        final docRef = _userDoc(uid).collection("daily_reports").doc(id);
+        final mapData = Map<String, dynamic>.from(item)..remove("id");
+        if (mapData["date"] != null) {
+          mapData["date"] = Timestamp.fromDate(DateTime.parse(mapData["date"]));
+        }
+        batch.set(docRef, mapData, SetOptions(merge: true));
+      }
+    }
+    if (backupData["salary_results"] != null) {
+      for (var item in backupData["salary_results"]) {
+        final id = item["id"];
+        final docRef = _userDoc(uid).collection("salary_results").doc(id);
+        final mapData = Map<String, dynamic>.from(item)..remove("id");
+        batch.set(docRef, mapData, SetOptions(merge: true));
+      }
+    }
+
+    await batch.commit();
+  }
 }

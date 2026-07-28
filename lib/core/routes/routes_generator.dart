@@ -4,6 +4,7 @@ import 'package:smart_salary/features/account_security/presentation/view/account
 import 'package:smart_salary/features/auth/presentation/view/forget_password.dart';
 import 'package:smart_salary/features/auth/presentation/view/login_screen.dart';
 import 'package:smart_salary/features/auth/presentation/view/register_screen.dart';
+import 'package:smart_salary/features/back_up/presentation/view/back_up_screen.dart';
 import 'package:smart_salary/features/edit_profile/presentation/view/edit_profile.dart';
 import 'package:smart_salary/features/language/presentation/view/language_profile.dart';
 import 'package:smart_salary/features/main_layout/main_layout.dart';
@@ -45,6 +46,11 @@ abstract class RoutesGenerator {
         {
           return CupertinoPageRoute(builder: (context) => EditProfile());
         }
+      case AppRoutes.backUp:
+        {
+          return CupertinoPageRoute(builder: (context) => BackUpScreen());
+        }
+
       case AppRoutes.accountSecurity:
         {
           return CupertinoPageRoute(
