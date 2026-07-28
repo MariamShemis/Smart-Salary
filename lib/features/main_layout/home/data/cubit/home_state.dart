@@ -17,3 +17,9 @@ class HomeLoaded extends HomeState {
     required this.user,
   });
 }
+
+class HomeError extends HomeState {
+  final String message;
+
+  HomeError(this.message);
+}

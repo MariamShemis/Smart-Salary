@@ -123,7 +123,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ProfileMenuTile(
                           icon: Icons.security_rounded,
                           title: appLocalizations.account_Security,
-                          onTap: () {},
+                          onTap: () {
+                            Navigator.pushNamed(
+                              context,
+                              AppRoutes.accountSecurity,
+                            );
+                          },
                         ),
                         BlocBuilder<LanguageCubit, LanguageState>(
                           builder: (context, state) {

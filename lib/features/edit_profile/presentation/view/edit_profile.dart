@@ -86,7 +86,9 @@ class _EditProfileState extends State<EditProfile> {
               _phoneController.text = state.profile.phone;
               _jobController.text = state.profile.jobTitle ?? "";
               _birthdayController.text = state.profile.birthday ?? "";
-              _selectedGender = state.profile.gender;
+              setState(() {
+                _selectedGender = state.profile.gender;
+              });
             }
             if (state is EditProfileSuccess) {
               Navigator.pop(context);
@@ -144,14 +146,13 @@ class _EditProfileState extends State<EditProfile> {
                     hintText: appLocalizations.enterYourName,
                     controller: _nameController,
                   ),
-
                   SizedBox(height: 20.h),
-
                   CustomProfileField(
                     title: appLocalizations.email.toUpperCase(),
                     hintText: appLocalizations.enterYourEmail,
                     controller: _emailController,
                     keyboardType: TextInputType.emailAddress,
+                    readOnly: true,
                   ),
 
                   SizedBox(height: 20.h),

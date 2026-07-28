@@ -1,0 +1,85 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:smart_salary/core/costants/color_manager.dart';
+import 'package:smart_salary/core/utils/validators/app_validators.dart';
+import 'package:smart_salary/features/account_security/data/cubit/account_security_cubit.dart';
+import 'package:smart_salary/features/account_security/data/cubit/account_security_state.dart';
+import 'package:smart_salary/features/account_security/presentation/widgets/password_text_field.dart';
+import 'package:smart_salary/l10n/app_localizations.dart';
+
+class DeleteAccountDialog extends StatefulWidget {
+  const DeleteAccountDialog({super.key});
+
+  @override
+  State<DeleteAccountDialog> createState() => _DeleteAccountDialogState();
+}
+
+class _DeleteAccountDialogState extends State<DeleteAccountDialog> {
+  final passwordController = TextEditingController();
+  final formKey = GlobalKey<FormState>();
+
+  @override
+  void dispose() {
+    passwordController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    AppLocalizations appLocalizations = AppLocalizations.of(context)!;
+    return AlertDialog(
+      icon: Icon(
+        Icons.delete_forever_rounded,
+        size: 45.sp,
+        color: ColorManager.red,
+      ),
+      title: Text(appLocalizations.deleteAccount),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            appLocalizations
+                .this_action_is_permanent_Enter_your_password_to_continue,
+          ),
+          SizedBox(height: 20.h),
+          Form(
+            key: formKey,
+            child: PasswordTextField(
+              controller: passwordController,
+              label: appLocalizations.currentPassword,
+              validator: (value) =>
+                  AppValidators.validatePassword(value, context),
+            ),
+          ),
+        ],
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: Text(appLocalizations.cancel),
+        ),
+
+        BlocBuilder<AccountSecurityCubit, AccountSecurityState>(
+          builder: (context, state) {
+            return TextButton(
+              onPressed: () {
+                FocusScope.of(context).unfocus();
+
+                if (!formKey.currentState!.validate()) return;
+
+                context.read<AccountSecurityCubit>().deleteAccount(
+                  currentPassword: passwordController.text.trim(),
+                );
+              },
+              child: Text(
+                appLocalizations.delete,
+                style: TextStyle(color: ColorManager.red),
+              ),
+            );
+          },
+        ),
+      ],
+    );
+  }
+}

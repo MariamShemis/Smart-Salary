@@ -8,6 +8,18 @@ class ThemeManager {
     brightness: Brightness.light,
     primaryColor: ColorManager.primaryColor,
     scaffoldBackgroundColor: Colors.transparent,
+    colorScheme: ColorScheme.light(
+      primary: ColorManager.primaryColor,
+      onPrimary: ColorManager.white,
+      secondary: ColorManager.secondary,
+      onSecondary: ColorManager.black,
+      background: ColorManager.background,
+      onBackground: ColorManager.black,
+      surface: ColorManager.white,
+      onSurface: ColorManager.black,
+      error: ColorManager.red,
+      onError: ColorManager.white,
+    ),
     appBarTheme: const AppBarTheme(
       backgroundColor: Colors.transparent,
       elevation: 0,
@@ -40,6 +52,7 @@ class ThemeManager {
 
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
+      focusColor: ColorManager.primaryColor,
       fillColor: ColorManager.white,
       contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
       border: OutlineInputBorder(

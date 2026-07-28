@@ -49,7 +49,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         }
         if (state is RegisterSuccess) {
           UiUtils.hideLoading(context);
-          UiUtils.showToast("Account created successfully.");
+          UiUtils.showToast(appLocalizations.account_created_successfully);
           Navigator.pop(context);
         }
         if (state is RegisterError) {
@@ -268,6 +268,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         phone: _phoneController.text.trim(),
         password: _passwordController.text,
       ),
+      context,
     );
   }
 }

@@ -5,8 +5,10 @@ import 'package:smart_salary/core/costants/color_manager.dart';
 import 'package:smart_salary/l10n/app_localizations.dart';
 
 class HomeTitle extends StatelessWidget {
-  const HomeTitle({super.key, required this.name});
+  const HomeTitle({super.key, required this.name, required this.image});
+
   final String name;
+  final Widget image;
 
   @override
   Widget build(BuildContext context) {
@@ -19,45 +21,35 @@ class HomeTitle extends StatelessWidget {
       children: [
         Card(
           shape: RoundedRectangleBorder(
-            side: BorderSide(
-              color: ColorManager.secondary,
-              width: 2.w,
-            ),
+            side: BorderSide(color: ColorManager.secondary, width: 2.w),
             borderRadius: BorderRadius.circular(50.r),
           ),
-          child: CircleAvatar(
-            radius: 28.r,
-            backgroundColor: ColorManager.primaryColor,
-            child: Icon(
-              Icons.person,
-              color: ColorManager.secondary,
-              size: 25.sp,
-            ),
-          ),
+          child: image,
         ),
         SizedBox(width: 10.w),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "${appLocalizations.welcome_back} ✨",
-              style: TextStyle(
-                fontSize: 14.sp,
-                color: ColorManager.greyDark,
-                fontWeight: FontWeight.w500,
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "${appLocalizations.welcome_back} ✨",
+                style: TextStyle(
+                  fontSize: 14.sp,
+                  color: ColorManager.greyDark,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
-            ),
-            Text(
-              name,
-              style: TextStyle(
-                fontSize: 18.sp,
-                color: ColorManager.primaryColor,
-                fontWeight: FontWeight.bold,
+              Text(
+                name,
+                style: TextStyle(
+                  fontSize: 18.sp,
+                  color: ColorManager.primaryColor,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-        const Spacer(),
         Column(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [

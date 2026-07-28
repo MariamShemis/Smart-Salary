@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:smart_salary/core/routes/app_routes.dart';
+import 'package:smart_salary/features/account_security/presentation/view/account_security_screen.dart';
 import 'package:smart_salary/features/auth/presentation/view/forget_password.dart';
 import 'package:smart_salary/features/auth/presentation/view/login_screen.dart';
 import 'package:smart_salary/features/auth/presentation/view/register_screen.dart';
@@ -36,15 +37,20 @@ abstract class RoutesGenerator {
         {
           return CupertinoPageRoute(builder: (context) => MainLayout());
         }
-        case AppRoutes.language:
+      case AppRoutes.language:
         {
           return CupertinoPageRoute(builder: (context) => LanguageProfile());
         }
-        case AppRoutes.editProfile:
+      case AppRoutes.editProfile:
         {
           return CupertinoPageRoute(builder: (context) => EditProfile());
         }
-
+      case AppRoutes.accountSecurity:
+        {
+          return CupertinoPageRoute(
+            builder: (context) => AccountSecurityScreen(),
+          );
+        }
     }
 
     return null;

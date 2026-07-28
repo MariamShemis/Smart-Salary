@@ -24,6 +24,7 @@ class SalaryCalculator extends StatefulWidget {
 
 class _SalaryCalculatorState extends State<SalaryCalculator> {
   DateTime _selectedMonth = DateTime.now();
+  Stream<Map<String, double>>? _totalsStream;
   final TextEditingController _basicSalaryController = TextEditingController();
 
   final TextEditingController _dailyCountDivisorController =
@@ -71,9 +72,8 @@ class _SalaryCalculatorState extends State<SalaryCalculator> {
     );
 
     _basicSalaryController.text = salary["basic"].toString();
+
     _dailyCountDivisorController.text = salary["divisor"].toString();
-    // _bonusValueController.text = savedData['bonusValue']!;
-    // _overtimeMultiplierController.text = savedData['otMultiplier']!;
 
     await _loadMonthData(_selectedMonth);
   }
@@ -120,31 +120,46 @@ class _SalaryCalculatorState extends State<SalaryCalculator> {
     _selectedMonth = month;
     final uid = FirebaseAuth.instance.currentUser!.uid;
 
-    final totals = await SalaryFirestoreServices.loadMonthlyTotals(
-      uid: uid,
-      month: month,
-    );
-    final salary = await SalaryFirestoreServices.loadSalaryInputs(
-      uid: uid,
-      month: _selectedMonth,
-    );
+    setState(() {
+      _totalsStream = SalaryFirestoreServices.monthlyTotalsStream(
+        uid: uid,
+        month: month,
+      );
+    });
 
-    final monthData = await SalaryFirestoreServices.loadMonthlySalaryData(
-      uid: uid,
-      month: month,
-    );
+    final results = await Future.wait([
+      SalaryFirestoreServices.loadMonthlyTotals(uid: uid, month: month),
+      SalaryFirestoreServices.loadSalaryInputs(uid: uid, month: month),
+      SalaryFirestoreServices.loadMonthlySalaryData(uid: uid, month: month),
+    ]);
+
+    final totals = results[0] as Map<String, double>;
+    final salary = results[1];
+    final monthData = results[2];
 
     setState(() {
       _basicSalaryController.text = salary["basic"].toString();
-      _dailyCountDivisorController.text = salary["divisor"].toString();
-      _absentDaysController.text = totals["absent"]!.toDouble().toString();
 
-      _deductionAbsentController.text = monthData["deductAbsent"]!;
-      _deductionCustomController.text = monthData["deductCustom"]!;
-      _rewardValueController.text = monthData["rewardValue"]!;
-      _rewardMultiplierController.text = monthData["rewardMultiplier"]!;
-      _overtimeMultiplierController.text = monthData["overtimeMultiplier"]!;
-      _bonusValueController.text = monthData["bonusValue"]!;
+      _dailyCountDivisorController.text = salary["divisor"].toString();
+
+      _overtimeDaysController.text = (totals["overtime"] ?? 0).toString();
+
+      _bonusDaysController.text = (totals["bonus"] ?? 0).toString();
+
+      _absentDaysController.text = (totals["absent"] ?? 0).toString();
+
+      _deductionAbsentController.text = monthData["deductAbsent"] ?? "";
+
+      _deductionCustomController.text = monthData["deductCustom"] ?? "";
+
+      _rewardValueController.text = monthData["rewardValue"] ?? "";
+
+      _rewardMultiplierController.text = monthData["rewardMultiplier"] ?? "";
+
+      _overtimeMultiplierController.text =
+          monthData["overtimeMultiplier"] ?? "";
+
+      _bonusValueController.text = monthData["bonusValue"]?.toString() ?? "20";
     });
 
     context.read<SalaryCubit>().loadSalary(month);
@@ -232,6 +247,7 @@ class _SalaryCalculatorState extends State<SalaryCalculator> {
                 ),
                 SizedBox(height: 20.h),
                 SalaryCard(
+                  totalsStream: _totalsStream,
                   basicSalaryController: _basicSalaryController,
                   dailyCountDivisorController: _dailyCountDivisorController,
                   overtimeDaysController: _overtimeDaysController,

@@ -23,7 +23,7 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<HomeCubit>().loadHome();
+      context.read<HomeCubit>().listenUser();
     });
   }
 
@@ -33,19 +33,16 @@ class _HomeScreenState extends State<HomeScreen> {
       builder: (context, state) {
         if (state is HomeLoading || state is HomeInitial) {
           return const Center(
-            child: CircularProgressIndicator(
-              color: ColorManager.primaryColor,
-            ),
+            child: CircularProgressIndicator(color: ColorManager.primaryColor),
           );
         }
-
         final homeState = state as HomeLoaded;
-
         return SafeArea(
           top: false,
           child: RefreshIndicator(
+            color: ColorManager.primaryColor,
             onRefresh: () async {
-              await context.read<HomeCubit>().loadHome();
+              context.read<HomeCubit>().listenUser();
             },
             child: SingleChildScrollView(
               physics: const AlwaysScrollableScrollPhysics(),
@@ -56,6 +53,20 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: [
                     HomeTitle(
                       name: homeState.user.name,
+                      image: CircleAvatar(
+                        radius: 28.r,
+                        backgroundColor: ColorManager.primaryColor,
+                        backgroundImage: (homeState.user.image?.isNotEmpty ?? false)
+                            ? NetworkImage(homeState.user.image!)
+                            : null,
+                        child: (homeState.user.image?.isNotEmpty ?? false)
+                            ? null
+                            : Icon(
+                          Icons.person,
+                          color: ColorManager.secondary,
+                          size: 25.sp,
+                        ),
+                      ),
                     ),
                     SizedBox(height: 3.h),
                     Divider(
@@ -64,18 +75,14 @@ class _HomeScreenState extends State<HomeScreen> {
                       indent: 4,
                       endIndent: 4,
                     ),
-
                     SizedBox(height: 16.h),
-
                     NetSalaryCard(
                       totalSalary: homeState.homeData["totalSalary"]!,
                       totalSalaryWithReward:
-                      homeState.homeData["totalSalaryWithReward"]!,
+                          homeState.homeData["totalSalaryWithReward"]!,
                       month: DateFormat("MMMM yyyy").format(homeState.month),
                     ),
-
                     SizedBox(height: 20.h),
-
                     SalaryDetailsGrid(
                       basicSalary: homeState.homeData["basicSalary"]!,
                       overtimeDays: homeState.homeData["overtimeDays"]!,
@@ -90,7 +97,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     VacationBalanceCard(
                       remainingDays: homeState.homeData["vacationDays"]!,
                     ),
-                    SizedBox(height: 24.h),
+                    SizedBox(height: 20.h),
                   ],
                 ),
               ),

@@ -18,6 +18,12 @@ class ProfileGenderDropdown extends StatelessWidget {
   Widget build(BuildContext context) {
     final appLocalizations = AppLocalizations.of(context)!;
     final isArabic = Localizations.localeOf(context).languageCode == 'ar';
+    String? normalizedValue;
+    if (selectedValue != null) {
+      final val = selectedValue!.trim().toLowerCase();
+      if (val == 'male') normalizedValue = 'Male';
+      if (val == 'female') normalizedValue = 'Female';
+    }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -32,13 +38,18 @@ class ProfileGenderDropdown extends StatelessWidget {
               color: ColorManager.black,
             ),
           ),
-        ), // <-- القوس ده كان ناقص هنا وقفّل الـ Padding بالظبط
+        ),
         DropdownButtonFormField<String>(
-          value: selectedValue,
+          dropdownColor: ColorManager.white,
+          focusColor: ColorManager.white,
+
+          value: normalizedValue,
           icon: const Icon(Icons.keyboard_arrow_down),
           decoration: InputDecoration(
             hintText: appLocalizations.selectGender,
+            fillColor: ColorManager.white,
             prefixIcon: null,
+
           ),
           items: [
             DropdownMenuItem(

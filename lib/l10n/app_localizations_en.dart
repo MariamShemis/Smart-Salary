@@ -96,7 +96,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get sign_up => 'Sign Up';
 
   @override
-  String get welcome_ => 'Welcome!';
+  String get welcome => 'Welcome';
 
   @override
   String get welcome_back => 'Welcome back';
@@ -324,5 +324,86 @@ class AppLocalizationsEn extends AppLocalizations {
   String get choose_from_gallery => 'Choose from gallery';
 
   @override
+  String get something_went_wrong_Please_try_again => 'Something went wrong. Please try again.';
+
+  @override
+  String get this_email_is_already_in_use => 'This email is already in use.';
+
+  @override
+  String get please_enter_a_valid_email_address => 'Please enter a valid email address.';
+
+  @override
+  String get password_is_too_weak => 'Password is too weak.';
+
+  @override
+  String get no_account_found_with_this_email => 'No account found with this email.';
+
+  @override
+  String get incorrect_email_or_password => 'Incorrect email or password.';
+
+  @override
+  String get please_check_your_internet_connection => 'Please check your internet connection.';
+
+  @override
+  String get too_many_attempts_Please_try_again_later => 'Too many attempts. Please try again later.';
+
+  @override
+  String get google_sign_in_was_cancelled => 'Google sign in was cancelled.';
+
+  @override
+  String get password_reset_email_sent_successfully => 'Password reset email sent successfully.';
+
+  @override
+  String get login_successfully => 'login successfully';
+
+  @override
+  String get account_created_successfully => 'Account created successfully.';
+
+  @override
+  String get profile_updated_successfully => 'Profile updated successfully';
+
+  @override
   String get gender => 'Gender';
+
+  @override
+  String get password_changed_successfully => 'Password changed successfully';
+
+  @override
+  String get account_deleted_successfully => 'Account deleted successfully';
+
+  @override
+  String get changePassword => 'Change Password';
+
+  @override
+  String get update_your_account_password => 'Update your account password';
+
+  @override
+  String get deleteAccount => 'Delete Account';
+
+  @override
+  String get permanently_delete_your_account => 'Permanently delete your account';
+
+  @override
+  String get currentPassword => 'Current Password';
+
+  @override
+  String get newPassword => 'New Password';
+
+  @override
+  String get updatePassword => 'Update Password';
+
+  @override
+  String get this_action_is_permanent_Enter_your_password_to_continue => 'This action is permanent. Enter your password to continue.';
+
+  @override
+  String get password_must_contain_letters_and_numbers => 'Password must contain letters and numbers';
+
+  @override
+  String get verifyEmail => 'Verify Email';
+
+  @override
+  String get send_verification_email => 'Send verification email';
+
+  @override
+  String get delete => 'Delete';
 }

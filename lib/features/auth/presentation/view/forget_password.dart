@@ -40,7 +40,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
         if (state is ResetPasswordSuccess) {
           UiUtils.showSuccess(
             context,
-            "Password reset email sent successfully.",
+            appLocalizations.password_reset_email_sent_successfully,
           );
           Navigator.pop(context);
         }
@@ -156,6 +156,6 @@ class _ForgetPasswordState extends State<ForgetPassword> {
       return;
     }
 
-    context.read<AuthCubit>().resetPassword(_emailController.text.trim());
+    context.read<AuthCubit>().resetPassword(_emailController.text.trim() , context);
   }
 }

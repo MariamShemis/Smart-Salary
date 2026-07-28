@@ -10,6 +10,7 @@ class CustomProfileField extends StatelessWidget {
   final TextInputType keyboardType;
   final bool readOnly;
   final VoidCallback? onTap;
+  final void Function(String)? onChanged;
 
   const CustomProfileField({
     super.key,
@@ -18,7 +19,7 @@ class CustomProfileField extends StatelessWidget {
     required this.controller,
     this.keyboardType = TextInputType.text,
     this.readOnly = false,
-    this.onTap,
+    this.onTap, this.onChanged,
   });
 
   @override
@@ -38,6 +39,7 @@ class CustomProfileField extends StatelessWidget {
           ),
         ),
         TextFormField(
+          onChanged: onChanged,
           controller: controller,
           keyboardType: keyboardType,
           readOnly: readOnly,
