@@ -96,6 +96,7 @@ class _ChangePasswordBottomSheetState extends State<ChangePasswordBottomSheet> {
                       context.read<AccountSecurityCubit>().changePassword(
                         currentPassword: currentController.text.trim(),
                         newPassword: newController.text.trim(),
+                        context: context,
                       );
                     },
                     child: Text(appLocalizations.updatePassword),

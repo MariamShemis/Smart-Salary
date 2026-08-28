@@ -4,7 +4,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:smart_salary/core/costants/color_manager.dart';
 import 'package:smart_salary/core/utils/validators/app_validators.dart';
 import 'package:smart_salary/features/account_security/data/cubit/account_security_cubit.dart';
-import 'package:smart_salary/features/account_security/data/cubit/account_security_state.dart';
 import 'package:smart_salary/features/account_security/presentation/widgets/password_text_field.dart';
 import 'package:smart_salary/l10n/app_localizations.dart';
 
@@ -28,6 +27,7 @@ class _DeleteAccountDialogState extends State<DeleteAccountDialog> {
   @override
   Widget build(BuildContext context) {
     final appLocalizations = AppLocalizations.of(context)!;
+    final cubit = context.read<AccountSecurityCubit>();
 
     return AlertDialog(
       insetPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 24.h),
@@ -36,29 +36,30 @@ class _DeleteAccountDialogState extends State<DeleteAccountDialog> {
         size: 40.r,
         color: ColorManager.red,
       ),
-      title: Text(
-        appLocalizations.deleteAccount,
-        textAlign: TextAlign.center,
-      ),
+      title: Text(appLocalizations.deleteAccount, textAlign: TextAlign.center),
       content: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              appLocalizations
-                  .this_action_is_permanent_Enter_your_password_to_continue,
+              cubit.isEmailAccount
+                  ? appLocalizations
+                        .this_action_is_permanent_Enter_your_password_to_continue
+                  : appLocalizations.permanently_delete_your_account,
               textAlign: TextAlign.center,
             ),
-            SizedBox(height: 16.h),
-            Form(
-              key: formKey,
-              child: PasswordTextField(
-                controller: passwordController,
-                label: appLocalizations.currentPassword,
-                validator: (value) =>
-                    AppValidators.validatePassword(value, context),
+            if (cubit.isEmailAccount) ...[
+              SizedBox(height: 16.h),
+              Form(
+                key: formKey,
+                child: PasswordTextField(
+                  controller: passwordController,
+                  label: appLocalizations.currentPassword,
+                  validator: (value) =>
+                      AppValidators.validatePassword(value, context),
+                ),
               ),
-            ),
+            ],
           ],
         ),
       ),
@@ -67,24 +68,24 @@ class _DeleteAccountDialogState extends State<DeleteAccountDialog> {
           onPressed: () => Navigator.pop(context),
           child: Text(appLocalizations.cancel),
         ),
-        BlocBuilder<AccountSecurityCubit, AccountSecurityState>(
-          builder: (context, state) {
-            return TextButton(
-              onPressed: () {
-                FocusScope.of(context).unfocus();
+        TextButton(
+          onPressed: () {
+            FocusScope.of(context).unfocus();
 
-                if (!formKey.currentState!.validate()) return;
+            if (cubit.isEmailAccount) {
+              if (!formKey.currentState!.validate()) return;
+            }
+            Navigator.pop(context);
 
-                context.read<AccountSecurityCubit>().deleteAccount(
-                  currentPassword: passwordController.text.trim(),
-                );
-              },
-              child: Text(
-                appLocalizations.delete,
-                style: TextStyle(color: ColorManager.red),
-              ),
+            cubit.deleteAccount(
+              currentPassword: passwordController.text.trim(),
+              context: context,
             );
           },
+          child: Text(
+            appLocalizations.delete,
+            style: TextStyle(color: ColorManager.red),
+          ),
         ),
       ],
     );

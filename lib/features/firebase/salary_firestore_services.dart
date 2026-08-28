@@ -122,12 +122,12 @@ class SalaryFirestoreServices {
         .collection("daily_reports")
         .doc("${date.year}-${date.month}-${date.day}")
         .set({
-          "date": Timestamp.fromDate(date),
-          "overtime": overtime,
-          "bonus": bonus,
-          "absent": absent,
-          "report": report,
-        });
+      "date": Timestamp.fromDate(date),
+      "overtime": overtime,
+      "bonus": bonus,
+      "absent": absent,
+      "report": report,
+    });
   }
 
   static Future<Map<String, dynamic>> loadDailyInput({
@@ -353,31 +353,39 @@ class SalaryFirestoreServices {
     required String uid,
     required DateTime month,
   }) {
-    final start = DateTime(month.year, month.month, 1);
-    final end = DateTime(month.year, month.month + 1, 1);
-
-    return _firestore
-        .collection("users")
-        .doc(uid)
+    final period = SalaryPeriodHelper.getPeriod(month);
+    return _userDoc(uid)
         .collection("daily_reports")
-        .where("date", isGreaterThanOrEqualTo: Timestamp.fromDate(start))
-        .where("date", isLessThan: Timestamp.fromDate(end))
+        .where(
+      "date",
+      isGreaterThanOrEqualTo: Timestamp.fromDate(period.start),
+    )
+        .where(
+      "date",
+      isLessThan: Timestamp.fromDate(period.end),
+    )
         .snapshots()
         .map((snapshot) {
-          double overtime = 0;
-          double bonus = 0;
-          double absent = 0;
+      double overtime = 0;
+      double bonus = 0;
+      double absent = 0;
 
-          for (var doc in snapshot.docs) {
-            overtime += double.tryParse(doc["overtime"].toString()) ?? 0;
+      for (final doc in snapshot.docs) {
+        final data = doc.data();
+        overtime +=
+            double.tryParse(data["overtime"]?.toString() ?? "0") ?? 0;
+        bonus +=
+            double.tryParse(data["bonus"]?.toString() ?? "0") ?? 0;
+        absent +=
+            double.tryParse(data["absent"]?.toString() ?? "0") ?? 0;
+      }
 
-            bonus += double.tryParse(doc["bonus"].toString()) ?? 0;
-
-            absent += double.tryParse(doc["absent"].toString()) ?? 0;
-          }
-
-          return {"overtime": overtime, "bonus": bonus, "absent": absent};
-        });
+      return {
+        "overtime": overtime,
+        "bonus": bonus,
+        "absent": absent,
+      };
+    });
   }
 
   static Future<void> createBackup({required String uid}) async {
@@ -457,6 +465,7 @@ class SalaryFirestoreServices {
   }) {
     return _userDoc(uid).collection("backup").doc(type).snapshots();
   }
+
   /// =========================
   /// Restore Backup Data to Firestore
   /// =========================
@@ -470,10 +479,12 @@ class SalaryFirestoreServices {
       for (var item in backupData["salary_history"]) {
         final id = item["id"];
         final docRef = _userDoc(uid).collection("salary_history").doc(id);
-        final mapData = Map<String, dynamic>.from(item)..remove("id");
+        final mapData = Map<String, dynamic>.from(item)
+          ..remove("id");
 
         if (mapData["effectiveMonth"] != null) {
-          mapData["effectiveMonth"] = Timestamp.fromDate(DateTime.parse(mapData["effectiveMonth"]));
+          mapData["effectiveMonth"] =
+              Timestamp.fromDate(DateTime.parse(mapData["effectiveMonth"]));
         }
         batch.set(docRef, mapData, SetOptions(merge: true));
       }
@@ -483,7 +494,8 @@ class SalaryFirestoreServices {
       for (var item in backupData["salary_months"]) {
         final id = item["id"];
         final docRef = _userDoc(uid).collection("salary_months").doc(id);
-        final mapData = Map<String, dynamic>.from(item)..remove("id");
+        final mapData = Map<String, dynamic>.from(item)
+          ..remove("id");
         batch.set(docRef, mapData, SetOptions(merge: true));
       }
     }
@@ -492,7 +504,8 @@ class SalaryFirestoreServices {
       for (var item in backupData["daily_reports"]) {
         final id = item["id"];
         final docRef = _userDoc(uid).collection("daily_reports").doc(id);
-        final mapData = Map<String, dynamic>.from(item)..remove("id");
+        final mapData = Map<String, dynamic>.from(item)
+          ..remove("id");
         if (mapData["date"] != null) {
           mapData["date"] = Timestamp.fromDate(DateTime.parse(mapData["date"]));
         }
@@ -503,7 +516,8 @@ class SalaryFirestoreServices {
       for (var item in backupData["salary_results"]) {
         final id = item["id"];
         final docRef = _userDoc(uid).collection("salary_results").doc(id);
-        final mapData = Map<String, dynamic>.from(item)..remove("id");
+        final mapData = Map<String, dynamic>.from(item)
+          ..remove("id");
         batch.set(docRef, mapData, SetOptions(merge: true));
       }
     }

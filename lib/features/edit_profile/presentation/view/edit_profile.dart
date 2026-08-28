@@ -191,14 +191,13 @@ class _EditProfileState extends State<EditProfile> {
 
                   SizedBox(
                     width: double.infinity,
-                    height: 56.h,
                     child: ElevatedButton(
                       onPressed: _saveProfileToFirebase,
                       child: Text(appLocalizations.saveChanges.toUpperCase()),
                     ),
                   ),
 
-                  SizedBox(height: 20.h),
+                  SizedBox(height: 50.h),
                 ],
               ),
             );
@@ -258,6 +257,7 @@ class _EditProfileState extends State<EditProfile> {
                 ],
               ),
             ),
+            SizedBox(height: 30.h,),
           ],
         ),
       ),

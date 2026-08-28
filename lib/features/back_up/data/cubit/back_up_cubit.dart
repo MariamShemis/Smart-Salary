@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smart_salary/features/back_up/data/cubit/back_up_state.dart';
@@ -19,22 +20,47 @@ class BackupCubit extends Cubit<BackupState> {
 
       if (type == "drive") {
         await GoogleDriveService.uploadBackup(data);
+        await FirebaseAuth.instance.currentUser?.reload();
       } else if (type == "local") {
         isSuccess = await LocalBackupService.createLocalBackup(data);
       }
-
-      // لو العملية اتلغت من المستخدم
       if (!isSuccess) {
         emit(BackupCancelled());
         return;
       }
 
-      // تحفيظ التاريخ فقط لو نجحت العملية بالفعل
       await SalaryFirestoreServices.saveBackupInfo(uid: uid, type: type);
       emit(BackupCreateSuccess(DateTime.now()));
     } catch (e, stack) {
       print("BACKUP ERROR =====> $e");
       emit(BackupError(e.toString().replaceAll("Exception: ", "")));
+    }
+  }
+  Future<void> performAutoBackup({bool checkPeriodic = true}) async {
+    try {
+      final currentUser = FirebaseAuth.instance.currentUser;
+      if (currentUser == null) return;
+
+      final uid = currentUser.uid;
+      if (checkPeriodic) {
+        final doc = await SalaryFirestoreServices.backupStream(uid: uid, type: "drive").first;
+        if (doc.exists) {
+          final lastDate = (doc.data()?["createdAt"] as Timestamp?)?.toDate();
+          if (lastDate != null && DateTime.now().difference(lastDate).inDays < 3) {
+            return;
+          }
+        }
+      }
+
+      final data = await SalaryFirestoreServices.getBackupData(uid: uid);
+      final isSuccess = await GoogleDriveService.uploadBackupSilently(data);
+
+      if (isSuccess) {
+        await SalaryFirestoreServices.saveBackupInfo(uid: uid, type: "drive");
+        print("AUTO BACKUP SUCCESSFUL");
+      }
+    } catch (e) {
+      print("AUTO BACKUP FAILED: $e");
     }
   }
 
@@ -45,7 +71,7 @@ class BackupCubit extends Cubit<BackupState> {
 
       if (type == "drive") {
         final backupData = await GoogleDriveService.downloadLatestBackup();
-
+        await FirebaseAuth.instance.currentUser?.reload();
         if (backupData != null) {
           await SalaryFirestoreServices.restoreBackupData(
             uid: uid,
@@ -67,7 +93,6 @@ class BackupCubit extends Cubit<BackupState> {
           await SalaryFirestoreServices.saveBackupInfo(uid: uid, type: type);
           emit(BackupRestoreSuccess());
         } else {
-          // المستخدم ألغى الاختيار
           emit(BackupCancelled());
         }
       }
