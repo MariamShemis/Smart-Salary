@@ -3,33 +3,41 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:smart_salary/core/costants/color_manager.dart';
 
 class UiUtils {
-  static void showLoading(BuildContext context, {bool isDismissible = true}) {
+  static bool _isLoadingShowing = false;
+
+  static void showLoading(BuildContext context, {bool isDismissible = false}) {
+    if (_isLoadingShowing) return;
+
+    _isLoadingShowing = true;
     showDialog(
-      barrierDismissible: isDismissible,
       context: context,
+      barrierDismissible: isDismissible,
+      useRootNavigator: true,
       builder: (_) {
-        return AlertDialog(
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: const [
-              Center(
-                child: PopScope(
-                  canPop: false,
-                  child: CircularProgressIndicator(
-                    color: ColorManager.primaryColor,
-                  ),
-                ),
+        return PopScope(
+          canPop: isDismissible,
+          child: const AlertDialog(
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            content: Center(
+              child: CircularProgressIndicator(
+                color: ColorManager.primaryColor,
               ),
-            ],
+            ),
           ),
         );
       },
-    );
+    ).then((_) {
+      _isLoadingShowing = false;
+    });
   }
 
   static void hideLoading(BuildContext context) {
-    if (Navigator.canPop(context)) {
-      Navigator.pop(context);
+    if (_isLoadingShowing) {
+      _isLoadingShowing = false;
+      if (Navigator.of(context, rootNavigator: true).canPop()) {
+        Navigator.of(context, rootNavigator: true).pop();
+      }
     }
   }
 
@@ -41,6 +49,7 @@ class UiUtils {
   }
 
   static void showSuccess(BuildContext context, String message) {
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
@@ -51,6 +60,7 @@ class UiUtils {
   }
 
   static void showError(BuildContext context, String message) {
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
@@ -61,9 +71,9 @@ class UiUtils {
   }
 
   static void showToast(
-    String message, {
-    Color backgroundColor = Colors.green,
-  }) {
+      String message, {
+        Color backgroundColor = Colors.green,
+      }) {
     Fluttertoast.showToast(
       msg: message,
       gravity: ToastGravity.BOTTOM,

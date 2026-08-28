@@ -887,6 +887,246 @@ abstract class AppLocalizations {
   /// **'Send verification email'**
   String get send_verification_email;
 
+  /// No description provided for @backup_Restore.
+  ///
+  /// In en, this message translates to:
+  /// **'Backup & Restore'**
+  String get backup_Restore;
+
+  /// No description provided for @backup_completed_successfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Backup completed successfully'**
+  String get backup_completed_successfully;
+
+  /// No description provided for @restore_completed_successfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore completed successfully'**
+  String get restore_completed_successfully;
+
+  /// No description provided for @no_backup_created_yet.
+  ///
+  /// In en, this message translates to:
+  /// **'No backup created yet'**
+  String get no_backup_created_yet;
+
+  /// No description provided for @last_backup.
+  ///
+  /// In en, this message translates to:
+  /// **'Last backup'**
+  String get last_backup;
+
+  /// No description provided for @backupLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Backup Location'**
+  String get backupLocation;
+
+  /// No description provided for @googleDrive.
+  ///
+  /// In en, this message translates to:
+  /// **'Google Drive'**
+  String get googleDrive;
+
+  /// No description provided for @localDevice.
+  ///
+  /// In en, this message translates to:
+  /// **'Local Device'**
+  String get localDevice;
+
+  /// No description provided for @createBackup.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Backup'**
+  String get createBackup;
+
+  /// No description provided for @restoreBackup.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore Backup'**
+  String get restoreBackup;
+
+  /// No description provided for @operation_cancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Operation cancelled'**
+  String get operation_cancelled;
+
+  /// No description provided for @tryAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'Try Again'**
+  String get tryAgain;
+
+  /// No description provided for @account_verified_successfully_with_Google.
+  ///
+  /// In en, this message translates to:
+  /// **'Account verified successfully with Google'**
+  String get account_verified_successfully_with_Google;
+
+  /// No description provided for @verify_with_Google.
+  ///
+  /// In en, this message translates to:
+  /// **'Verify with Google'**
+  String get verify_with_Google;
+
+  /// No description provided for @lin_your_Google_account_to_verify_this_email_immediately.
+  ///
+  /// In en, this message translates to:
+  /// **'Link your Google account to verify this email immediately'**
+  String get lin_your_Google_account_to_verify_this_email_immediately;
+
+  /// No description provided for @emailVerified.
+  ///
+  /// In en, this message translates to:
+  /// **'Email Verified'**
+  String get emailVerified;
+
+  /// No description provided for @emailNotVerified.
+  ///
+  /// In en, this message translates to:
+  /// **'Email Not Verified'**
+  String get emailNotVerified;
+
+  /// No description provided for @email_does_not_match.
+  ///
+  /// In en, this message translates to:
+  /// **'Email does not match.'**
+  String get email_does_not_match;
+
+  /// No description provided for @verification_cancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Verification cancelled.'**
+  String get verification_cancelled;
+
+  /// No description provided for @failed_to_link_Google_account.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to link Google account.'**
+  String get failed_to_link_Google_account;
+
+  /// No description provided for @something_went_wrong.
+  ///
+  /// In en, this message translates to:
+  /// **'Something went wrong'**
+  String get something_went_wrong;
+
+  /// No description provided for @user_not_found.
+  ///
+  /// In en, this message translates to:
+  /// **'User not found'**
+  String get user_not_found;
+
+  /// No description provided for @password_is_required.
+  ///
+  /// In en, this message translates to:
+  /// **'Password is required'**
+  String get password_is_required;
+
+  /// No description provided for @authentication_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Authentication failed'**
+  String get authentication_failed;
+
+  /// No description provided for @noEmailProvided.
+  ///
+  /// In en, this message translates to:
+  /// **'No Email Provided'**
+  String get noEmailProvided;
+
+  /// No description provided for @fingerprintLogin.
+  ///
+  /// In en, this message translates to:
+  /// **'Fingerprint Login'**
+  String get fingerprintLogin;
+
+  /// No description provided for @secure_access_with_your_fingerprint.
+  ///
+  /// In en, this message translates to:
+  /// **'Secure access with your fingerprint'**
+  String get secure_access_with_your_fingerprint;
+
+  /// No description provided for @sendResetLink.
+  ///
+  /// In en, this message translates to:
+  /// **'Send Reset Link'**
+  String get sendResetLink;
+
+  /// No description provided for @emailSent.
+  ///
+  /// In en, this message translates to:
+  /// **'Email Sent'**
+  String get emailSent;
+
+  /// No description provided for @we_ve_sent_a_password_reset_link_to.
+  ///
+  /// In en, this message translates to:
+  /// **'We\'ve sent a password reset link to'**
+  String get we_ve_sent_a_password_reset_link_to;
+
+  /// No description provided for @please_check_your_inbox_and_follow_the_instructions_to_reset_your_password.
+  ///
+  /// In en, this message translates to:
+  /// **'Please check your inbox and follow the instructions to reset your password.'**
+  String get please_check_your_inbox_and_follow_the_instructions_to_reset_your_password;
+
+  /// No description provided for @back_to_Login.
+  ///
+  /// In en, this message translates to:
+  /// **'Back to Login'**
+  String get back_to_Login;
+
+  /// No description provided for @verification_email_sent_Please_check_your_inbox.
+  ///
+  /// In en, this message translates to:
+  /// **'Verification email sent. Please check your inbox.'**
+  String get verification_email_sent_Please_check_your_inbox;
+
+  /// No description provided for @email_verified_successfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Email verified successfully.'**
+  String get email_verified_successfully;
+
+  /// No description provided for @verify_your_email_address.
+  ///
+  /// In en, this message translates to:
+  /// **'Verify your email address'**
+  String get verify_your_email_address;
+
+  /// No description provided for @congratulations_Your_account_awaits.
+  ///
+  /// In en, this message translates to:
+  /// **'Congratulations! Your account awaits.'**
+  String get congratulations_Your_account_awaits;
+
+  /// No description provided for @verify_your_email_to_continue.
+  ///
+  /// In en, this message translates to:
+  /// **'Verify your email to continue.'**
+  String get verify_your_email_to_continue;
+
+  /// No description provided for @continue_.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get continue_;
+
+  /// No description provided for @resend_to_Email.
+  ///
+  /// In en, this message translates to:
+  /// **'Resend to Email'**
+  String get resend_to_Email;
+
+  /// No description provided for @send_a_verification_email_to_your_email_address.
+  ///
+  /// In en, this message translates to:
+  /// **'Send a verification email to your email address'**
+  String get send_a_verification_email_to_your_email_address;
+
   /// No description provided for @delete.
   ///
   /// In en, this message translates to:

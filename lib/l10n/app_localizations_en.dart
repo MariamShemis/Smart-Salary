@@ -405,5 +405,125 @@ class AppLocalizationsEn extends AppLocalizations {
   String get send_verification_email => 'Send verification email';
 
   @override
+  String get backup_Restore => 'Backup & Restore';
+
+  @override
+  String get backup_completed_successfully => 'Backup completed successfully';
+
+  @override
+  String get restore_completed_successfully => 'Restore completed successfully';
+
+  @override
+  String get no_backup_created_yet => 'No backup created yet';
+
+  @override
+  String get last_backup => 'Last backup';
+
+  @override
+  String get backupLocation => 'Backup Location';
+
+  @override
+  String get googleDrive => 'Google Drive';
+
+  @override
+  String get localDevice => 'Local Device';
+
+  @override
+  String get createBackup => 'Create Backup';
+
+  @override
+  String get restoreBackup => 'Restore Backup';
+
+  @override
+  String get operation_cancelled => 'Operation cancelled';
+
+  @override
+  String get tryAgain => 'Try Again';
+
+  @override
+  String get account_verified_successfully_with_Google => 'Account verified successfully with Google';
+
+  @override
+  String get verify_with_Google => 'Verify with Google';
+
+  @override
+  String get lin_your_Google_account_to_verify_this_email_immediately => 'Link your Google account to verify this email immediately';
+
+  @override
+  String get emailVerified => 'Email Verified';
+
+  @override
+  String get emailNotVerified => 'Email Not Verified';
+
+  @override
+  String get email_does_not_match => 'Email does not match.';
+
+  @override
+  String get verification_cancelled => 'Verification cancelled.';
+
+  @override
+  String get failed_to_link_Google_account => 'Failed to link Google account.';
+
+  @override
+  String get something_went_wrong => 'Something went wrong';
+
+  @override
+  String get user_not_found => 'User not found';
+
+  @override
+  String get password_is_required => 'Password is required';
+
+  @override
+  String get authentication_failed => 'Authentication failed';
+
+  @override
+  String get noEmailProvided => 'No Email Provided';
+
+  @override
+  String get fingerprintLogin => 'Fingerprint Login';
+
+  @override
+  String get secure_access_with_your_fingerprint => 'Secure access with your fingerprint';
+
+  @override
+  String get sendResetLink => 'Send Reset Link';
+
+  @override
+  String get emailSent => 'Email Sent';
+
+  @override
+  String get we_ve_sent_a_password_reset_link_to => 'We\'ve sent a password reset link to';
+
+  @override
+  String get please_check_your_inbox_and_follow_the_instructions_to_reset_your_password => 'Please check your inbox and follow the instructions to reset your password.';
+
+  @override
+  String get back_to_Login => 'Back to Login';
+
+  @override
+  String get verification_email_sent_Please_check_your_inbox => 'Verification email sent. Please check your inbox.';
+
+  @override
+  String get email_verified_successfully => 'Email verified successfully.';
+
+  @override
+  String get verify_your_email_address => 'Verify your email address';
+
+  @override
+  String get congratulations_Your_account_awaits => 'Congratulations! Your account awaits.';
+
+  @override
+  String get verify_your_email_to_continue => 'Verify your email to continue.';
+
+  @override
+  String get continue_ => 'Continue';
+
+  @override
+  String get resend_to_Email => 'Resend to Email';
+
+  @override
+  String get send_a_verification_email_to_your_email_address => 'Send a verification email to your email address';
+
+  @override
   String get delete => 'Delete';
 }

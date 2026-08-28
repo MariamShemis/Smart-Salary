@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:smart_salary/core/costants/assets_manager.dart';
 import 'package:smart_salary/core/costants/color_manager.dart';
+import 'package:smart_salary/core/routes/app_routes.dart';
 import 'package:smart_salary/core/utils/ui_utils.dart';
 import 'package:smart_salary/core/utils/validators/app_validators.dart';
 import 'package:smart_salary/core/widgets/custom_auth_text_form_field.dart';
-import 'package:smart_salary/core/widgets/logo_app.dart';
 import 'package:smart_salary/core/widgets/main_gradient_background.dart';
 import 'package:smart_salary/features/auth/data/cubit/auth_cubit.dart';
 import 'package:smart_salary/features/auth/data/cubit/auth_state.dart';
 import 'package:smart_salary/features/auth/data/model/register_request.dart';
-import 'package:smart_salary/features/auth/presentation/widgets/custom_login_outline_border.dart';
 import 'package:smart_salary/l10n/app_localizations.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -47,10 +47,22 @@ class _RegisterScreenState extends State<RegisterScreen> {
         if (state is RegisterLoading) {
           UiUtils.showLoading(context, isDismissible: false);
         }
+        // if (state is RegisterSuccess) {
+        //   UiUtils.hideLoading(context);
+        //   UiUtils.showToast(appLocalizations.account_created_successfully);
+        //   Navigator.pop(context);
+        // }
         if (state is RegisterSuccess) {
           UiUtils.hideLoading(context);
-          UiUtils.showToast(appLocalizations.account_created_successfully);
-          Navigator.pop(context);
+
+          Navigator.pushReplacementNamed(
+            context,
+            AppRoutes.verifyEmail,
+            arguments: {
+              'email': _emailController.text,
+              'fromAccountSecurity': false,
+            },
+          );
         }
         if (state is RegisterError) {
           UiUtils.hideLoading(context);
@@ -108,7 +120,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          LogoApp(width: 65.w, height: 65.h, size: 43),
+                          Image.asset(
+                            ImageAssets.logoApp,
+                            width: 80.w,
+                            height: 80.h,
+                          ),
+                          //LogoApp(width: 65.w, height: 65.h, size: 43),
                           SizedBox(height: 16.h),
                           Text(
                             appLocalizations.smartSalary,
@@ -174,77 +191,84 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             onPressed: _addRegister,
                             child: Text(appLocalizations.sign_up),
                           ),
+                          // SizedBox(height: 24.h),
+                          // Row(
+                          //   children: [
+                          //     const Expanded(
+                          //       child: Divider(
+                          //         color: Color(0xFFE5E9E7),
+                          //         thickness: 1,
+                          //       ),
+                          //     ),
+                          //     Padding(
+                          //       padding: REdgeInsets.symmetric(
+                          //         horizontal: 16.0,
+                          //       ),
+                          //       child: Text(
+                          //         appLocalizations.orContinueWith,
+                          //         style: TextStyle(
+                          //           fontSize: 11.sp,
+                          //           fontWeight: FontWeight.bold,
+                          //           color: ColorManager.greyDark,
+                          //           letterSpacing: 0.5,
+                          //         ),
+                          //       ),
+                          //     ),
+                          //     const Expanded(
+                          //       child: Divider(
+                          //         color: Color(0xFFE5E9E7),
+                          //         thickness: 1,
+                          //       ),
+                          //     ),
+                          //   ],
+                          // ),
+                          // SizedBox(height: 24.h),
+                          // Row(
+                          //   children: [
+                          //     Expanded(
+                          //       child: CustomLoginOutlineBorder(
+                          //         onPressed: () {},
+                          //       ),
+                          //     ),
+                          //     SizedBox(width: 16.w),
+                          //     Expanded(
+                          //       child: CustomLoginOutlineBorder(
+                          //         onPressed: () {},
+                          //         isGoogle: false,
+                          //       ),
+                          //     ),
+                          //   ],
+                          // ),
                           SizedBox(height: 24.h),
-                          Row(
-                            children: [
-                              const Expanded(
-                                child: Divider(
-                                  color: Color(0xFFE5E9E7),
-                                  thickness: 1,
-                                ),
-                              ),
-                              Padding(
-                                padding: REdgeInsets.symmetric(
-                                  horizontal: 16.0,
-                                ),
-                                child: Text(
-                                  appLocalizations.orContinueWith,
-                                  style: TextStyle(
-                                    fontSize: 11.sp,
-                                    fontWeight: FontWeight.bold,
-                                    color: ColorManager.greyDark,
-                                    letterSpacing: 0.5,
+                          Center(
+                            child: Text.rich(
+                              TextSpan(
+                                children: [
+                                  TextSpan(
+                                    text:
+                                        "${appLocalizations.alreadyHaveAccount}  ",
+                                    style: TextStyle(
+                                      fontSize: 14.sp,
+                                      color: ColorManager.greyDark,
+                                    ),
                                   ),
-                                ),
-                              ),
-                              const Expanded(
-                                child: Divider(
-                                  color: Color(0xFFE5E9E7),
-                                  thickness: 1,
-                                ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 24.h),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: CustomLoginOutlineBorder(
-                                  onPressed: () {},
-                                ),
-                              ),
-                              SizedBox(width: 16.w),
-                              Expanded(
-                                child: CustomLoginOutlineBorder(
-                                  onPressed: () {},
-                                  isGoogle: false,
-                                ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 24.h),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                "${appLocalizations.alreadyHaveAccount}  ",
-                                style: TextStyle(
-                                  fontSize: 14.sp,
-                                  color: ColorManager.greyDark,
-                                ),
-                              ),
-                              GestureDetector(
-                                onTap: () => Navigator.pop(context),
-                                child: Text(
-                                  appLocalizations.login,
-                                  style: TextStyle(
-                                    fontSize: 14.sp,
-                                    fontWeight: FontWeight.bold,
-                                    color: ColorManager.primaryColor,
+                                  WidgetSpan(
+                                    child: GestureDetector(
+                                      onTap: () => Navigator.pop(context),
+                                      child: Text(
+                                        appLocalizations.login,
+                                        style: TextStyle(
+                                          fontSize: 14.sp,
+                                          fontWeight: FontWeight.bold,
+                                          color: ColorManager.primaryColor,
+                                        ),
+                                      ),
+                                    ),
                                   ),
-                                ),
+                                ],
                               ),
-                            ],
+                              textAlign: TextAlign.center,
+                            ),
                           ),
                         ],
                       ),

@@ -27,3 +27,9 @@ class EmailVerificationUpdated extends AccountSecurityState {
 
   EmailVerificationUpdated(this.verified);
 }
+
+class BiometricStatusChanged extends AccountSecurityState {
+  final bool enabled;
+
+  BiometricStatusChanged(this.enabled);
+}

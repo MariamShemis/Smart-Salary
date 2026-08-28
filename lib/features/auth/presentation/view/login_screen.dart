@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:smart_salary/core/costants/assets_manager.dart';
 import 'package:smart_salary/core/costants/color_manager.dart';
 import 'package:smart_salary/core/routes/app_routes.dart';
+import 'package:smart_salary/core/session_service/biometric_service.dart';
 import 'package:smart_salary/core/utils/ui_utils.dart';
 import 'package:smart_salary/core/utils/validators/app_validators.dart';
 import 'package:smart_salary/core/widgets/custom_auth_text_form_field.dart';
-import 'package:smart_salary/core/widgets/logo_app.dart';
 import 'package:smart_salary/core/widgets/main_gradient_background.dart';
 import 'package:smart_salary/features/auth/data/cubit/auth_cubit.dart';
 import 'package:smart_salary/features/auth/data/cubit/auth_state.dart';
@@ -25,6 +26,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final BiometricService _biometric = BiometricService();
 
   bool rememberMe = false;
 
@@ -34,6 +36,36 @@ class _LoginScreenState extends State<LoginScreen> {
     _passwordController.dispose();
     super.dispose();
   }
+
+  // Future<void> _loginWithFingerprint() async {
+  //   final authenticated = await _biometric.authenticate();
+  //
+  //   if (!authenticated) return;
+  //
+  //   final email = await SecureStorageService.getEmail();
+  //   final password = await SecureStorageService.getPassword();
+  //
+  //   if (email == null || password == null) {
+  //     UiUtils.showError(context, "Please login once using email.");
+  //     return;
+  //   }
+  //
+  //   try {
+  //     await FirebaseServices.login(
+  //       LoginRequest(
+  //         email: email,
+  //         password: password,
+  //       ),
+  //     );
+  //
+  //     Navigator.pushReplacementNamed(
+  //       context,
+  //       AppRoutes.mainLayout,
+  //     );
+  //   } catch (e) {
+  //     UiUtils.showError(context, "Login failed");
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -99,7 +131,12 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          LogoApp(width: 65.w, height: 65.h, size: 43),
+                          Image.asset(
+                            ImageAssets.logoApp,
+                            width: 80.w,
+                            height: 80.h,
+                          ),
+                          //LogoApp(width: 65.w, height: 65.h, size: 43),
                           SizedBox(height: 16.h),
                           Text(
                             appLocalizations.smartSalary,
@@ -132,61 +169,94 @@ class _LoginScreenState extends State<LoginScreen> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Row(
-                                children: [
-                                  SizedBox(
-                                    width: 24,
-                                    height: 24,
-                                    child: Checkbox(
-                                      value: rememberMe,
-                                      onChanged: (value) {
-                                        setState(() {
-                                          rememberMe = value ?? false;
-                                        });
-                                      },
-                                      activeColor: ColorManager.primaryColor,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(4),
+                              Expanded(
+                                child: Row(
+                                  children: [
+                                    SizedBox(
+                                      width: 24,
+                                      height: 24,
+                                      child: Checkbox(
+                                        value: rememberMe,
+                                        onChanged: (value) {
+                                          setState(() {
+                                            rememberMe = value ?? false;
+                                          });
+                                        },
+                                        activeColor: ColorManager.primaryColor,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(
+                                            4,
+                                          ),
+                                        ),
                                       ),
                                     ),
+                                    SizedBox(width: 4.w),
+                                    Text(
+                                      appLocalizations.rememberMe,
+                                      style: TextStyle(
+                                        fontSize: 12.sp,
+                                        color: ColorManager.greyDark,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Expanded(
+                                child: TextButton(
+                                  onPressed: () {
+                                    Navigator.pushNamed(
+                                      context,
+                                      AppRoutes.forgetPassword,
+                                    );
+                                  },
+                                  style: TextButton.styleFrom(
+                                    padding: EdgeInsets.zero,
+                                    minimumSize: Size.zero,
                                   ),
-                                  SizedBox(width: 4.w),
-                                  Text(
-                                    appLocalizations.rememberMe,
+                                  child: Text(
+                                    appLocalizations.forget_password_,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
                                       fontSize: 13.sp,
-                                      color: ColorManager.greyDark,
-                                      fontWeight: FontWeight.w500,
+                                      color: ColorManager.primaryColor,
+                                      fontWeight: FontWeight.bold,
                                     ),
-                                  ),
-                                ],
-                              ),
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.pushNamed(
-                                    context,
-                                    AppRoutes.forgetPassword,
-                                  );
-                                },
-                                style: TextButton.styleFrom(
-                                  padding: EdgeInsets.zero,
-                                  minimumSize: Size.zero,
-                                ),
-                                child: Text(
-                                  appLocalizations.forget_password_,
-                                  style: TextStyle(
-                                    fontSize: 13.sp,
-                                    color: ColorManager.primaryColor,
-                                    fontWeight: FontWeight.bold,
                                   ),
                                 ),
                               ),
                             ],
                           ),
                           SizedBox(height: 18.h),
-                          ElevatedButton(
-                            onPressed: _login,
-                            child: Text(appLocalizations.login),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: ElevatedButton(
+                                  onPressed: _login,
+                                  child: Text(appLocalizations.login),
+                                ),
+                              ),
+                              SizedBox(width: 12.w),
+                              SizedBox(
+                                width: 56.w,
+                                height: 56.h,
+                                child: ElevatedButton(
+                                  onPressed: () {
+                                    context
+                                        .read<AuthCubit>()
+                                        .loginWithBiometric(context);
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(16.r),
+                                    ),
+                                    padding: EdgeInsets.zero,
+                                  ),
+                                  child: Icon(Icons.fingerprint, size: 28.sp),
+                                ),
+                              ),
+                            ],
                           ),
                           SizedBox(height: 24.h),
                           Row(
@@ -230,33 +300,40 @@ class _LoginScreenState extends State<LoginScreen> {
                             isGoogle: false,
                           ),
                           SizedBox(height: 24.h),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                "${appLocalizations.dontHaveAnAccount}  ",
-                                style: TextStyle(
-                                  fontSize: 14.sp,
-                                  color: ColorManager.greyDark,
-                                ),
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  Navigator.pushNamed(
-                                    context,
-                                    AppRoutes.register,
-                                  );
-                                },
-                                child: Text(
-                                  appLocalizations.register,
-                                  style: TextStyle(
-                                    fontSize: 14.sp,
-                                    fontWeight: FontWeight.bold,
-                                    color: ColorManager.primaryColor,
+                          Center(
+                            child: Text.rich(
+                              TextSpan(
+                                children: [
+                                  TextSpan(
+                                    text:
+                                        "${appLocalizations.dontHaveAnAccount}  ",
+                                    style: TextStyle(
+                                      fontSize: 14.sp,
+                                      color: ColorManager.greyDark,
+                                    ),
                                   ),
-                                ),
+                                  WidgetSpan(
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        Navigator.pushNamed(
+                                          context,
+                                          AppRoutes.register,
+                                        );
+                                      },
+                                      child: Text(
+                                        appLocalizations.register,
+                                        style: TextStyle(
+                                          fontSize: 14.sp,
+                                          fontWeight: FontWeight.bold,
+                                          color: ColorManager.primaryColor,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ],
+                              textAlign: TextAlign.center,
+                            ),
                           ),
                         ],
                       ),

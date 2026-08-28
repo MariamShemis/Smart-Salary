@@ -33,7 +33,9 @@ class _PasswordTextFieldState extends State<PasswordTextField> {
               obscure = !obscure;
             });
           },
-          icon: Icon(obscure ? Icons.visibility_off : Icons.visibility),
+          icon: Icon(
+            obscure ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+          ),
         ),
       ),
     );

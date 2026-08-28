@@ -405,5 +405,125 @@ class AppLocalizationsAr extends AppLocalizations {
   String get send_verification_email => 'إرسال بريد التأكيد';
 
   @override
+  String get backup_Restore => 'النسخ الاحتياطي والاستعادة';
+
+  @override
+  String get backup_completed_successfully => 'تم إكمال النسخ الاحتياطي بنجاح';
+
+  @override
+  String get restore_completed_successfully => 'تمت استعادة البيانات بنجاح';
+
+  @override
+  String get no_backup_created_yet => 'لم يتم إنشاء نسخة احتياطية بعد';
+
+  @override
+  String get last_backup => 'آخر نسخة احتياطية';
+
+  @override
+  String get backupLocation => 'مكان النسخة الاحتياطية';
+
+  @override
+  String get googleDrive => 'جوجل درايف';
+
+  @override
+  String get localDevice => 'الجهاز المحلي';
+
+  @override
+  String get createBackup => 'إنشاء نسخة احتياطية';
+
+  @override
+  String get restoreBackup => 'استعادة النسخة الاحتياطية';
+
+  @override
+  String get operation_cancelled => 'تم إلغاء العملية';
+
+  @override
+  String get tryAgain => 'حاول مرة أخرى';
+
+  @override
+  String get account_verified_successfully_with_Google => 'تم التحقق من الحساب بنجاح بواسطة Google';
+
+  @override
+  String get verify_with_Google => 'التحقق بواسطة Google';
+
+  @override
+  String get lin_your_Google_account_to_verify_this_email_immediately => 'اربط حساب Google الخاص بك للتحقق من البريد الإلكتروني فوراً';
+
+  @override
+  String get emailVerified => 'البريد الإلكتروني مفعّل';
+
+  @override
+  String get emailNotVerified => 'البريد الإلكتروني غير مفعّل';
+
+  @override
+  String get email_does_not_match => 'البريد الإلكتروني غير متطابق.';
+
+  @override
+  String get verification_cancelled => 'تم إلغاء عملية التحقق.';
+
+  @override
+  String get failed_to_link_Google_account => 'فشل ربط حساب Google.';
+
+  @override
+  String get something_went_wrong => 'حدث خطأ ما';
+
+  @override
+  String get user_not_found => 'المستخدم غير موجود';
+
+  @override
+  String get password_is_required => 'كلمة المرور مطلوبة';
+
+  @override
+  String get authentication_failed => 'فشلت عملية المصادقة';
+
+  @override
+  String get noEmailProvided => 'لم يتم تقديم بريد إلكتروني';
+
+  @override
+  String get fingerprintLogin => 'تسجيل الدخول بالبصمة';
+
+  @override
+  String get secure_access_with_your_fingerprint => 'دخول آمن باستخدام بصمة أصبعك';
+
+  @override
+  String get sendResetLink => 'إرسال رابط إعادة الضبط';
+
+  @override
+  String get emailSent => 'تم إرسال البريد الإلكتروني';
+
+  @override
+  String get we_ve_sent_a_password_reset_link_to => 'لقد أرسلنا رابط إعادة ضبط كلمة السر إلى';
+
+  @override
+  String get please_check_your_inbox_and_follow_the_instructions_to_reset_your_password => 'يرجى التحقق من صندوق الوارد واتباع التعليمات لإعادة ضبط كلمة السر الخاص بك.';
+
+  @override
+  String get back_to_Login => 'الرجوع إلى تسجيل الدخول';
+
+  @override
+  String get verification_email_sent_Please_check_your_inbox => 'تم إرسال بريد التحقق. يرجى التحقق من صندوق الوارد.';
+
+  @override
+  String get email_verified_successfully => 'تم تأكيد البريد الإلكتروني بنجاح.';
+
+  @override
+  String get verify_your_email_address => 'تأكيد عنوان البريد الإلكتروني';
+
+  @override
+  String get congratulations_Your_account_awaits => 'تهانينا! حسابك في انتظارك.';
+
+  @override
+  String get verify_your_email_to_continue => 'قم بتأكيد بريدك الإلكتروني للمتابعة.';
+
+  @override
+  String get continue_ => 'متابعة';
+
+  @override
+  String get resend_to_Email => 'إعادة الإرسال إلى البريد الإلكتروني';
+
+  @override
+  String get send_a_verification_email_to_your_email_address => 'إرسال إيميل التفعيل إلى عنوان بريدك الإلكتروني';
+
+  @override
   String get delete => 'حذف';
 }

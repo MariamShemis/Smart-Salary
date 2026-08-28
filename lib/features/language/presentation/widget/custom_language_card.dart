@@ -33,15 +33,15 @@ class CustomLanguageCard extends StatelessWidget {
           width: 1.5,
         ),
       ),
-      child: Material( // 1. أضفنا ويدجت Material هنا لحل المشكلة
-        color: Colors.transparent, // 2. جعلناها شفافة تماماً
-        borderRadius: BorderRadius.circular(20.r), // 3. الحفاظ على انحناء الحواف عند الضغط
+      child: Material(
+        color: Colors.transparent,
+        borderRadius: BorderRadius.circular(20.r),
         child: RadioListTile<String>(
           value: languageCode,
           groupValue: selectedLanguage,
           activeColor: ColorManager.secondary,
           radioScaleFactor: 1.5,
-          shape: RoundedRectangleBorder( // 4. تحديد حواف الـ Tile نفسها عشان تأثير الضغط ميتخطاش الكارد
+          shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20.r),
           ),
           radioSide: BorderSide(

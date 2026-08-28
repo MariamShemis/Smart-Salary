@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../costants/color_manager.dart';
 
@@ -8,6 +10,7 @@ class ThemeManager {
     brightness: Brightness.light,
     primaryColor: ColorManager.primaryColor,
     scaffoldBackgroundColor: Colors.transparent,
+
     colorScheme: ColorScheme.light(
       primary: ColorManager.primaryColor,
       onPrimary: ColorManager.white,
@@ -20,14 +23,15 @@ class ThemeManager {
       error: ColorManager.red,
       onError: ColorManager.white,
     ),
-    appBarTheme: const AppBarTheme(
+
+    appBarTheme: AppBarTheme(
       backgroundColor: Colors.transparent,
       elevation: 0,
       centerTitle: true,
       iconTheme: IconThemeData(color: ColorManager.black),
-      titleTextStyle: TextStyle(
+      titleTextStyle: GoogleFonts.inter(
         color: ColorManager.black,
-        fontSize: 20,
+        fontSize: 20.sp,
         fontWeight: FontWeight.bold,
       ),
     ),
@@ -36,64 +40,83 @@ class ThemeManager {
       style: ElevatedButton.styleFrom(
         backgroundColor: ColorManager.primaryColor,
         foregroundColor: ColorManager.white,
-        minimumSize: const Size(double.infinity, 52),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-        textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        minimumSize: Size(double.infinity, 52.h),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.r)),
+        textStyle: GoogleFonts.inter(fontSize: 16.sp, fontWeight: FontWeight.bold),
       ),
     ),
+
     outlinedButtonTheme: OutlinedButtonThemeData(
       style: OutlinedButton.styleFrom(
-        minimumSize: const Size(double.infinity, 52),
-        side: const BorderSide(color: Color(0xFFD1DCDA), width: 1),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(26)),
-        textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        minimumSize: Size(double.infinity, 52.h),
+        side: BorderSide(color: Color(0xFFD1DCDA), width: 1),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.r)),
+        textStyle: GoogleFonts.inter(fontSize: 16.sp, fontWeight: FontWeight.bold),
       ),
     ),
-
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
-      focusColor: ColorManager.primaryColor,
       fillColor: ColorManager.white,
-      contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-      border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(16),
-        borderSide: BorderSide.none,
+      contentPadding: REdgeInsets.symmetric(horizontal: 20, vertical: 16),
+
+      hintStyle: GoogleFonts.inter(color: ColorManager.greyDark, fontSize: 14.sp),
+      labelStyle: GoogleFonts.inter(color: ColorManager.greyDark, fontSize: 14.sp),
+      floatingLabelStyle: GoogleFonts.inter(
+        color: ColorManager.primaryColor,
+        fontSize: 14.sp,
+        fontWeight: FontWeight.w600,
       ),
+      prefixIconColor: ColorManager.greyDark,
+      suffixIconColor: ColorManager.greyDark,
+
       enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(16),
-        borderSide: BorderSide.none,
+        borderRadius: BorderRadius.circular(16.r),
+        borderSide: BorderSide(color: Color(0xFFE0E0E0), width: 1.0.w),
       ),
+
       focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(16),
-        borderSide: const BorderSide(
+        borderRadius: BorderRadius.circular(16.r),
+        borderSide: BorderSide(
           color: ColorManager.primaryColor,
-          width: 1.5,
+          width: 1.5.w,
         ),
       ),
-      hintStyle: const TextStyle(color: ColorManager.greyDark, fontSize: 14),
+      errorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(16.r),
+        borderSide: BorderSide(color: ColorManager.red, width: 1.0.w),
+      ),
+      focusedErrorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(16.r),
+        borderSide: BorderSide(color: ColorManager.red, width: 1.5.w),
+      ),
+      errorStyle: GoogleFonts.inter(
+        color: ColorManager.red,
+        fontSize: 12.sp,
+        fontWeight: FontWeight.w500,
+      ),
     ),
 
-    textTheme: const TextTheme(
-      headlineLarge: TextStyle(
-        fontSize: 28,
+    textTheme: TextTheme(
+      headlineLarge: GoogleFonts.inter(
+        fontSize: 28.sp,
         fontWeight: FontWeight.bold,
         color: ColorManager.black,
       ),
-      headlineMedium: TextStyle(
-        fontSize: 24,
+      headlineMedium: GoogleFonts.inter(
+        fontSize: 24.sp,
         fontWeight: FontWeight.bold,
         color: ColorManager.black,
       ),
-      bodyLarge: TextStyle(fontSize: 16, color: ColorManager.black),
-      bodyMedium: TextStyle(fontSize: 14, color: ColorManager.greyDark),
-      labelLarge: TextStyle(
-        fontSize: 16,
+      bodyLarge: GoogleFonts.inter(fontSize: 16.sp, color: ColorManager.black),
+      bodyMedium: GoogleFonts.inter(fontSize: 14.sp, color: ColorManager.greyDark),
+      labelLarge: GoogleFonts.inter(
+        fontSize: 16.sp,
         fontWeight: FontWeight.bold,
         color: ColorManager.white,
       ),
     ),
 
-    bottomNavigationBarTheme: BottomNavigationBarThemeData(
+    bottomNavigationBarTheme: const BottomNavigationBarThemeData(
       elevation: 0,
       backgroundColor: ColorManager.white,
       type: BottomNavigationBarType.fixed,

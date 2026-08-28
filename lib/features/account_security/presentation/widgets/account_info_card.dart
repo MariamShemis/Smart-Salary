@@ -16,6 +16,7 @@ class AccountInfoCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     AppLocalizations appLocalizations = AppLocalizations.of(context)!;
+
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(24.w),
@@ -55,7 +56,7 @@ class AccountInfoCard extends StatelessWidget {
           SizedBox(height: 8.h),
 
           Text(
-            email,
+            email.isEmpty ? "No Email Provided" : email,
             style: GoogleFonts.inter(
               color: Colors.grey.shade700,
               fontSize: 14.sp,
@@ -82,7 +83,7 @@ class AccountInfoCard extends StatelessWidget {
                 ),
                 SizedBox(width: 8.w),
                 Text(
-                  isVerified ? "Email Verified" : "Email Not Verified",
+                  isVerified ? appLocalizations.emailVerified : appLocalizations.emailNotVerified,
                   style: GoogleFonts.inter(
                     fontWeight: FontWeight.w600,
                     color: isVerified

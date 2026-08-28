@@ -1,7 +1,10 @@
 import 'package:bloc/bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:smart_salary/core/session_service/secure_storage_service.dart';
 import 'package:smart_salary/features/account_security/data/cubit/account_security_state.dart';
 import 'package:smart_salary/features/firebase/firebase_services.dart';
+import 'package:smart_salary/l10n/app_localizations.dart';
 
 class AccountSecurityCubit extends Cubit<AccountSecurityState> {
   AccountSecurityCubit() : super(AccountSecurityInitial());
@@ -10,10 +13,33 @@ class AccountSecurityCubit extends Cubit<AccountSecurityState> {
 
   String get email => currentUser?.email ?? "";
 
+  bool get isEmailVerified {
+    return currentUser?.emailVerified ?? false;
+  }
+
+  bool get isEmailAccount {
+    return currentUser?.providerData.any(
+          (provider) => provider.providerId == "password",
+        ) ??
+        false;
+  }
+
+  Future<void> reloadUser() async {
+    try {
+      await FirebaseServices.currentFirebaseUser()?.reload();
+      emit(EmailVerificationUpdated(isEmailVerified));
+    } catch (e) {
+      debugPrint("Error reloading user: $e");
+    }
+  }
+
   Future<void> changePassword({
     required String currentPassword,
     required String newPassword,
+    required BuildContext context,
   }) async {
+    final appLocalizations = AppLocalizations.of(context)!;
+
     emit(ChangePasswordLoading());
 
     try {
@@ -21,62 +47,76 @@ class AccountSecurityCubit extends Cubit<AccountSecurityState> {
 
       await currentUser!.updatePassword(newPassword);
 
+      await SecureStorageService.saveLogin(
+        email: currentUser!.email!,
+        password: newPassword,
+      );
+
       emit(ChangePasswordSuccess());
     } on FirebaseAuthException catch (e) {
-      emit(ChangePasswordError(e.message ?? "Something went wrong"));
+      emit(
+        ChangePasswordError(e.message ?? appLocalizations.something_went_wrong),
+      );
     } catch (_) {
-      emit(ChangePasswordError("Something went wrong"));
+      emit(ChangePasswordError(appLocalizations.something_went_wrong));
     }
   }
 
-  Future<void> deleteAccount({required String currentPassword}) async {
+  Future<void> deleteAccount({
+    String? currentPassword,
+    required BuildContext context,
+  }) async {
+    final appLocalizations = AppLocalizations.of(context)!;
+
     emit(DeleteAccountLoading());
 
     try {
-      await FirebaseServices.reauthenticate(currentPassword);
-
+      final user = currentUser;
       final uid = FirebaseServices.currentUserId();
 
-      if (uid == null) {
-        emit(DeleteAccountError("User not found"));
+      if (uid == null || user == null) {
+        emit(DeleteAccountError(appLocalizations.user_not_found));
         return;
       }
+      if (isEmailAccount) {
+        if (currentPassword == null || currentPassword.trim().isEmpty) {
+          emit(DeleteAccountError(appLocalizations.password_is_required));
+          return;
+        }
 
+        await FirebaseServices.reauthenticate(currentPassword.trim());
+      }
       await FirebaseServices.deleteUser(uid);
-
-      await currentUser!.delete();
+      await user.delete();
+      await FirebaseServices.logout();
 
       emit(DeleteAccountSuccess());
     } on FirebaseAuthException catch (e) {
-      emit(DeleteAccountError(e.message ?? "Something went wrong"));
-    } catch (_) {
-      emit(DeleteAccountError("Something went wrong"));
+      emit(
+        DeleteAccountError(e.message ?? appLocalizations.authentication_failed),
+      );
+    } catch (e) {
+      emit(
+        DeleteAccountError(
+          "${appLocalizations.something_went_wrong}: ${e.toString()}",
+        ),
+      );
     }
   }
 
-  Future<void> sendVerificationEmail() async {
-    await FirebaseServices.sendVerificationEmail();
+  Future<bool> isBiometricEnabled() {
+    return FirebaseServices.getBiometricEnabled();
   }
 
-  Future<void> reloadUser() async {
-    await currentUser?.reload();
+  Future<void> enableBiometric() async {
+    await FirebaseServices.setBiometricEnabled(true);
 
-    emit(
-      EmailVerificationUpdated(
-        currentUser?.emailVerified ?? false,
-      ),
-    );
+    emit(BiometricStatusChanged(true));
   }
 
-  bool get isGoogleAccount {
-    if (currentUser == null) return false;
+  Future<void> disableBiometric() async {
+    await FirebaseServices.setBiometricEnabled(false);
 
-    return currentUser!.providerData.any((e) => e.providerId == "google.com");
-  }
-
-  bool get isEmailAccount {
-    if (currentUser == null) return false;
-
-    return currentUser!.providerData.any((e) => e.providerId == "password");
+    emit(BiometricStatusChanged(false));
   }
 }

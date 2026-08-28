@@ -4,8 +4,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:smart_salary/core/costants/assets_manager.dart';
 import 'package:smart_salary/core/costants/color_manager.dart';
 import 'package:smart_salary/core/routes/app_routes.dart';
+import 'package:smart_salary/core/session_service/biometric_service.dart';
 import 'package:smart_salary/core/session_service/session_service.dart';
 import 'package:smart_salary/core/widgets/logo_app.dart';
+import 'package:smart_salary/features/firebase/firebase_services.dart';
 import 'package:smart_salary/l10n/app_localizations.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -87,9 +89,15 @@ class _SplashScreenState extends State<SplashScreen>
       return;
     }
     if (FirebaseAuth.instance.currentUser != null) {
-      Navigator.pushReplacementNamed(context, AppRoutes.mainLayout);
+      Navigator.pushReplacementNamed(
+        context,
+        AppRoutes.mainLayout,
+      );
     } else {
-      Navigator.pushReplacementNamed(context, AppRoutes.login);
+      Navigator.pushReplacementNamed(
+        context,
+        AppRoutes.login,
+      );
     }
   }
 
@@ -134,7 +142,8 @@ class _SplashScreenState extends State<SplashScreen>
                         return Transform(
                           alignment: Alignment.center,
                           transform: transformMatrix,
-                          child: LogoApp(width: 110.w, height: 110.h, size: 55.sp,),
+                          child: Image.asset(ImageAssets.logoApp, width: 130.w, height: 130.h,),
+                          //LogoApp(width: 110.w, height: 110.h, size: 55.sp,),
                         );
                       },
                     ),

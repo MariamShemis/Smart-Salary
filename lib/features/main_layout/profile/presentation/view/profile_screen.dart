@@ -121,6 +121,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           },
                         ),
                         ProfileMenuTile(
+                          icon: Icons.cloud_done_rounded,
+                          title: appLocalizations.backup_Restore,
+                          onTap: () {
+                            Navigator.pushNamed(context, AppRoutes.backUp);
+                          },
+                        ),
+                        ProfileMenuTile(
                           icon: Icons.security_rounded,
                           title: appLocalizations.account_Security,
                           onTap: () {

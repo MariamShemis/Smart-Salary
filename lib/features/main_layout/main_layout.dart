@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:smart_salary/core/costants/color_manager.dart';
 import 'package:smart_salary/core/widgets/main_gradient_background.dart';
+import 'package:smart_salary/features/back_up/data/cubit/back_up_cubit.dart';
 import 'package:smart_salary/features/main_layout/daily_reports/presentation/view/daily_reports.dart';
 import 'package:smart_salary/features/main_layout/home/presentation/view/home_screen.dart';
 import 'package:smart_salary/features/main_layout/profile/presentation/view/profile_screen.dart';
@@ -14,15 +16,38 @@ class MainLayout extends StatefulWidget {
   State<MainLayout> createState() => _MainLayoutState();
 }
 
-class _MainLayoutState extends State<MainLayout> {
+class _MainLayoutState extends State<MainLayout> with WidgetsBindingObserver {
   int selectedIndex = 0;
 
   List<Widget> get _pages => [
-    HomeScreen(),
-    DailyReports(),
-    SalaryCalculator(),
-    ProfileScreen(),
+    const HomeScreen(),
+    const DailyReports(),
+    const SalaryCalculator(),
+    const ProfileScreen(),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<BackupCubit>().performAutoBackup(checkPeriodic: true);
+    });
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.inactive || state == AppLifecycleState.paused) {
+      context.read<BackupCubit>().performAutoBackup(checkPeriodic: false);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

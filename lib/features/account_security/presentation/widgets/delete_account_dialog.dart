@@ -4,7 +4,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:smart_salary/core/costants/color_manager.dart';
 import 'package:smart_salary/core/utils/validators/app_validators.dart';
 import 'package:smart_salary/features/account_security/data/cubit/account_security_cubit.dart';
-import 'package:smart_salary/features/account_security/data/cubit/account_security_state.dart';
 import 'package:smart_salary/features/account_security/presentation/widgets/password_text_field.dart';
 import 'package:smart_salary/l10n/app_localizations.dart';
 
@@ -27,57 +26,66 @@ class _DeleteAccountDialogState extends State<DeleteAccountDialog> {
 
   @override
   Widget build(BuildContext context) {
-    AppLocalizations appLocalizations = AppLocalizations.of(context)!;
+    final appLocalizations = AppLocalizations.of(context)!;
+    final cubit = context.read<AccountSecurityCubit>();
+
     return AlertDialog(
+      insetPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 24.h),
       icon: Icon(
         Icons.delete_forever_rounded,
-        size: 45.sp,
+        size: 40.r,
         color: ColorManager.red,
       ),
-      title: Text(appLocalizations.deleteAccount),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            appLocalizations
-                .this_action_is_permanent_Enter_your_password_to_continue,
-          ),
-          SizedBox(height: 20.h),
-          Form(
-            key: formKey,
-            child: PasswordTextField(
-              controller: passwordController,
-              label: appLocalizations.currentPassword,
-              validator: (value) =>
-                  AppValidators.validatePassword(value, context),
+      title: Text(appLocalizations.deleteAccount, textAlign: TextAlign.center),
+      content: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              cubit.isEmailAccount
+                  ? appLocalizations
+                        .this_action_is_permanent_Enter_your_password_to_continue
+                  : appLocalizations.permanently_delete_your_account,
+              textAlign: TextAlign.center,
             ),
-          ),
-        ],
+            if (cubit.isEmailAccount) ...[
+              SizedBox(height: 16.h),
+              Form(
+                key: formKey,
+                child: PasswordTextField(
+                  controller: passwordController,
+                  label: appLocalizations.currentPassword,
+                  validator: (value) =>
+                      AppValidators.validatePassword(value, context),
+                ),
+              ),
+            ],
+          ],
+        ),
       ),
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context),
           child: Text(appLocalizations.cancel),
         ),
+        TextButton(
+          onPressed: () {
+            FocusScope.of(context).unfocus();
 
-        BlocBuilder<AccountSecurityCubit, AccountSecurityState>(
-          builder: (context, state) {
-            return TextButton(
-              onPressed: () {
-                FocusScope.of(context).unfocus();
+            if (cubit.isEmailAccount) {
+              if (!formKey.currentState!.validate()) return;
+            }
+            Navigator.pop(context);
 
-                if (!formKey.currentState!.validate()) return;
-
-                context.read<AccountSecurityCubit>().deleteAccount(
-                  currentPassword: passwordController.text.trim(),
-                );
-              },
-              child: Text(
-                appLocalizations.delete,
-                style: TextStyle(color: ColorManager.red),
-              ),
+            cubit.deleteAccount(
+              currentPassword: passwordController.text.trim(),
+              context: context,
             );
           },
+          child: Text(
+            appLocalizations.delete,
+            style: TextStyle(color: ColorManager.red),
+          ),
         ),
       ],
     );

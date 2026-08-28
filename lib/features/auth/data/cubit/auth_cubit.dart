@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:smart_salary/core/session_service/biometric_service.dart';
+import 'package:smart_salary/core/session_service/secure_storage_service.dart';
 import 'package:smart_salary/features/auth/data/model/login_request.dart';
 import 'package:smart_salary/features/auth/data/model/register_request.dart';
 import 'package:smart_salary/features/firebase/firebase_services.dart';
@@ -11,7 +13,7 @@ import 'auth_state.dart';
 class AuthCubit extends Cubit<AuthState> {
   AuthCubit() : super(AuthInitial());
 
-  Future<void> register(RegisterRequest request , BuildContext context) async {
+  Future<void> register(RegisterRequest request, BuildContext context) async {
     AppLocalizations appLocalizations = AppLocalizations.of(context)!;
     emit(RegisterLoading());
 
@@ -19,22 +21,42 @@ class AuthCubit extends Cubit<AuthState> {
       await FirebaseServices.register(request);
       emit(RegisterSuccess());
     } on FirebaseAuthException catch (e) {
-      emit(RegisterError(_firebaseErrorMessage(e , context)));
+      emit(RegisterError(_firebaseErrorMessage(e, context)));
     } catch (_) {
-      emit(RegisterError(appLocalizations.something_went_wrong_Please_try_again));
+      emit(
+        RegisterError(appLocalizations.something_went_wrong_Please_try_again),
+      );
     }
   }
 
-  Future<void> login(LoginRequest request , BuildContext context) async {
+  Future<void> login(LoginRequest request, BuildContext context) async {
     AppLocalizations appLocalizations = AppLocalizations.of(context)!;
+
     emit(LoginLoading());
 
     try {
       await FirebaseServices.login(request);
+
+      await SecureStorageService.saveLogin(
+        email: request.email,
+        password: request.password,
+      );
+
+      final biometricEnabled = await FirebaseServices.shouldUseBiometric();
+
+      if (biometricEnabled) {
+        final success = await BiometricService().authenticate();
+
+        if (!success) {
+          emit(LoginSuccess(await FirebaseServices.getCurrentUser()));
+          return;
+        }
+      }
+
       final user = await FirebaseServices.getCurrentUser();
       emit(LoginSuccess(user));
     } on FirebaseAuthException catch (e) {
-      emit(LoginError(_firebaseErrorMessage(e , context)));
+      emit(LoginError(_firebaseErrorMessage(e, context)));
     } catch (_) {
       emit(LoginError(appLocalizations.something_went_wrong_Please_try_again));
     }
@@ -42,20 +64,22 @@ class AuthCubit extends Cubit<AuthState> {
 
   Future<void> logout() async {
     await FirebaseServices.logout();
+    await SecureStorageService.clear();
     emit(AuthInitial());
   }
 
-  Future<void> resetPassword(String email , BuildContext context) async {
+  Future<void> resetPassword(String email, BuildContext context) async {
     AppLocalizations appLocalizations = AppLocalizations.of(context)!;
     emit(ResetPasswordLoading());
 
     try {
       await FirebaseServices.resetPassword(email);
+      print("SUCCESS");
       emit(ResetPasswordSuccess());
     } on FirebaseAuthException catch (e) {
-      emit(ResetPasswordError(_firebaseErrorMessage(e , context)));
-    } catch (_) {
-      emit(ResetPasswordError(appLocalizations.something_went_wrong_Please_try_again));
+      print(e.code);
+      print(e.message);
+      emit(ResetPasswordError(_firebaseErrorMessage(e, context)));
     }
   }
 
@@ -65,15 +89,55 @@ class AuthCubit extends Cubit<AuthState> {
 
     try {
       final user = await FirebaseServices.signInWithGoogle();
+      if (user.email != null) {
+        await SecureStorageService.saveGoogleLogin(email: user.email!);
+      }
+
       emit(LoginSuccess(user));
     } on FirebaseAuthException catch (e) {
-      emit(LoginError(_firebaseErrorMessage(e , context)));
+      emit(LoginError(_firebaseErrorMessage(e, context)));
     } catch (_) {
       emit(LoginError(appLocalizations.something_went_wrong_Please_try_again));
     }
   }
 
-  String _firebaseErrorMessage(FirebaseAuthException e , BuildContext context) {
+  Future<void> loginWithBiometric(BuildContext context) async {
+    emit(LoginLoading());
+
+    try {
+      final success = await BiometricService().authenticate();
+
+      if (!success) {
+        emit(LoginError("Authentication failed"));
+        return;
+      }
+      final isGoogleUser = await SecureStorageService.isGoogleUser();
+
+      if (isGoogleUser) {
+        final user = await FirebaseServices.signInWithGoogle();
+        emit(LoginSuccess(user));
+      } else {
+        final email = await SecureStorageService.getEmail();
+        final password = await SecureStorageService.getPassword();
+
+        if (email == null || password == null) {
+          emit(LoginError("Please login once using email."));
+          return;
+        }
+
+        await FirebaseServices.login(
+          LoginRequest(email: email, password: password),
+        );
+
+        final user = await FirebaseServices.getCurrentUser();
+        emit(LoginSuccess(user));
+      }
+    } catch (e) {
+      emit(LoginError(e.toString()));
+    }
+  }
+
+  String _firebaseErrorMessage(FirebaseAuthException e, BuildContext context) {
     AppLocalizations appLocalizations = AppLocalizations.of(context)!;
     switch (e.code) {
       case 'email-already-in-use':

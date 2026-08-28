@@ -12,13 +12,31 @@ class FirebaseServices {
   static final FirebaseAuth _auth = FirebaseAuth.instance;
   static final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
+  // static Future<UserCredential> register(RegisterRequest request) async {
+  //   UserCredential credential = await _auth.createUserWithEmailAndPassword(
+  //     email: request.email,
+  //     password: request.password,
+  //   );
+  //
+  //   UserModel user = UserModel(
+  //     id: credential.user!.uid,
+  //     name: request.name,
+  //     email: request.email,
+  //     phone: request.phone,
+  //   );
+  //
+  //   await addUserToFireStore(user);
+  //
+  //   return credential;
+  // }
   static Future<UserCredential> register(RegisterRequest request) async {
-    UserCredential credential = await _auth.createUserWithEmailAndPassword(
+    final UserCredential credential =
+    await _auth.createUserWithEmailAndPassword(
       email: request.email,
       password: request.password,
     );
 
-    UserModel user = UserModel(
+    final user = UserModel(
       id: credential.user!.uid,
       name: request.name,
       email: request.email,
@@ -26,6 +44,9 @@ class FirebaseServices {
     );
 
     await addUserToFireStore(user);
+
+    // Send verification email immediately after registration
+    await credential.user!.sendEmailVerification();
 
     return credential;
   }
@@ -44,6 +65,9 @@ class FirebaseServices {
   static Future<void> logout() async {
     await GoogleSignIn().signOut();
     await _auth.signOut();
+
+    // امسحيهم فقط لو انتي لا تريدين البصمة بعد تسجيل الخروج
+    // await SecureStorageService.clear();
   }
 
   static CollectionReference<UserModel> getUsersCollection() {
@@ -170,24 +194,24 @@ class FirebaseServices {
     return user;
   }
 
-  static Future<void> sendVerificationEmail() async {
-    try {
-      final user = _auth.currentUser;
-
-      if (user == null) {
-        throw FirebaseAuthException(
-          code: "user-not-found",
-          message: "No user is logged in",
-        );
-      }
-
-      if (!user.emailVerified) {
-        await user.sendEmailVerification();
-      }
-    } on FirebaseAuthException {
-      rethrow;
-    }
-  }
+  // static Future<void> sendVerificationEmail() async {
+  //   try {
+  //     final user = _auth.currentUser;
+  //
+  //     if (user == null) {
+  //       throw FirebaseAuthException(
+  //         code: "user-not-found",
+  //         message: "No user is logged in",
+  //       );
+  //     }
+  //
+  //     if (!user.emailVerified) {
+  //       await user.sendEmailVerification();
+  //     }
+  //   } on FirebaseAuthException {
+  //     rethrow;
+  //   }
+  // }
 
   /// Current Firebase User
   static User? currentFirebaseUser() {
@@ -200,35 +224,40 @@ class FirebaseServices {
   }
 
   static Future<void> reauthenticate(String password) async {
-    final user = _auth.currentUser!;
+    final user = _auth.currentUser;
+    if (user == null) throw Exception("No user logged in.");
 
-    final provider = user.providerData.first.providerId;
+    final isGoogle = user.providerData.any((p) => p.providerId == "google.com");
 
-    if (provider == "password") {
-      final credential = EmailAuthProvider.credential(
-        email: user.email!,
-        password: password,
-      );
+    if (isGoogle) {
+      final googleSignIn = GoogleSignIn();
+      final googleUser = await googleSignIn.signIn();
 
-      await user.reauthenticateWithCredential(credential);
-      return;
-    }
-
-    if (provider == "google.com") {
-      final googleUser = await GoogleSignIn().signIn();
-
-      if (googleUser == null) return;
+      if (googleUser == null) {
+        throw FirebaseAuthException(
+          code: "cancelled",
+          message: "Google sign in cancelled",
+        );
+      }
 
       final googleAuth = await googleUser.authentication;
-
       final credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
 
       await user.reauthenticateWithCredential(credential);
+      return;
     }
+
+    final credential = EmailAuthProvider.credential(
+      email: user.email!,
+      password: password,
+    );
+
+    await user.reauthenticateWithCredential(credential);
   }
+
   static Future<void> deleteUser(String uid) async {
     await getUsersCollection().doc(uid).delete();
   }
@@ -237,5 +266,180 @@ class FirebaseServices {
     final user = _auth.currentUser!;
 
     await user.verifyBeforeUpdateEmail(email);
+  }
+
+  // static Future<void> sendVerificationEmail() async {
+  //   final user = _auth.currentUser;
+  //
+  //   if (user == null) {
+  //     throw FirebaseAuthException(
+  //       code: "user-not-found",
+  //       message: "No user is logged in",
+  //     );
+  //   }
+  //
+  //   await user.reload();
+  //
+  //   final updatedUser = _auth.currentUser!;
+  //
+  //   final isGoogle = updatedUser.providerData
+  //       .any((p) => p.providerId == 'google.com');
+  //
+  //   if (updatedUser.emailVerified || isGoogle) {
+  //     throw FirebaseAuthException(
+  //       code: "already-verified",
+  //       message: "Your email is already verified.",
+  //     );
+  //   }
+  //   await updatedUser.sendEmailVerification();
+  // }
+
+  static Future<void> sendEmailVerification() async {
+    final user = _auth.currentUser;
+
+    if (user == null) {
+      throw FirebaseAuthException(
+        code: "user-not-found",
+        message: "No user is logged in",
+      );
+    }
+
+    await user.reload();
+
+    final updatedUser = _auth.currentUser;
+
+    if (updatedUser == null) {
+      throw FirebaseAuthException(
+        code: "user-not-found",
+        message: "No user is logged in",
+      );
+    }
+
+    if (updatedUser.emailVerified) {
+      throw FirebaseAuthException(
+        code: "already-verified",
+        message: "Email is already verified.",
+      );
+    }
+
+    await updatedUser.sendEmailVerification();
+  }
+
+  static Future<bool> checkEmailVerified() async {
+    final user = _auth.currentUser;
+
+    if (user == null) {
+      return false;
+    }
+
+    await user.reload();
+
+    return _auth.currentUser?.emailVerified ?? false;
+  }
+
+  // static Future<void> logout() async {
+  //   await GoogleSignIn().signOut();
+  //   await _auth.signOut();
+  // }
+
+  // static Future<void> linkAccountWithGoogle() async {
+  //   final user = _auth.currentUser;
+  //   if (user == null) throw FirebaseAuthException(code: "user-not-found", message: "No user logged in.");
+  //
+  //   final GoogleSignIn googleSignIn = GoogleSignIn();
+  //   await googleSignIn.signOut();
+  //
+  //   final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
+  //   if (googleUser == null) {
+  //     throw FirebaseAuthException(
+  //       code: "cancelled",
+  //       message: "Google sign in was cancelled",
+  //     );
+  //   }
+  //
+  //   if (googleUser.email.toLowerCase() != user.email?.toLowerCase()) {
+  //     throw FirebaseAuthException(
+  //       code: "email-mismatch",
+  //       message: "Please select the Google account for ${user.email}",
+  //     );
+  //   }
+  //
+  //   final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+  //   final credential = GoogleAuthProvider.credential(
+  //     accessToken: googleAuth.accessToken,
+  //     idToken: googleAuth.idToken,
+  //   );
+  //
+  //   await user.linkWithCredential(credential);
+  //   await user.reload();
+  // }
+
+  static Future<void> setBiometricEnabled(bool enabled) async {
+    final uid = currentUserId()!;
+
+    await _firestore
+        .collection("users")
+        .doc(uid)
+        .update({
+      "biometricEnabled": enabled,
+    });
+  }
+
+  static Future<bool> getBiometricEnabled() async {
+    final uid = currentUserId()!;
+
+    final doc = await _firestore
+        .collection("users")
+        .doc(uid)
+        .get();
+
+    return doc.data()?["biometricEnabled"] ?? false;
+  }
+
+  static Stream<bool> biometricStream() {
+    final uid = currentUserId()!;
+
+    return _firestore
+        .collection("users")
+        .doc(uid)
+        .snapshots()
+        .map(
+          (e) => e.data()?["biometricEnabled"] ?? false,
+    );
+  }
+
+  // static Future<bool> getAskedBiometric() async {
+  //   final uid = currentUserId()!;
+  //
+  //   final doc = await _firestore
+  //       .collection("users")
+  //       .doc(uid)
+  //       .get();
+  //
+  //   return doc.data()?["askedBiometric"] ?? false;
+  // }
+  //
+  // static Future<void> setAskedBiometric() async {
+  //   final uid = currentUserId()!;
+  //
+  //   await _firestore
+  //       .collection("users")
+  //       .doc(uid)
+  //       .update({
+  //     "askedBiometric": true,
+  //   });
+  // }
+
+  static Future<bool> shouldUseBiometric() async {
+    final uid = currentUserId();
+
+    if (uid == null) return false;
+
+    final doc = await _firestore
+        .collection(UserModel.collectionName)
+        .doc(uid)
+        .get();
+
+    return doc.data()?["biometricEnabled"] ?? false;
   }
 }

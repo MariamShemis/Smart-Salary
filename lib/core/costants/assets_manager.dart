@@ -2,6 +2,9 @@ class ImageAssets {
   static const String base = 'assets/images/';
   static const String splashBg = '${base}splash_bg.png';
   static const String forgetPassword = '${base}forget_password1.png';
+  static const String emailSend = '${base}email_send.png';
+  static const String verifyEmail = '${base}verify_email.png';
+  static const String logoApp = '${base}logo_app.png';
 }
 
 class IconAssets {

@@ -102,16 +102,16 @@ class SalaryCubit extends Cubit<SalaryState> {
 
     final double totalSalaryWithReward = totalSalary + reward;
 
-    // await SalaryFirestoreServices.saveSalaryResult(
-    //   uid: FirebaseAuth.instance.currentUser!.uid,
-    //   month: month,
-    //   totalSalary: totalSalary,
-    //   totalSalaryWithReward: totalSalaryWithReward,
-    //   overtimeMonth: overtimeMonth,
-    //   bonusMonth: bonusMonth,
-    //   deduction: deduction,
-    //   vacationDays: vacation,
-    // );
+    await SalaryFirestoreServices.saveSalaryResult(
+      uid: FirebaseAuth.instance.currentUser!.uid,
+      month: month,
+      totalSalary: totalSalary,
+      totalSalaryWithReward: totalSalaryWithReward,
+      overtimeMonth: overtimeMonth,
+      bonusMonth: bonusMonth,
+      deduction: deduction,
+      vacationDays: vacation,
+    );
 
     emit(
       SalarySuccess(
