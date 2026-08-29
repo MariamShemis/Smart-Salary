@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smart_salary/core/routes/app_routes.dart';
 import 'package:smart_salary/features/account_security/presentation/view/account_security_screen.dart';
+import 'package:smart_salary/features/app_lock/view/app_lock_screen.dart';
 import 'package:smart_salary/features/auth/presentation/view/forget_password.dart';
 import 'package:smart_salary/features/auth/presentation/view/login_screen.dart';
 import 'package:smart_salary/features/auth/presentation/view/register_screen.dart';
@@ -80,6 +81,10 @@ abstract class RoutesGenerator {
           return CupertinoPageRoute(
             builder: (context) => AccountSecurityScreen(),
           );
+        }
+      case AppRoutes.appLock:
+        {
+          return CupertinoPageRoute(builder: (context) => AppLockScreen());
         }
     }
 

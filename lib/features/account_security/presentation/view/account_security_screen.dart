@@ -106,25 +106,45 @@ class _AccountSecurityScreenState extends State<AccountSecurityScreen> {
                         if (value) {
                           final success = await BiometricService()
                               .authenticate();
-                          if (!success) return;
-                          await cubit.enableBiometric();
-
-                          if (mounted) {
-                            setState(() {
-                              biometricEnabled = true;
-                            });
+                          if (success) {
+                            await cubit.enableBiometric();
+                            if (mounted) setState(() => biometricEnabled = true);
                           }
                         } else {
                           await cubit.disableBiometric();
-
-                          if (mounted) {
-                            setState(() {
-                              biometricEnabled = false;
-                            });
-                          }
+                          if (mounted) setState(() => biometricEnabled = false);
                         }
                       },
                     ),
+                    // SecuritySwitchTile(
+                    //   icon: Icons.fingerprint,
+                    //   title: appLocalizations.fingerprintLogin,
+                    //   subtitle:
+                    //       appLocalizations.secure_access_with_your_fingerprint,
+                    //   value: biometricEnabled,
+                    //   onChanged: (value) async {
+                    //     if (value) {
+                    //       final success = await BiometricService()
+                    //           .authenticate();
+                    //       if (!success) return;
+                    //       await cubit.enableBiometric();
+                    //
+                    //       if (mounted) {
+                    //         setState(() {
+                    //           biometricEnabled = true;
+                    //         });
+                    //       }
+                    //     } else {
+                    //       await cubit.disableBiometric();
+                    //
+                    //       if (mounted) {
+                    //         setState(() {
+                    //           biometricEnabled = false;
+                    //         });
+                    //       }
+                    //     }
+                    //   },
+                    // ),
                     SizedBox(height: 24.h),
                     if (!isVerified && cubit.isEmailAccount) ...[
                       SecurityTile(

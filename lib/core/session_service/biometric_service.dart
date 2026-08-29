@@ -4,7 +4,10 @@ import 'package:local_auth/local_auth.dart';
 class BiometricService {
   final LocalAuthentication auth = LocalAuthentication();
 
-  Future<bool> authenticate() async {
+  Future<bool> authenticate({
+    String localizedReason = "Please authenticate to access Smart Salary",
+    bool biometricOnly = false,
+  }) async {
     try {
       final isSupported = await auth.isDeviceSupported();
       final canCheck = await auth.canCheckBiometrics;
@@ -12,17 +15,15 @@ class BiometricService {
       debugPrint("isSupported = $isSupported");
       debugPrint("canCheck = $canCheck");
 
-      final available = await auth.getAvailableBiometrics();
-      debugPrint("available = $available");
+      if (!isSupported && !canCheck) return false;
 
       final result = await auth.authenticate(
-        localizedReason: "Please authenticate",
-        biometricOnly: false,
+        localizedReason: localizedReason,
+        biometricOnly: biometricOnly,
         persistAcrossBackgrounding: true,
       );
 
       debugPrint("result = $result");
-
       return result;
     } catch (e, s) {
       debugPrint("Biometric Error: $e");

@@ -26,7 +26,7 @@ class SmartSalary extends StatelessWidget {
                   title: "Smart Salary",
                   debugShowCheckedModeBanner: false,
                   onGenerateRoute: RoutesGenerator.router,
-                  initialRoute: AppRoutes.splashScreen,
+                  initialRoute: AppRoutes.appLock,
                   theme: ThemeManager.light,
                   themeMode: ThemeMode.light,
                   localizationsDelegates: const [

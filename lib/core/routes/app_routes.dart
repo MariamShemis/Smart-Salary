@@ -9,5 +9,6 @@ abstract class AppRoutes {
   static const String editProfile = "/EditProfile";
   static const String accountSecurity = "/accountSecurity";
   static const String verifyEmail = "/VerifyEmail";
+  static const String appLock = "/AppLock";
   static const String backUp = "/backUp";
 }
